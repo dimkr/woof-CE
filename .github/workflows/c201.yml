@@ -48,7 +48,7 @@ jobs:
         sudo -E ./build.sh
     - name: Build image
       run: |
-        cd ../woof-out_x86_64_arm_debian_bulleye
+        cd ../woof-out_x86_64_arm_debian_bullseye
         echo | sudo ./2createpackages
         sudo ./3builddistro
     - name: Create Release
