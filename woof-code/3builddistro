@@ -699,7 +699,7 @@ fi
 
 #111123 put this into target, want to know if cross-build at 1st boot (see rc.update)...
 [ -f ../WOOFMERGEVARS ] && cp -f ../WOOFMERGEVARS rootfs-complete/etc/rc.d/
-[ -n "$QEMU" ] && echo "WOOF_QEMU="${QEMU}" >> rootfs-complete/etc/rc.d/WOOFMERGEVARS
+[ -n "$QEMU" ] && echo "WOOF_QEMU=${QEMU}" >> rootfs-complete/etc/rc.d/WOOFMERGEVARS
 
 #120704 some constraints in a small system...
 if [ "$SDFLAG" != "" ];then
