@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - c201-v2
+      - c201-qemu
 
 jobs:
   build:
