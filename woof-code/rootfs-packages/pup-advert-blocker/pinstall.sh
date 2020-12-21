@@ -1,3 +1,3 @@
 #!/bin/sh
 
-./usr/sbin/pup-advert-blocker start
+chroot . /usr/sbin/pup-advert-blocker start

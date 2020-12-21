@@ -60,16 +60,11 @@ append_adlist () {
 	# remove the markers
 	sed -i -e "/$markerstart/d" /tmp/hosts-temp
 	sed -i -e "/$markerend/d" /tmp/hosts-temp
-	# check the size of the final adlist
-	if [ -s /tmp/adlist-all ];then
-		# add list contents into the hosts file, below a marker (for easier removal)
-		echo "$markerstart" >> /tmp/hosts-temp
-		# get contents of the downloaded adlist
-		cat /tmp/adlist-all >> /tmp/hosts-temp
-		echo "$markerend" >> /tmp/hosts-temp
-	else
-		Xdialog --title "$title $appver" --msgbox "$(gettext 'No ad lists selected. Ad blocking will be disabled.')" 0 0
-	fi
+	# add list contents into the hosts file, below a marker (for easier removal)
+	echo "$markerstart" >> /tmp/hosts-temp
+	# get contents of the downloaded adlist
+	cat /tmp/adlist-all >> /tmp/hosts-temp
+	echo "$markerend" >> /tmp/hosts-temp
 	# replace the original with the cleaned version
 	mv -f "/tmp/hosts-temp" "/etc/hosts"
 }
