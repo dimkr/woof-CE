@@ -40,12 +40,26 @@ set -a
 # cleanup all leftover files
 cleanup () {
 	# remove all temp files
-	rm -f /tmp/adlist-all /tmp/hosts-temp
+	rm -f /tmp/adlist-all /tmp/adlist-all-temp /tmp/hosts-temp
 }
 
 # download the ads list
 download_adlist () {
-	wget -t 2 -O- https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts | grep '^0\.0\.0\.0' | grep -v '^0\.0\.0\.0 [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*$' > /tmp/adlist-all
+	wget -t 2 -O /tmp/adlist-all https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+}
+
+# clean out everything but the list of IPs and servers
+clean_adlist () {
+	sed -i '/^#/d' /tmp/adlist-all # remove all comments
+	sed -i 's/ #.*$//' /tmp/adlist-all
+	sed -i '/localhost/d' /tmp/adlist-all # remove the original links to localhost (we already have them)
+	sed -i '/^$/d' /tmp/adlist-all # remove empty lines
+	sed -i 's/\t/ /' /tmp/adlist-all # replace all tabs with spaces
+	sed -i 's/  / /g' /tmp/adlist-all # remove double spaces
+	dos2unix -u /tmp/adlist-all # change all carriage returns to UNIX format
+	#cat /tmp/adlist-all |sort |uniq > /tmp/adlist-all # remove duplicates (again)
+	cat /tmp/adlist-all | grep -e ^0\.0\.0\.0 |sort | uniq > /tmp/adlist-all-temp #100830 BK
+	mv -f /tmp/adlist-all-temp /tmp/adlist-all #100830 BK
 }
 
 # creates an empty ad list
@@ -101,6 +115,7 @@ Download and block the latest list of known advertising servers.")'"</label></te
         <button>
           '"`/usr/lib/gtkdialog/xml_button-icon execute.svg big`"'
           <action>download_adlist</action>
+          <action>clean_adlist</action>
           <action>append_adlist</action>
           <action>cleanup</action>
           <action>success</action>
@@ -155,6 +170,7 @@ cleanup
 if [ "$1" = "start" ]
 then
   download_adlist
+  clean_adlist
   append_adlist
   cleanup
 else
