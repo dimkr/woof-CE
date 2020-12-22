@@ -146,8 +146,7 @@ Manually edit your hosts file in a text editor, adding or removing any entries y
 # cleanup before start
 cleanup
 
-if [ "$1" = "start" ]
-then
+if [ "$1" = "start" ]; then
   download_adlist
   append_adlist
   cleanup
