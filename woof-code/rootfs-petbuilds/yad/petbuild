@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+wget -O- https://github.com/v1cont/yad/archive/v0.42.1.tar.gz | tar -xzf-
+cd yad-0.42.1
+autoreconf -if
+intltoolize --force
+./configure --prefix=/usr --with-gtk=gtk2 --disable-pfd
+make install
+rm -rf /usr/share/locale /usr/share/aclocal

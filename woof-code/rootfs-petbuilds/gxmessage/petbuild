@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+wget -O- https://ftp.gnu.org/gnu/gxmessage/gxmessage-2.20.4.tar.gz | tar -xzf-
+cd gxmessage-2.20.4
+./configure --prefix=/usr --disable-nls
+make install

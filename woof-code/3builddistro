@@ -730,7 +730,6 @@ fi
 )
 
 rm -rf rootfs-complete/tmp/* #121123 some above chroot operations may have left something behind in here.
-[ -n "$QEMU" ] && rm -f rootfs-complete/${QEMU}
 
 ## $DEFAULTAPPS - build.conf
 echo "Setting default apps specified in build.conf ..."
@@ -815,48 +814,8 @@ sync
 
 if [ "$BUILD_SFS" = 'yes' ]; then
 	sh $MWD/support/files2delete.sh rootfs-complete
-	#build the rootfs-complete sfs...
-	echo -e "\nNow building the main f.s., ${PUPPYSFS}..."
 	sync
-	rm -f build/${PUPPYSFS} 2>/dev/null
-	mksquashfs rootfs-complete build/${PUPPYSFS} ${SFSCOMP} #100911 110713
-	sync
-	###########
-	if [ -d adrv -o -d fdrv -o -d ydrv ];then
-		#build the {a,f,y}drive sfs...
-		for SYS_SFS in adrv fdrv ydrv
-		do
-			[ ! -d "$SYS_SFS" ] && echo "no $SYS_SFS" && continue
-			case $SYS_SFS in
-				adrv) TYPE_SYS_SFS="${ADRVSFS}";;
-				fdrv) TYPE_SYS_SFS="${FDRVSFS}";;
-				ydrv) TYPE_SYS_SFS="${YDRVSFS}";;
-			esac
-			echo -e "\nNow building the $SYS_SFS f.s., $TYPE_SYS_SFS ..."
-			sync
-			rm -f build/${TYPE_SYS_SFS} 2>/dev/null
-			mksquashfs $SYS_SFS build/${TYPE_SYS_SFS} ${SFSCOMP} #170330
-			sync
-		done
-	fi
-	#############
-	# build.conf: ADRV_SFS_URL='..' YDRV_SFS_URL='..' FDRV_SFS_URL='..'
-	for i in \
-		"adrv|${ADRV_SFS_URL}|${ADRVSFS}" \
-		"ydrv|${YDRV_SFS_URL}|${YDRVSFS}" \
-		"fdrv|${FDRV_SFS_URL}|${FDRVSFS}"
-	do
-		IFS="|" read XDRV XDRV_URL XDRV_SFS <<< "$i"
-		if [ -d "$XDRV" ] ; then
-			continue # $XDRV is created using the PKGS_SPECS
-		fi
-		if ! [ "$XDRV_URL" ] ; then
-			continue
-		fi
-		../support/download_file.sh "$XDRV_URL" ../../local-repositories/sfs build/${XDRV_SFS}
-		[ $? -ne 0 ] && ../support/download_file.sh "$XDRV_URL" ../../local-repositories/sfs build/${XDRV_SFS}
-	done
-fi # if BUILD_SFS
+fi
 
 #==================================================================================
 # DEVX.SFS
@@ -949,6 +908,60 @@ if [ "$BUILD_DEVX" = "yes" ] ; then
 
 	cd sandbox3
 fi
+
+if [ "$BUILD_DEVX" = "yes" ] ; then
+	. ../support/petbuilds.sh
+fi
+
+[ -n "$QEMU" ] && rm -f rootfs-complete/${QEMU}
+
+#=================================================
+. ../support/builtin_files.sh # /tmp/rootfs-packages.specs
+#=================================================
+
+if [ "$BUILD_SFS" = 'yes' ]; then
+	#build the rootfs-complete sfs...
+	echo -e "\nNow building the main f.s., ${PUPPYSFS}..."
+	sync
+	rm -f build/${PUPPYSFS} 2>/dev/null
+	mksquashfs rootfs-complete build/${PUPPYSFS} ${SFSCOMP} #100911 110713
+	sync
+	###########
+	if [ -d adrv -o -d fdrv -o -d ydrv ];then
+		#build the {a,f,y}drive sfs...
+		for SYS_SFS in adrv fdrv ydrv
+		do
+			[ ! -d "$SYS_SFS" ] && echo "no $SYS_SFS" && continue
+			case $SYS_SFS in
+				adrv) TYPE_SYS_SFS="${ADRVSFS}";;
+				fdrv) TYPE_SYS_SFS="${FDRVSFS}";;
+				ydrv) TYPE_SYS_SFS="${YDRVSFS}";;
+			esac
+			echo -e "\nNow building the $SYS_SFS f.s., $TYPE_SYS_SFS ..."
+			sync
+			rm -f build/${TYPE_SYS_SFS} 2>/dev/null
+			mksquashfs $SYS_SFS build/${TYPE_SYS_SFS} ${SFSCOMP} #170330
+			sync
+		done
+	fi
+	#############
+	# build.conf: ADRV_SFS_URL='..' YDRV_SFS_URL='..' FDRV_SFS_URL='..'
+	for i in \
+		"adrv|${ADRV_SFS_URL}|${ADRVSFS}" \
+		"ydrv|${YDRV_SFS_URL}|${YDRVSFS}" \
+		"fdrv|${FDRV_SFS_URL}|${FDRVSFS}"
+	do
+		IFS="|" read XDRV XDRV_URL XDRV_SFS <<< "$i"
+		if [ -d "$XDRV" ] ; then
+			continue # $XDRV is created using the PKGS_SPECS
+		fi
+		if ! [ "$XDRV_URL" ] ; then
+			continue
+		fi
+		../support/download_file.sh "$XDRV_URL" ../../local-repositories/sfs build/${XDRV_SFS}
+		[ $? -ne 0 ] && ../support/download_file.sh "$XDRV_URL" ../../local-repositories/sfs build/${XDRV_SFS}
+	done
+fi # if BUILD_SFS
 
 #==================================================================================
 # ISO file
