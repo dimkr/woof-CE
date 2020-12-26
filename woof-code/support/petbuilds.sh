@@ -16,7 +16,7 @@ MAKEFLAGS=-j`nproc`
 for i in ../rootfs-petbuilds/*; do
     NAME=${i#../rootfs-petbuilds/}
     [ -d "../rootfs-packages/${NAME}" ] && continue
-    mkdir ../rootfs-packages/${NAME}
+    mkdir -p ../rootfs-packages/${NAME} petbuild-root
     mount -t aufs -o br=../rootfs-packages/${NAME}:devx:rootfs-complete petbuild petbuild-root
     mkdir -p petbuild-root/proc petbuild-root/sys petbuild-root/dev petbuild-root/tmp
     mount --bind /proc petbuild-root/proc
