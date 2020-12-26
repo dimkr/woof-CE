@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+wget -O- http://checkinstall.izto.org/files/source/checkinstall-1.6.2.tar.gz | tar -xzf-
+cd checkinstall-1.6.2
+patch -p1 < ../glibc.patch
+cd installwatch
+make PREFIX=/usr install
