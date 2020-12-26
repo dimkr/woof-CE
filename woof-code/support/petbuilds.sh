@@ -15,49 +15,63 @@ MAKEFLAGS=-j`nproc`
 
 for i in ../rootfs-petbuilds/*; do
     NAME=${i#../rootfs-petbuilds/}
-    [ -d "../rootfs-packages/${NAME}" ] && continue
-    mkdir -p ../rootfs-packages/${NAME} petbuild-root
-    mount -t aufs -o br=../rootfs-packages/${NAME}:devx:rootfs-complete petbuild petbuild-root
-    mkdir -p petbuild-root/proc petbuild-root/sys petbuild-root/dev petbuild-root/tmp
-    mount --bind /proc petbuild-root/proc
-    mount --bind /sys petbuild-root/sys
-    mount --bind /dev petbuild-root/dev
-    mount --bind /tmp petbuild-root/tmp
-    cp -a ../rootfs-petbuilds/${NAME}/* petbuild-root/tmp/
-    chroot petbuild-root sh -c "cd /tmp && CFLAGS=\"$WOOF_CFLAGS\" CXXFLAGS=\"$WOOF_CXXFLAGS\" LDFLAGS=\"$WOOF_LDFLAGS\" MAKEFLAGS=\"$MAKEFLAGS\" ./petbuild"
-    ret=$?
-    umount -l petbuild-root/tmp
-    umount -l petbuild-root/dev
-    umount -l petbuild-root/sys
-    umount -l petbuild-root/proc
-    umount -l petbuild-root
 
-    if [ $ret -ne 0 ]; then
-        echo "ERROR: failed to build ${NAME}"
-        exit 1
+    if [ ! -d "../../local-repositories/petbuilds/${NAME}" ]; then
+        echo "Building ${NAME}"
+
+        mkdir -p ../../local-repositories/petbuilds/${NAME} petbuild-root
+        mount -t aufs -o br=../../local-repositories/petbuilds/${NAME}:devx:rootfs-complete petbuild petbuild-root
+
+        mkdir -p petbuild-root/proc petbuild-root/sys petbuild-root/dev petbuild-root/tmp
+        mount --bind /proc petbuild-root/proc
+        mount --bind /sys petbuild-root/sys
+        mount --bind /dev petbuild-root/dev
+        mount --bind /tmp petbuild-root/tmp
+
+        chroot petbuild-root update-ca-certificates
+        install -D -m 755 ../packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox petbuild-root/bin/
+        ../support/busybox_symlinks.sh petbuild-root > /dev/null
+
+        cp -a ../rootfs-petbuilds/${NAME}/* petbuild-root/tmp/
+        chroot petbuild-root sh -c "cd /tmp && CFLAGS=\"$WOOF_CFLAGS\" CXXFLAGS=\"$WOOF_CXXFLAGS\" LDFLAGS=\"$WOOF_LDFLAGS\" MAKEFLAGS=\"$MAKEFLAGS\" ./petbuild"
+        ret=$?
+        umount -l petbuild-root/tmp
+        umount -l petbuild-root/dev
+        umount -l petbuild-root/sys
+        umount -l petbuild-root/proc
+        umount -l petbuild-root
+
+        if [ $ret -ne 0 ]; then
+            echo "ERROR: failed to build ${NAME}"
+            exit 1
+        fi
+
+        rm -rf ../../local-repositories/petbuilds/${NAME}/tmp ../../local-repositories/petbuilds/${NAME}/etc/ssl ../../local-repositories/petbuilds/${NAME}/etc/resolv.conf ../../local-repositories/petbuilds/${NAME}/usr/share/man ../../local-repositories/petbuilds/${NAME}/usr/share/info ../../local-repositories/petbuilds/${NAME}/root/.wget-hsts ../../local-repositories/petbuilds/${NAME}/usr/share/icons/hicolor/icon-theme.cache
+        rmdir ../../local-repositories/petbuilds/${NAME}/* 2>/dev/null
+        find ../../local-repositories/petbuilds/${NAME} -name '.wh*' -delete
+        find ../../local-repositories/petbuilds/${NAME} -name '.git*' -delete
+
+        find ../../local-repositories/petbuilds/${NAME} -type f | while read ELF; do
+            strip --strip-all -R .note -R .comment ${ELF} 2>/dev/null
+        done
+
+        for EXTRAFILE in ../rootfs-petbuilds/${NAME}/*; do
+            case "${EXTRAFILE##*/}" in
+            petbuild|*.patch) ;;
+            *) cp -a $EXTRAFILE ../../local-repositories/petbuilds/${NAME}/
+            esac
+        done
     fi
 
-    rm -rf ../rootfs-packages/${NAME}/tmp ../rootfs-packages/${NAME}/usr/share/man ../rootfs-packages/${NAME}/usr/share/info ../rootfs-packages/${NAME}/root/.wget-hsts ../rootfs-packages/${NAME}/usr/share/icons/hicolor/icon-theme.cache
-    rmdir ../rootfs-packages/${NAME}/* 2>/dev/null
-    find ../rootfs-packages/${NAME} -name '.wh*' -delete
-    find ../rootfs-packages/${NAME} -name '.git*' -delete
-
-    find ../rootfs-packages/${NAME} -type f | while read ELF; do
-        strip --strip-all -R .note -R .comment ${ELF} 2>/dev/null
-    done
-
-    for EXTRAFILE in ../rootfs-petbuilds/${NAME}/*; do
-        case "${EXTRAFILE##*/}" in
-        petbuild|*.patch) ;;
-        *) cp -a $EXTRAFILE ../rootfs-packages/${NAME}/
-        esac
-    done
+    echo "Copying ${NAME}"
 
     rm -f rootfs-complete/pinstall.sh
-    cp -a ../rootfs-packages/${NAME}/* rootfs-complete/
+    cp -a ../../local-repositories/petbuilds/${NAME}/* rootfs-complete/
+
     if [ -f rootfs-complete/pinstall.sh ]; then
-        chroot rootfs-complete /pinstall.sh
+        cat rootfs-complete/pinstall.sh >> /tmp/rootfs_pkgs_pinstall.sh
         rm -f rootfs-complete/pinstall.sh
     fi
+
     cat ../rootfs-petbuilds/${NAME}/pet.specs >> /tmp/rootfs-packages.specs
 done

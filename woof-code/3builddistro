@@ -162,9 +162,6 @@ done < $CHOICE
 #rm $CHOICE
 #==============================
 
-#creates devx-only-installed-packages.
-./support/findwoofinstalledpkgs # moved to here so we can add /tmp/rootfs-packages.specs
-
 ### new {a,f,y}drv stuff - this creates a full 'woof-installed-packages' in {a,y}drv and subtracts the
 # {a,y}drv installed packages from the the full 'woof-installed-packages' that goes to the main sfs.
 if [ "$(echo $ADRV_INC)" != "" -o "$(echo $FDRV_INC)" != "" -o "$(echo $YDRV_INC)" != "" ];then 
@@ -262,6 +259,46 @@ fi
 PKGLIST="${PKGLIST}"
 copy_pkgs_to_build "${PKGLIST}" rootfs-complete
 echo
+
+case $BUILD_DEVX in #_00build.conf
+	yes|no) echo -n ;;
+	*) BUILD_DEVX=yes ;;
+esac
+
+if [ "$BUILD_DEVX" = "yes" ] ; then
+	cd $WKGDIR
+	echo "Building sandbox3/devx ..."
+	echo "$PKGS_SPECS_TABLE" | grep '^yes' | cut -f 2 -d '|' | sed -e 's%$%_DEV%' > /tmp/ALLGENNAMESD
+	##rm -f ./${WOOF_OUTPUT}/${DEVXSFS} 2>/dev/null #100911
+	rm -f ./sandbox3/${DEVXSFS} 2>/dev/null #100911
+	for ONEDEV in `ls -1 packages-${DISTRO_FILE_PREFIX} | grep '_DEV$' | tr '\n' ' '`
+	do
+		if grep -q -m1 "^$ONEDEV" /tmp/ALLGENNAMESD ;then
+			echo -n " ${ONEDEV}"
+			cp -a --remove-destination packages-${DISTRO_FILE_PREFIX}/${ONEDEV}/* sandbox3/devx/
+			sync
+		fi
+	done
+	rm -f /tmp/ALLGENNAMESD
+	sync
+	echo
+fi
+
+QEMU=`command -v qemu-${WOOF_TARGETARCH}-static`
+[ -n "$QEMU" ] && install -D -m 755 $QEMU rootfs-complete/${QEMU}
+
+if [ "$BUILD_DEVX" = "yes" ]; then
+	if [ "$WOOF_HOSTARCH" = "$WOOF_TARGETARCH" -o -n "$QEMU" ]; then
+		cd sandbox3
+		. ../support/petbuilds.sh
+		cd ..
+	else
+		echo "Skipping petbuilds"
+	fi
+fi
+
+#creates devx-only-installed-packages.
+./support/findwoofinstalledpkgs # moved to here so we can add /tmp/rootfs-packages.specs
 
 ### new {a,f,y}drv build - this sorts the packages and builds the {a,f,y}drv filesystem
 ADRV_INCLUDE='';FDRV_INCLUDE_='';YDRV_INCLUDE=''
@@ -389,7 +426,6 @@ done
 echo
 echo "Executing sandbox3/pinstall.sh post-install script..."
 cd $WKGDIR/sandbox3/rootfs-complete
-SAVEWKGDIR="$WKGDIR"
 $WKGDIR/sandbox3/pinstall.sh
 ( ### new {a,f,y}drv stuff - execute the '{a,f,y}pinstall.sh'
 	cd $WKGDIR/sandbox3/
@@ -422,7 +458,6 @@ SUPPORT_URL="http://www.murga-linux.com/puppy/index.php"
 BUG_REPORT_URL="https://github.com/puppylinux-woof-CE/woof-CE"
 _EOF
 
-WKGDIR="$SAVEWKGDIR"
 cd $WKGDIR
 
 #==========
@@ -517,9 +552,6 @@ rm -f rootfs-complete/etc/profile.d/*.csh* 2>/dev/null # slackware 13.1
 #-----------------------------------------
 #sanity check...
 echo
-
-QEMU=`command -v qemu-${WOOF_TARGETARCH}-static`
-[ -n "$QEMU" ] && install -D -m 755 $QEMU rootfs-complete/${QEMU}
 
 if [ "$WOOF_HOSTARCH" = "$WOOF_TARGETARCH" -o -n "$QEMU" ];then #111123
 	chroot rootfs-complete echo 'testing chroot'
@@ -730,6 +762,7 @@ fi
 )
 
 rm -rf rootfs-complete/tmp/* #121123 some above chroot operations may have left something behind in here.
+[ -n "$QEMU" ] && rm -f rootfs-complete/${QEMU}
 
 ## $DEFAULTAPPS - build.conf
 echo "Setting default apps specified in build.conf ..."
@@ -814,35 +847,55 @@ sync
 
 if [ "$BUILD_SFS" = 'yes' ]; then
 	sh $MWD/support/files2delete.sh rootfs-complete
+	#build the rootfs-complete sfs...
+	echo -e "\nNow building the main f.s., ${PUPPYSFS}..."
 	sync
-fi
+	rm -f build/${PUPPYSFS} 2>/dev/null
+	mksquashfs rootfs-complete build/${PUPPYSFS} ${SFSCOMP} #100911 110713
+	sync
+	###########
+	if [ -d adrv -o -d fdrv -o -d ydrv ];then
+		#build the {a,f,y}drive sfs...
+		for SYS_SFS in adrv fdrv ydrv
+		do
+			[ ! -d "$SYS_SFS" ] && echo "no $SYS_SFS" && continue
+			case $SYS_SFS in
+				adrv) TYPE_SYS_SFS="${ADRVSFS}";;
+				fdrv) TYPE_SYS_SFS="${FDRVSFS}";;
+				ydrv) TYPE_SYS_SFS="${YDRVSFS}";;
+			esac
+			echo -e "\nNow building the $SYS_SFS f.s., $TYPE_SYS_SFS ..."
+			sync
+			rm -f build/${TYPE_SYS_SFS} 2>/dev/null
+			mksquashfs $SYS_SFS build/${TYPE_SYS_SFS} ${SFSCOMP} #170330
+			sync
+		done
+	fi
+	#############
+	# build.conf: ADRV_SFS_URL='..' YDRV_SFS_URL='..' FDRV_SFS_URL='..'
+	for i in \
+		"adrv|${ADRV_SFS_URL}|${ADRVSFS}" \
+		"ydrv|${YDRV_SFS_URL}|${YDRVSFS}" \
+		"fdrv|${FDRV_SFS_URL}|${FDRVSFS}"
+	do
+		IFS="|" read XDRV XDRV_URL XDRV_SFS <<< "$i"
+		if [ -d "$XDRV" ] ; then
+			continue # $XDRV is created using the PKGS_SPECS
+		fi
+		if ! [ "$XDRV_URL" ] ; then
+			continue
+		fi
+		../support/download_file.sh "$XDRV_URL" ../../local-repositories/sfs build/${XDRV_SFS}
+		[ $? -ne 0 ] && ../support/download_file.sh "$XDRV_URL" ../../local-repositories/sfs build/${XDRV_SFS}
+	done
+fi # if BUILD_SFS
 
 #==================================================================================
 # DEVX.SFS
 
-#now do the devx...
-case $BUILD_DEVX in #_00build.conf
-	yes|no) echo -n ;;
-	*) BUILD_DEVX=yes ;;
-esac
-
 if [ "$BUILD_DEVX" = "yes" ] ; then
-	cd $WKGDIR
-	echo
 	echo "Building ${DEVXSFS}..."
-	echo " building sandbox3/devx ..."
-	echo "$PKGS_SPECS_TABLE" | grep '^yes' | cut -f 2 -d '|' | sed -e 's%$%_DEV%' > /tmp/ALLGENNAMESD
-	##rm -f ./${WOOF_OUTPUT}/${DEVXSFS} 2>/dev/null #100911
-	rm -f ./sandbox3/${DEVXSFS} 2>/dev/null #100911
-	for ONEDEV in `ls -1 packages-${DISTRO_FILE_PREFIX} | grep '_DEV$' | tr '\n' ' '`
-	do
-		if grep -q -m1 "^$ONEDEV" /tmp/ALLGENNAMESD ;then
-			cp -a --remove-destination packages-${DISTRO_FILE_PREFIX}/${ONEDEV}/* sandbox3/devx/
-			sync
-		fi
-	done
-	rm -f /tmp/ALLGENNAMESD
-	sync
+	cd $WKGDIR
 
 	if [ "$WOOF_HOSTARCH" = "$WOOF_TARGETARCH" -o -n "$QEMU" ] ; then
 		#earlier above i moved all invalid symlinks into the devx module, yeah but i
@@ -908,60 +961,6 @@ if [ "$BUILD_DEVX" = "yes" ] ; then
 
 	cd sandbox3
 fi
-
-if [ "$BUILD_DEVX" = "yes" ] ; then
-	. ../support/petbuilds.sh
-fi
-
-[ -n "$QEMU" ] && rm -f rootfs-complete/${QEMU}
-
-#=================================================
-. ../support/builtin_files.sh # /tmp/rootfs-packages.specs
-#=================================================
-
-if [ "$BUILD_SFS" = 'yes' ]; then
-	#build the rootfs-complete sfs...
-	echo -e "\nNow building the main f.s., ${PUPPYSFS}..."
-	sync
-	rm -f build/${PUPPYSFS} 2>/dev/null
-	mksquashfs rootfs-complete build/${PUPPYSFS} ${SFSCOMP} #100911 110713
-	sync
-	###########
-	if [ -d adrv -o -d fdrv -o -d ydrv ];then
-		#build the {a,f,y}drive sfs...
-		for SYS_SFS in adrv fdrv ydrv
-		do
-			[ ! -d "$SYS_SFS" ] && echo "no $SYS_SFS" && continue
-			case $SYS_SFS in
-				adrv) TYPE_SYS_SFS="${ADRVSFS}";;
-				fdrv) TYPE_SYS_SFS="${FDRVSFS}";;
-				ydrv) TYPE_SYS_SFS="${YDRVSFS}";;
-			esac
-			echo -e "\nNow building the $SYS_SFS f.s., $TYPE_SYS_SFS ..."
-			sync
-			rm -f build/${TYPE_SYS_SFS} 2>/dev/null
-			mksquashfs $SYS_SFS build/${TYPE_SYS_SFS} ${SFSCOMP} #170330
-			sync
-		done
-	fi
-	#############
-	# build.conf: ADRV_SFS_URL='..' YDRV_SFS_URL='..' FDRV_SFS_URL='..'
-	for i in \
-		"adrv|${ADRV_SFS_URL}|${ADRVSFS}" \
-		"ydrv|${YDRV_SFS_URL}|${YDRVSFS}" \
-		"fdrv|${FDRV_SFS_URL}|${FDRVSFS}"
-	do
-		IFS="|" read XDRV XDRV_URL XDRV_SFS <<< "$i"
-		if [ -d "$XDRV" ] ; then
-			continue # $XDRV is created using the PKGS_SPECS
-		fi
-		if ! [ "$XDRV_URL" ] ; then
-			continue
-		fi
-		../support/download_file.sh "$XDRV_URL" ../../local-repositories/sfs build/${XDRV_SFS}
-		[ $? -ne 0 ] && ../support/download_file.sh "$XDRV_URL" ../../local-repositories/sfs build/${XDRV_SFS}
-	done
-fi # if BUILD_SFS
 
 #==================================================================================
 # ISO file
