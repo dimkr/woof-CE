@@ -28,9 +28,11 @@ for i in ../rootfs-petbuilds/*; do
         mount --bind /dev petbuild-root/dev
         mount --bind /tmp petbuild-root/tmp
 
-        chroot petbuild-root update-ca-certificates
         install -D -m 755 ../packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox petbuild-root/bin/
         ../support/busybox_symlinks.sh petbuild-root > /dev/null
+
+        install -m 755 ../packages-${DISTRO_FILE_PREFIX}/ca-certificates/pinstall.sh petbuild-root/pinstall.sh
+        chroot petbuild-root /pinstall.sh > /dev/null
 
         cp -a ../rootfs-petbuilds/${NAME}/* petbuild-root/tmp/
         chroot petbuild-root sh -c "cd /tmp && CFLAGS=\"$WOOF_CFLAGS\" CXXFLAGS=\"$WOOF_CXXFLAGS\" LDFLAGS=\"$WOOF_LDFLAGS\" MAKEFLAGS=\"$MAKEFLAGS\" ./petbuild"
