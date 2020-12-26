@@ -2,6 +2,7 @@
 
 wget -O- http://distro.ibiblio.org/puppylinux/sources/g/gnome-menus-2.14.3.tar.bz2 | tar -xjf-
 cd gnome-menus-2.14.3
+sed s~fam.h~doesnotexist.h~ -i configure
 ./configure --prefix=/usr --disable-python
 make install
 
