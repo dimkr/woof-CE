@@ -6,16 +6,6 @@ on:
       - c201-v2
       - testing
       - c201-testing
-    paths:
-      - 'woof-distro/arm/debian/bullseye/**'
-      - 'woof-code/**'
-      - 'merge2out'
-      - '!**.svg'
-      - '!**.png'
-      - '!**.htm'
-      - '!**.html'
-  schedule:
-    - cron: '0 0 * * 4'
 
 jobs:
   build:
