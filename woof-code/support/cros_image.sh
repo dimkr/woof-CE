@@ -8,7 +8,12 @@ INSTALL_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-2gb-install.img
 
 SSD_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-16gb.img
 
-cat << EOF > kernel.its
+echo "console=tty1 root=PARTUUID=%U/PARTNROFF=1 init=/init rootfstype=ext4 rootwait rw" > cmdline
+vmlinuz=boot/vmlinuz
+bootloader=
+case $WOOF_TARGETARCH in
+arm) # TODO: this specific to RK3288-based models
+	cat << EOF > kernel.its
 /dts-v1/;
 
 / {
@@ -48,18 +53,22 @@ cat << EOF > kernel.its
 	};
 };
 EOF
+	mkimage -D "-I dts -O dtb -p 2048" -f kernel.its vmlinux.uimg
+	vmlinuz=vmlinux.uimg
+	dd if=/dev/zero of=bootloader.bin bs=512 count=1
+	bootloader=--bootloader bootloader.bin
+	;;
+# TODO: aarch64 support
+esac
 
-echo "console=tty1 root=PARTUUID=%U/PARTNROFF=1 init=/init rootfstype=ext4 rootwait rw" > cmdline
-mkimage -D "-I dts -O dtb -p 2048" -f kernel.its vmlinux.uimg
-dd if=/dev/zero of=bootloader.bin bs=512 count=1
 vbutil_kernel --pack build/vmlinux.kpart \
               --version 1 \
-              --vmlinuz vmlinux.uimg \
-              --arch arm \
+              --vmlinuz $vmlinuz \
+              --arch $WOOF_TARGETARCH \
               --keyblock /usr/share/vboot/devkeys/kernel.keyblock \
               --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk \
               --config cmdline \
-              --bootloader bootloader.bin
+              $bootloader
 
 mkdir -p /mnt/sdimagep2 /mnt/ssdimagep2
 
@@ -93,8 +102,12 @@ for SFS in build/*.sfs; do
 	ln -s ${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}/${BASE} /mnt/ssdimagep2/${BASE}
 done
 mkdir -p ../../local-repositories/frugalify
-[ ! -f ../../local-repositories/frugalify/frugalify-overlayfs-arm ] && wget --tries=1 --timeout=10 -O ../../local-repositories/frugalify/frugalify-overlayfs-arm  https://github.com/dimkr/frugalify/releases/latest/download/frugalify-overlayfs-arm
-install -m 755 ../../local-repositories/frugalify/frugalify-overlayfs-arm /mnt/ssdimagep2/init
+case $WOOF_TARGETARCH in
+x86*) FRUGALIFY=frugalify-overlayfs-i386 ;;
+arm|aarch64) FRUGALIFY=frugalify-overlayfs-arm ;;
+esac
+[ ! -f ../../local-repositories/frugalify/${FRUGALIFY} ] && wget --tries=1 --timeout=10 -O ../../local-repositories/frugalify/${FRUGALIFY} https://github.com/dimkr/frugalify/releases/latest/download/${FRUGALIFY}
+install -m 755 ../../local-repositories/frugalify/${FRUGALIFY} /mnt/ssdimagep2/init
 cp -a /mnt/ssdimagep2/${DISTRO_FILE_PREFIX}-${DISTRO_VERSION} /mnt/ssdimagep2/*.sfs /mnt/ssdimagep2/init /mnt/sdimagep2/
 busybox umount /mnt/sdimagep2 2>/dev/null
 busybox umount /mnt/ssdimagep2 2>/dev/null
