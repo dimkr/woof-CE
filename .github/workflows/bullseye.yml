@@ -76,7 +76,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: v${{ github.run_number }}
+        tag_name: bullseye-x86_64-v${{ github.run_number }}
         release_name: bullseye-x86_64-v${{ github.run_number }}
         draft: false
         prerelease: true
@@ -168,7 +168,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: v${{ github.run_number }}
+        tag_name: bullseye-arm-v${{ github.run_number }}
         release_name: bullseye-arm-v${{ github.run_number }}
         draft: false
         prerelease: true
