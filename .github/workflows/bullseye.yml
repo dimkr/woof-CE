@@ -25,9 +25,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: local-repositories
-        key: ${{ github.job }}-local-repositories-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ github.job }}-local-repositories-${{ github.sha }}
         restore-keys: |
-          ${{ github.job }}-local-repositories-
+          ${{ github.workflow }}-${{ github.job }}-local-repositories-
     - name: Prepare build environment
       run: |
         [ -f local-repositories/vercmp ] || (curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o ../local-repositories/vercmp -)
@@ -53,9 +53,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.ccache
-        key: ${{ github.job }}-ccache-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ github.job }}-ccache-${{ github.sha }}
         restore-keys: |
-          ${{ github.job }}-ccache-
+          ${{ github.workflow }}-${{ github.job }}-ccache-
     - name: kernel-kit
       run: |
         cd ../woof-out_x86_64_x86_64_debian_bullseye/kernel-kit
@@ -117,9 +117,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: local-repositories
-        key: ${{ github.job }}-local-repositories-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ github.job }}-local-repositories-${{ github.sha }}
         restore-keys: |
-          ${{ github.job }}-local-repositories-
+          ${{ github.workflow }}-${{ github.job }}-local-repositories-
     - name: Prepare build environment
       run: |
         [ -f local-repositories/vercmp ] || (curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o ../local-repositories/vercmp -)
@@ -145,9 +145,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.ccache
-        key: ${{ github.job }}-ccache-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ github.job }}-ccache-${{ github.sha }}
         restore-keys: |
-          ${{ github.job }}-ccache-
+          ${{ github.workflow }}-${{ github.job }}-ccache-
     - name: kernel-kit
       run: |
         cd ../woof-out_x86_64_arm_debian_bullseye/kernel-kit
