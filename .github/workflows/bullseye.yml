@@ -69,7 +69,7 @@ jobs:
       run: |
         cd ../woof-out_x86_64_x86_64_debian_bullseye
         sudo -E ./3builddistro
-        sudo gzip -1 ./woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb.img
+        sudo gzip -1 ./woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -87,7 +87,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ../woof-out_x86_64_x86_64_debian_bullseye/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb.img.gz
+        asset_path: ../woof-out_x86_64_x86_64_debian_bullseye/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img.gz
         asset_name: bullseye-8.0-ext4-2gb-x86_64.img.gz
         asset_content_type: application/octet-stream
     - name: Upload x86_64 devx
