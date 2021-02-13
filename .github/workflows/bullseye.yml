@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get install -y --no-install-recommends ccache vboot-kernel-utils cgpt extlinux
+        sudo apt-get install -y --no-install-recommends ccache vboot-kernel-utils cgpt extlinux graphicsmagick-imagemagick-compat qemu-system-x86
         ccache --set-config=hash_dir=false --set-config=max_size=2.0G
     - name: Create local-repositories
       run: |
@@ -69,7 +69,12 @@ jobs:
       run: |
         cd ../woof-out_x86_64_x86_64_debian_bullseye
         sudo -E ./3builddistro
-        sudo gzip -1 ./woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img
+    - name: Tests
+      run: |
+        cd ../ci
+        cp -f ../woof-out_x86_64_x86_64_debian_bullseye/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img test.img
+        ./test.sh test.img
+        sudo gzip -1 ../woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
