@@ -74,7 +74,7 @@ jobs:
         cd ci
         cp -f ../../woof-out_x86_64_x86_64_debian_bullseye/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img test.img
         ./test.sh test.img
-        sudo gzip -1 ../../woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img
+        sudo gzip -1 ../../woof-out_x86_64_x86_64_debian_bullseye/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
