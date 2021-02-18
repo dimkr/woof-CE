@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get install -y --no-install-recommends ccache vboot-kernel-utils cgpt extlinux graphicsmagick-imagemagick-compat qemu-system-x86
+        sudo apt-get install -y --no-install-recommends ccache vboot-kernel-utils cgpt extlinux graphicsmagick-imagemagick-compat qemu-system-x86 caca-utils
         ccache --set-config=hash_dir=false --set-config=max_size=2.0G
     - name: Create local-repositories
       run: |
