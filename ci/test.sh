@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
 command_qemu() {
     echo "$1" >> /tmp/qemu.in
@@ -44,7 +44,7 @@ for SHOT in *.pnm; do
     convert ${SHOT} /tmp/${SHOT%.pnm}.bmp
 done
 
-clear
+/bin/echo -ne "\033[2J\033[H"
 
 # wait until the desktop is ready
 wait_for_screenshot 360 quicksetup
