@@ -79,11 +79,6 @@ jobs:
       run: |
         cd ../woof-out_x86_64_x86_64_debian_bullseye
         sudo -E ./3builddistro
-    - name: Run automated tests
-      run: |
-        cd ci
-        cp -f ../../woof-out_x86_64_x86_64_debian_bullseye/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img test.img
-        ./test.sh test.img
         sudo gzip -1 ../../woof-out_x86_64_x86_64_debian_bullseye/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img
     - name: Create Release
       id: create_release
@@ -115,6 +110,11 @@ jobs:
         asset_path: ../woof-out_x86_64_x86_64_debian_bullseye/woof-output-bullseye-8.0/devx_bullseye_8.0.sfs
         asset_name: devx_bullseye_8.0-x86_64.sfs
         asset_content_type: application/octet-stream
+    - name: Run automated tests
+      run: |
+        cd ci
+        gzip -dc ../../woof-out_x86_64_x86_64_debian_bullseye/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img.gz > test.img
+        ./test.sh test.img
   arm:
     runs-on: ubuntu-20.04
     steps:
