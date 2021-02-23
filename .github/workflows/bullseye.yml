@@ -88,8 +88,6 @@ jobs:
         key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-petbuild-sources-
-    - name: Move cached petbuild-sources
-      run: sudo mv petbuild-sources ../woof-out_x86_64_x86_64_debian_bullseye/
     - name: Get cached petbuild-cache
       id: get_petbuild_cache
       uses: actions/cache@v2
@@ -98,8 +96,6 @@ jobs:
         key: ${{ github.workflow }}-${{ github.job }}-petbuild-cache-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-${{ github.job }}-petbuild-cache-
-    - name: Move cached petbuild-cache
-      run: sudo mv petbuild-cache ../woof-out_x86_64_x86_64_debian_bullseye/
     - name: Get cached petbuild-output
       id: get_petbuild_output_cache
       uses: actions/cache@v2
@@ -108,10 +104,10 @@ jobs:
         key: ${{ github.workflow }}-${{ github.job }}-petbuild-output-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-${{ github.job }}-petbuild-output-
-    - name: Move cached petbuild-output
-      run: sudo mv petbuild-output ../woof-out_x86_64_x86_64_debian_bullseye/
     - name: 3builddistro
       run: |
+        sudo chown -R root:root petbuild-output
+        sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_x86_64_debian_bullseye/
         cd ../woof-out_x86_64_x86_64_debian_bullseye
         sudo -E ./3builddistro
         sudo gzip -1 woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img
@@ -174,7 +170,7 @@ jobs:
       run: sudo apt-get install -y --no-install-recommends gcc-arm-linux-gnueabihf vboot-kernel-utils u-boot-tools device-tree-compiler cgpt qemu-user-static binfmt-support
     - name: Create cache directories
       run: |
-        mkdir -p local-repositories kernel-kit-output petbuild-sources petbuild-cache petbuild-output
+        mkdir -p local-repositories petbuild-sources petbuild-cache petbuild-output kernel-kit-output
         ln -s `pwd`/local-repositories ../local-repositories
     - name: Get cached local-repositories
       uses: actions/cache@v2
@@ -245,8 +241,6 @@ jobs:
         key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-petbuild-sources-
-    - name: Move cached petbuild-sources
-      run: sudo mv petbuild-sources ../woof-out_x86_64_arm_debian_bullseye/
     - name: Get cached petbuild-cache
       id: get_petbuild_cache
       uses: actions/cache@v2
@@ -255,8 +249,6 @@ jobs:
         key: ${{ github.workflow }}-${{ github.job }}-petbuild-cache-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-${{ github.job }}-petbuild-cache-
-    - name: Move cached petbuild-cache
-      run: sudo mv petbuild-cache ../woof-out_x86_64_arm_debian_bullseye/
     - name: Get cached petbuild-output
       id: get_petbuild_output_cache
       uses: actions/cache@v2
@@ -265,10 +257,10 @@ jobs:
         key: ${{ github.workflow }}-${{ github.job }}-petbuild-output-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-${{ github.job }}-petbuild-output-
-    - name: Move cached petbuild-output
-      run: sudo mv petbuild-output ../woof-out_x86_64_arm_debian_bullseye/
     - name: 3builddistro
       run: |
+        sudo chown -R root:root petbuild-output
+        sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_arm_debian_bullseye/
         cd ../woof-out_x86_64_arm_debian_bullseye
         sudo -E ./3builddistro
         sudo gzip -1 ./woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb.img
