@@ -1,8 +1,12 @@
 diff -rupN xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c xdg_puppy-0.7.6-9/jwm-xdgmenu/jwm-xdgmenu.c
---- xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c	2021-02-24 08:38:27.162776965 +0200
-+++ xdg_puppy-0.7.6-9/jwm-xdgmenu/jwm-xdgmenu.c	2021-02-24 08:47:19.735438775 +0200
-@@ -111,17 +111,29 @@ process_directory(GMenuTreeDirectory *di
- 	int hasSeparator = 0;
+--- xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c	2021-02-24 09:26:15.392214890 +0200
++++ xdg_puppy-0.7.6-9/jwm-xdgmenu/jwm-xdgmenu.c	2021-02-24 09:28:01.540157679 +0200
+@@ -108,20 +108,34 @@ show_help()
+ void
+ process_directory(GMenuTreeDirectory *directory, char *menheight)
+ {
+-	int hasSeparator = 0;
++	int hasSeparator = 0, first = 1;
  	char *mheight = menheight;
  	
 -  g_printf("<Menu label=\"%s\" icon=\"%s\" height=\"%s\">\n",
@@ -19,7 +23,9 @@ diff -rupN xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c xdg_puppy-0.7.6-9/jw
 +  /* if the menu has no items, don't show an empty menu */
 +  for (l = entryList; l; l = l->next)
 +  {
-+    if (l->entryType == GMENU_TREE_ITEM_ENTRY)
++    GMenuTreeItem *item = l->data;
++
++    if (gmenu_tree_item_get_type (GMENU_TREE_ITEM(item)) == GMENU_TREE_ITEM_ENTRY)
 +    {
 +      goto start;
 +    }
@@ -36,7 +42,36 @@ diff -rupN xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c xdg_puppy-0.7.6-9/jw
    for (l = entryList; l; l = l->next)
    {
  
-@@ -156,6 +168,7 @@ process_directory(GMenuTreeDirectory *di
+@@ -134,18 +148,26 @@ process_directory(GMenuTreeDirectory *di
+ 		case GMENU_TREE_ITEM_DIRECTORY:
+ 		  if (hasSeparator)
+ 		  {
+-				process_separator(GMENU_TREE_SEPARATOR(item));
++				if (!first)
++				{
++					process_separator(GMENU_TREE_SEPARATOR(item));
++				}
+ 				hasSeparator = 0;
+ 		  }
+ 			process_directory(GMENU_TREE_DIRECTORY(item),menheight);
++			first = 0;
+ 			break;
+ 		case GMENU_TREE_ITEM_ENTRY:
+ 		  if (hasSeparator)
+ 		  {
+-				process_separator(GMENU_TREE_SEPARATOR(item));
++				if (!first)
++				{
++					process_separator(GMENU_TREE_SEPARATOR(item));
++				}
+ 				hasSeparator = 0;
+ 		  }
+ 			process_entry(GMENU_TREE_ENTRY(item));
++			first = 0;
+ 			break;
+ 		case GMENU_TREE_ITEM_SEPARATOR:
+ 			hasSeparator = 1;
+@@ -156,6 +178,7 @@ process_directory(GMenuTreeDirectory *di
  
    }
    g_printf("</Menu>\n");
