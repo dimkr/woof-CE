@@ -1,0 +1,45 @@
+diff -rupN xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c xdg_puppy-0.7.6-9/jwm-xdgmenu/jwm-xdgmenu.c
+--- xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c	2021-02-24 08:38:27.162776965 +0200
++++ xdg_puppy-0.7.6-9/jwm-xdgmenu/jwm-xdgmenu.c	2021-02-24 09:06:04.012756739 +0200
+@@ -108,7 +108,7 @@ show_help()
+ void
+ process_directory(GMenuTreeDirectory *directory, char *menheight)
+ {
+-	int hasSeparator = 0;
++	int hasSeparator = 0, first = 1;
+ 	char *mheight = menheight;
+ 	
+   g_printf("<Menu label=\"%s\" icon=\"%s\" height=\"%s\">\n",
+@@ -134,7 +134,10 @@ process_directory(GMenuTreeDirectory *di
+ 		case GMENU_TREE_ITEM_DIRECTORY:
+ 		  if (hasSeparator)
+ 		  {
+-				process_separator(GMENU_TREE_SEPARATOR(item));
++				if (!first)
++				{
++					process_separator(GMENU_TREE_SEPARATOR(item));
++				}
+ 				hasSeparator = 0;
+ 		  }
+ 			process_directory(GMENU_TREE_DIRECTORY(item),menheight);
+@@ -142,7 +145,10 @@ process_directory(GMenuTreeDirectory *di
+ 		case GMENU_TREE_ITEM_ENTRY:
+ 		  if (hasSeparator)
+ 		  {
+-				process_separator(GMENU_TREE_SEPARATOR(item));
++				if (!first)
++				{
++					process_separator(GMENU_TREE_SEPARATOR(item));
++				}
+ 				hasSeparator = 0;
+ 		  }
+ 			process_entry(GMENU_TREE_ENTRY(item));
+@@ -152,6 +158,8 @@ process_directory(GMenuTreeDirectory *di
+ 			break;
+ 	}
+ 
++	first = 0;
++
+     gmenu_tree_item_unref (item);
+ 
+   }
