@@ -1,0 +1,46 @@
+diff -rupN xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c xdg_puppy-0.7.6-9/jwm-xdgmenu/jwm-xdgmenu.c
+--- xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c	2021-02-24 08:38:27.162776965 +0200
++++ xdg_puppy-0.7.6-9/jwm-xdgmenu/jwm-xdgmenu.c	2021-02-24 08:47:19.735438775 +0200
+@@ -111,17 +111,29 @@ process_directory(GMenuTreeDirectory *di
+ 	int hasSeparator = 0;
+ 	char *mheight = menheight;
+ 	
+-  g_printf("<Menu label=\"%s\" icon=\"%s\" height=\"%s\">\n",
+-            gmenu_tree_directory_get_name(directory),
+-            gmenu_tree_directory_get_icon(directory),
+-            mheight);
+-
+   GMenuTreeItemType entryType;
+ 
+   GSList *entryList = gmenu_tree_directory_get_contents (directory);
+ 
+   GSList *l;
+ 
++  /* if the menu has no items, don't show an empty menu */
++  for (l = entryList; l; l = l->next)
++  {
++    if (l->entryType == GMENU_TREE_ITEM_ENTRY)
++    {
++      goto start;
++    }
++  }
++
++  goto done;
++
++start:
++  g_printf("<Menu label=\"%s\" icon=\"%s\" height=\"%s\">\n",
++            gmenu_tree_directory_get_name(directory),
++            gmenu_tree_directory_get_icon(directory),
++            mheight);
++
+   for (l = entryList; l; l = l->next)
+   {
+ 
+@@ -156,6 +168,7 @@ process_directory(GMenuTreeDirectory *di
+ 
+   }
+   g_printf("</Menu>\n");
++done:
+   g_slist_free (entryList);
+ }
+ 
