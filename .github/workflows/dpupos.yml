@@ -1,4 +1,4 @@
-name: bullseye
+name: dpupos
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - c201-v2
       - testing
     paths:
-      - 'woof-distro/arm/debian/bullseye/**'
-      - 'woof-distro/x86_64/debian/bullseye/**'
+      - 'woof-distro/arm/debian/dpupos/**'
+      - 'woof-distro/x86_64/debian/dpupos/**'
       - 'woof-code/**'
       - 'merge2out'
       - 'ci/**'
@@ -19,7 +19,7 @@ on:
     - cron: '0 0 * * 4'
 
 jobs:
-  x86_64-cros:
+  x86_64:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout code
@@ -51,14 +51,14 @@ jobs:
       run: sudo chown -R root:root local-repositories
     - name: merge2out
       run: |
-        (echo 3; echo 1; echo 1; echo) | sudo -E ./merge2out
+        (echo 3; echo 1; echo 2; echo) | sudo -E ./merge2out
     - name: 0setup
       run: |
-        cd ../woof-out_x86_64_x86_64_debian_bullseye-cros
+        cd ../woof-out_x86_64_x86_64_debian_dpupos
         sudo ./0setup
     - name: 1download
       run: |
-        cd ../woof-out_x86_64_x86_64_debian_bullseye-cros
+        cd ../woof-out_x86_64_x86_64_debian_dpupos
         sudo ./1download
     - name: Get cached kernel-kit output
       id: get_kernel_kit_output_cache
@@ -69,7 +69,7 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-${{ github.job }}-kernel-kit-output-
     - name: Move cached kernel-kit output
-      run: sudo mv kernel-kit-output ../woof-out_x86_64_x86_64_debian_bullseye-cros/kernel-kit/output
+      run: sudo mv kernel-kit-output ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit/output
     - name: Install ccache
       if: steps.get_kernel_kit_output_cache.outputs.cache-hit != 'true'
       run: |
@@ -86,12 +86,12 @@ jobs:
     - name: kernel-kit
       if: steps.get_kernel_kit_output_cache.outputs.cache-hit != 'true'
       run: |
-        cd ../woof-out_x86_64_x86_64_debian_bullseye-cros/kernel-kit
-        sudo cp -f cros-build-x86_64.conf build.conf
+        cd ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit
+        sudo cp -f dpupos-build-x86_64.conf build.conf
         sudo -E ./build.sh
     - name: 2createpackages
       run: |
-        cd ../woof-out_x86_64_x86_64_debian_bullseye-cros
+        cd ../woof-out_x86_64_x86_64_debian_dpupos
         echo | sudo ./2createpackages
     - name: Get cached petbuild-sources
       id: get_petbuild_sources_cache
@@ -120,19 +120,19 @@ jobs:
     - name: 3builddistro
       run: |
         sudo chown -R root:root petbuild-output
-        sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_x86_64_debian_bullseye-cros/
-        cd ../woof-out_x86_64_x86_64_debian_bullseye-cros
+        sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_x86_64_debian_dpupos/
+        cd ../woof-out_x86_64_x86_64_debian_dpupos
         sudo -E ./3builddistro
     - name: Run automated tests
       run: |
         cd ci
-        cp -f ../../woof-out_x86_64_x86_64_debian_bullseye-cros/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img test.img
+        cp -f ../../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-8.0/dpupos-8.0-ext4-2gb-legacy.img test.img
         timeout 650 ./test.sh test.img
     - name: Move cached directories
       run: |
-        sudo mv ../woof-out_x86_64_x86_64_debian_bullseye-cros/petbuild-{sources,cache,output} .
-        sudo mv ../woof-out_x86_64_x86_64_debian_bullseye-cros/kernel-kit/output kernel-kit-output
-  arm-cros:
+        sudo mv ../woof-out_x86_64_x86_64_debian_dpupos/petbuild-{sources,cache,output} .
+        sudo mv ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit/output kernel-kit-output
+  arm:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout code
@@ -167,11 +167,11 @@ jobs:
         (echo 1; echo 1; echo; echo) | sudo -E ./merge2out
     - name: 0setup
       run: |
-        cd ../woof-out_x86_64_arm_debian_bullseye-cros
+        cd ../woof-out_x86_64_arm_debian_dpupos
         sudo ./0setup
     - name: 1download
       run: |
-        cd ../woof-out_x86_64_arm_debian_bullseye-cros
+        cd ../woof-out_x86_64_arm_debian_dpupos
         sudo ./1download
     - name: Get cached kernel-kit output
       id: get_kernel_kit_output_cache
@@ -182,7 +182,7 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-${{ github.job }}-kernel-kit-output-
     - name: Move cached kernel-kit output
-      run: sudo mv kernel-kit-output ../woof-out_x86_64_arm_debian_bullseye-cros/kernel-kit/output
+      run: sudo mv kernel-kit-output ../woof-out_x86_64_arm_debian_dpupos/kernel-kit/output
     - name: Install ccache
       if: steps.get_kernel_kit_output_cache.outputs.cache-hit != 'true'
       run: |
@@ -199,12 +199,12 @@ jobs:
     - name: kernel-kit
       if: steps.get_kernel_kit_output_cache.outputs.cache-hit != 'true'
       run: |
-        cd ../woof-out_x86_64_arm_debian_bullseye-cros/kernel-kit
-        sudo cp -f cros-build-arm.conf build.conf
+        cd ../woof-out_x86_64_arm_debian_dpupos/kernel-kit
+        sudo cp -f dpupos-build-arm.conf build.conf
         sudo -E ./build.sh
     - name: 2createpackages
       run: |
-        cd ../woof-out_x86_64_arm_debian_bullseye-cros
+        cd ../woof-out_x86_64_arm_debian_dpupos
         echo | sudo ./2createpackages
     - name: Get cached petbuild-sources
       id: get_petbuild_sources_cache
@@ -233,10 +233,10 @@ jobs:
     - name: 3builddistro
       run: |
         sudo chown -R root:root petbuild-output
-        sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_arm_debian_bullseye-cros/
-        cd ../woof-out_x86_64_arm_debian_bullseye-cros
+        sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_arm_debian_dpupos/
+        cd ../woof-out_x86_64_arm_debian_dpupos
         sudo -E ./3builddistro
     - name: Move cached directories
       run: |
-        sudo mv ../woof-out_x86_64_arm_debian_bullseye-cros/petbuild-{sources,cache,output} .
-        sudo mv ../woof-out_x86_64_arm_debian_bullseye-cros/kernel-kit/output kernel-kit-output
+        sudo mv ../woof-out_x86_64_arm_debian_dpupos/petbuild-{sources,cache,output} .
+        sudo mv ../woof-out_x86_64_arm_debian_dpupos/kernel-kit/output kernel-kit-output
