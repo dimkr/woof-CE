@@ -119,8 +119,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: bullseye-x86_64-v${{ github.run_number }}
-        release_name: bullseye-x86_64-v${{ github.run_number }}
+        tag_name: dpupos-8.0-x86_64-v${{ github.run_number }}
+        release_name: dpupos-8.0-x86_64-v${{ github.run_number }}
         draft: false
         prerelease: true
     - name: Upload x86_64 image
@@ -142,6 +142,15 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
         asset_path: ../woof-out_x86_64_x86_64_debian_bullseye-cros/woof-output-dpupos-8.0/devx_dpupos_8.0.sfs
         asset_name: devx_dpupos_8.0-x86_64.sfs
+        asset_content_type: application/octet-stream
+    - name: Upload x86_64 archive
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: ../woof-out_x86_64_x86_64_debian_bullseye-cros/woof-output-dpupos-8.0/dpupos-8.0.tar
+        asset_name: dpupos-8.0.tar
         asset_content_type: application/octet-stream
     - name: Run automated tests
       run: |
@@ -278,8 +287,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: bullseye-arm-v${{ github.run_number }}
-        release_name: bullseye-arm-v${{ github.run_number }}
+        tag_name: dpupos-8.0-arm-v${{ github.run_number }}
+        release_name: dpupos-8.0-arm-v${{ github.run_number }}
         draft: false
         prerelease: true
     - name: Upload C201 image
@@ -301,4 +310,13 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
         asset_path: ../woof-out_x86_64_arm_debian_bullseye-cros/woof-output-dpupos-8.0/devx_dpupos_8.0.sfs
         asset_name: devx_dpupos_8.0-arm.sfs
+        asset_content_type: application/octet-stream
+    - name: Upload C201 archive
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: ../woof-out_x86_64_arm_debian_bullseye-cros/woof-output-dpupos-8.0/dpupos-8.0.tar
+        asset_name: dpupos-8.0.tar
         asset_content_type: application/octet-stream
