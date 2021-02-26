@@ -1,0 +1,137 @@
+#!/bin/sh
+
+# this script looks for the newest GitHub release that matches
+# DISTRO_FILE_PREFIX, DISTRO_VERSION and DISTRO_TARGETARCH, downloads all assets
+# named *.sfs and vmlinuz to a new directory on the boot partition, then
+# replaces the symlinks at the partition root with symlinks to files under that
+# directory
+
+. /etc/rc.d/PUPSTATE
+
+if [ $PUPMODE -ne 6 ]; then
+    echo "Update is supported only with PUPMODE=6"
+    exit 1
+fi
+
+. /etc/DISTRO_SPECS
+. /etc/pm6_updater.conf
+
+echo "Listing available releases"
+
+RELEASES=`wget -O- --header "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${UPDATE_REPO}/releases`
+
+# choose the first compatible release
+COUNT=`echo "$RELEASES" | jq length`
+if [ -z "$COUNT" ] || [ $COUNT -eq 0 ]; then
+    echo "Failed to list releases"
+    exit 1
+fi
+RELEASE_CHOICE=-1
+for i in `seq 0 $(($COUNT - 1))`; do
+    # installations in the dev release channel update to any draft or prerelease or release
+    DRAFT=`echo "$RELEASES" | jq -r ".[$i].draft"`
+    [ "$DRAFT" = true -a "$RELEASE_CHANNEL" != dev ] && continue
+
+    # installations in the beta release channel update to any prerelease or release
+    PRERELEASE=`echo "$RELEASES" | jq -r ".[$i].prerelease"`
+    [ "$PRERELEASE" = true -a "$RELEASE_CHANNEL" = stable ] && continue
+
+    RELEASE_NAME=`echo "$RELEASES" | jq -r ".[$i].name"`
+    case "$RELEASE_NAME" in
+    ${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-${DISTRO_TARGETARCH}-*)
+        echo "Selecting $RELEASE_NAME"
+        RELEASE_CHOICE=$i
+        break
+        ;;
+    esac
+done
+
+if [ $RELEASE_CHOICE -lt 0 ]; then
+    echo "No $RELEASE_CHANNEL update available"
+    exit 1
+fi
+
+RELEASE_TAG=`echo "$RELEASES" | jq -r ".[$RELEASE_CHOICE].tag_name"`
+
+# make sure we haven't updated yet
+if [ -e "/initrd/${RELEASE_TAG}" ]; then
+    echo "/initrd/${RELEASE_TAG} already exists"
+    exit 1
+fi
+
+mkdir "/initrd/${RELEASE_TAG}"
+if [ $? -ne 0 ]; then
+    echo "Failed to create /initrd/${RELEASE_TAG}"
+    exit 1
+fi
+
+RELEASE_ASSETS=`echo "$RELEASES" | jq -r ".[$RELEASE_CHOICE].assets"`
+COUNT=`echo "$RELEASE_ASSETS" | jq length`
+
+# download the kernel and every SFS in the release
+ASSET_CHOICE=-1
+for i in `seq 0 $(($COUNT - 1))`; do
+    ASSET_NAME=`echo "$RELEASE_ASSETS" | jq -r ".[$i].name"`
+
+    if [ "$ASSET_NAME" = "${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}.tar" ]; then
+        ASSET_CHOICE=$i
+        break
+    fi
+done
+
+if [ $ASSET_CHOICE -lt 0 ]; then
+    echo "No $RELEASE_CHANNEL update available"
+    rm -rf "/initrd/${RELEASE_TAG}"
+    exit 1
+fi
+
+cd "/initrd/${RELEASE_TAG}"
+
+echo "Downloading $ASSET_NAME"
+ASSET_URL=`echo "$RELEASE_ASSETS" | jq -r ".[$ASSET_CHOICE].url"`
+wget -c --header "Accept: application/octet-stream" "$ASSET_URL"
+if [ $? -ne 0 ]; then
+    echo "Failed to download $ASSET_NAME"
+    cd ..
+    rm -rf "${RELEASE_TAG}"
+    exit 1
+fi
+
+tar xf "${ASSET_NAME}"
+if [ $? -ne 0 ]; then
+    echo "Failed to update to $RELEASE_TAG"
+    cd ..
+    rm -rf "${RELEASE_TAG}"
+    exit 1
+fi
+
+rm -f "${ASSET_NAME}"
+
+# it's important to make sure all assets are flushed to disk
+echo "Flushing /initrd/${RELEASE_TAG} to disk"
+sync
+
+# update the SFS symlinks on the boot partition
+for NAME in *.sfs; do
+    echo "Updating $NAME"
+    rm -f "../${NAME}"
+    ln -s "${RELEASE_TAG}/${NAME}" "../${NAME}"
+done
+
+echo "Updating the kernel"
+if [ -e ../vmlinuz ]; then
+    ln -s "${RELEASE_TAG}/vmlinuz" ../vmlinuz
+else
+    # TODO: detect the partition instead of relying on a fixed UUID
+    dd if=vmlinux.kpart of=/dev/disk/by-partuuid/b361601a-103d-374c-ba2c-35b8533a199d
+    rm -f vmlinuz vmlinux.kpart
+fi
+
+echo "Updating frugalify"
+mv -f init ../init
+chmod 755 ../init
+
+# if the files are not flushed to disk, we're left in non-bootable state
+sync
+
+# TODO: rc.update needs to be triggered in the first boot after update
