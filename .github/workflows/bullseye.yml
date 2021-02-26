@@ -112,7 +112,7 @@ jobs:
         sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_x86_64_debian_bullseye-cros/
         cd ../woof-out_x86_64_x86_64_debian_bullseye-cros
         sudo -E ./3builddistro
-        sudo gzip -1 woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img
+        sudo gzip -1 woof-output-dpupos-8.0/dpupos-8.0-ext4-2gb-legacy.img
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -130,8 +130,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ../woof-out_x86_64_x86_64_debian_bullseye-cros/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img.gz
-        asset_name: bullseye-8.0-ext4-2gb-x86_64.img.gz
+        asset_path: ../woof-out_x86_64_x86_64_debian_bullseye-cros/woof-output-dpupos-8.0/dpupos-8.0-ext4-2gb-legacy.img.gz
+        asset_name: dpupos-8.0-ext4-2gb-x86_64.img.gz
         asset_content_type: application/octet-stream
     - name: Upload x86_64 devx
       id: upload-devx
@@ -140,13 +140,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ../woof-out_x86_64_x86_64_debian_bullseye-cros/woof-output-bullseye-8.0/devx_bullseye_8.0.sfs
-        asset_name: devx_bullseye_8.0-x86_64.sfs
+        asset_path: ../woof-out_x86_64_x86_64_debian_bullseye-cros/woof-output-dpupos-8.0/devx_dpupos_8.0.sfs
+        asset_name: devx_dpupos_8.0-x86_64.sfs
         asset_content_type: application/octet-stream
     - name: Run automated tests
       run: |
         cd ci
-        gzip -dc ../../woof-out_x86_64_x86_64_debian_bullseye-cros/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb-legacy.img.gz > test.img
+        gzip -dc ../../woof-out_x86_64_x86_64_debian_bullseye-cros/woof-output-dpupos-8.0/dpupos-8.0-ext4-2gb-legacy.img.gz > test.img
         timeout 650 ./test.sh test.img || :
         tar -c /tmp/*.pnm /tmp/*.bmp | gzip -9 > /tmp/screenshots.tar.gz
     - name: Upload screenshots
@@ -267,7 +267,7 @@ jobs:
         sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_arm_debian_bullseye-cros/
         cd ../woof-out_x86_64_arm_debian_bullseye-cros
         sudo -E ./3builddistro
-        sudo gzip -1 ./woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb.img
+        sudo gzip -1 ./woof-output-dpupos-8.0/dpupos-8.0-ext4-2gb.img
     - name: Move cached directories
       run: |
         sudo mv ../woof-out_x86_64_arm_debian_bullseye-cros/petbuild-{sources,cache,output} .
@@ -289,8 +289,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ../woof-out_x86_64_arm_debian_bullseye-cros/woof-output-bullseye-8.0/bullseye-8.0-ext4-2gb.img.gz
-        asset_name: bullseye-8.0-ext4-2gb-arm.img.gz
+        asset_path: ../woof-out_x86_64_arm_debian_bullseye-cros/woof-output-dpupos-8.0/dpupos-8.0-ext4-2gb.img.gz
+        asset_name: dpupos-8.0-ext4-2gb-arm.img.gz
         asset_content_type: application/octet-stream
     - name: Upload C201 devx
       id: upload-devx
@@ -299,6 +299,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-        asset_path: ../woof-out_x86_64_arm_debian_bullseye-cros/woof-output-bullseye-8.0/devx_bullseye_8.0.sfs
-        asset_name: devx_bullseye_8.0-arm.sfs
+        asset_path: ../woof-out_x86_64_arm_debian_bullseye-cros/woof-output-dpupos-8.0/devx_dpupos_8.0.sfs
+        asset_name: devx_dpupos_8.0-arm.sfs
         asset_content_type: application/octet-stream
