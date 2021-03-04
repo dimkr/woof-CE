@@ -13,17 +13,17 @@ build() {
 
     tar -xJf menu-cache-1.1.0.tar.xz
     cd menu-cache-1.1.0
-    ./configure --prefix=/usr --libexecdir=/usr/lib/pcmanfm
+    PKG_CONFIG_PATH="/usr/lib/pkgconfig:$PKG_CONFIG_PATH" ./configure --prefix=/usr --libexecdir=/usr/lib/pcmanfm
     make install
     cd ..
 
     cd libfm-1.3.2
-    ./configure --prefix=/usr --libexecdir=/usr/lib/pcmanfm --disable-old-actions --with-gtk=3
+    PKG_CONFIG_PATH="/usr/lib/pkgconfig:$PKG_CONFIG_PATH" ./configure --prefix=/usr --libexecdir=/usr/lib/pcmanfm --disable-old-actions --with-gtk=3
     make install
     cd ..
 
     tar -xJf pcmanfm-1.3.2.tar.xz
     cd pcmanfm-1.3.2
-    ./configure --prefix=/usr --with-gtk=3
+    PKG_CONFIG_PATH="/usr/lib/pkgconfig:$PKG_CONFIG_PATH" ./configure --prefix=/usr --with-gtk=3
     make install
 }
