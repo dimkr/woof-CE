@@ -29,5 +29,5 @@ build() {
     make install
 
     rm -f /usr/share/applications/{libfm-pref-apps,lxshortcut,pcmanfm-desktop-pref}.desktop
-    sed -e 's/^Categories=.*/Categories=FileManager/' -e 's/^Name=File Manager PCManFM$/Name=PCManFM file manager/' -e 's/^Icon=.*/Icon=/usr/share/pixmaps/puppy/open.svg/' -e '/^Name\[/d' -i /usr/share/applications/pcmanfm.desktop
+    sed -e 's/^Categories=.*/Categories=FileManager/' -e 's/^Name=File Manager PCManFM$/Name=PCManFM file manager/' -e 's~^Icon=.*~Icon=/usr/share/pixmaps/puppy/open.svg~' -e '/^Name\[/d' -i /usr/share/applications/pcmanfm.desktop
 }
