@@ -199,7 +199,7 @@ no|geany-plugins|geany-plugins,geany-common|exe,dev,doc,nls|
 no|get_libreoffice||exe
 yes|getcurpos||exe
 yes|gettext_devxonly|gettext-base,gettext|exe>dev,dev,doc,nls
-yes|gettext|gettext,gettext-base,libasprintf0v5,libasprintf-dev,libgettextpo-dev|exe,dev>null,doc>null,nls>null| #MERGED 20150717-08
+yes|gettext|gettext,gettext-base,libasprintf0v5,libasprintf-dev,libgettextpo0,libgettextpo-dev|exe,dev>null,doc>null,nls>null| #MERGED 20150717-08
 yes|gexec|gexec|exe,dev>null,doc,nls
 no|gftp|gftp-gtk,gftp-common|exe,dev>null,doc,nls
 no|ghostscript|ghostscript,ghostscript-x,libgs9,libgs9-common,libgs-dev|exe,dev,doc,nls|
@@ -397,7 +397,7 @@ no|libgeoip|libgeoip1,libgeoip-dev|exe,dev,doc,nls
 yes|libgif|libgif7,libgif-dev|exe,dev,doc,nls
 yes|libglade2|libglade2-0,libglade2-dev|exe,dev,doc,nls
 no|libgles|libgles2,libgles2-mesa-dev|exe,dev,doc,nls
-yes|libglvnd|libglvnd0,libglvnd-dev,libgles-dev,libglvnd-core-dev,libgl1,libegl1,libglx0,libglx-mesa0,libglx-dev,libgl-dev,libegl-dev,libopengl0|exe,dev,doc,nls
+yes|libglvnd|libglvnd0,libglvnd-dev,libopengl-dev,libgles-dev,libglvnd-core-dev,libgl1,libegl1,libglx0,libglx-mesa0,libglx-dev,libgl-dev,libegl-dev,libopengl0,libegl1-mesa-dev|exe,dev,doc,nls
 no|libgnome|libgnome-2-0,libgnome2-0,libgnome2-bin,libgnome2-common,libgnome2-dev|exe,dev,doc,nls| 
 yes|libgnomecanvas|libgnomecanvas2-common,libgnomecanvas2-0,libgnomecanvas2-dev|exe,dev,doc,nls| 
 no|libgnome-keyring|libgnome-keyring-common,libgnome-keyring0|exe,dev,doc,nls|
