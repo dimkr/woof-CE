@@ -221,7 +221,7 @@ yes|gmp|libgmp10,libgmpxx4ldbl,libgmp-dev,libgmp3-dev|exe,dev,doc,nls| #in preci
 yes|gnet||exe,dev,doc,nls
 no|gnome-doc-utils|gnome-doc-utils|exe>dev,dev,doc,nls|+python-libxml2
 no|gnome-keyring|libgnome-keyring0,libgnome-keyring-dev|exe,dev,doc,nls
-yes|gnome-menus||exe,dev,doc,nls| #use my pet, version 2.14.3, needed by xdg_puppy.
+no|gnome-menus||exe,dev,doc,nls| #use my pet, version 2.14.3, needed by xdg_puppy.
 no|gnome-vfs|libgnomevfs2-0,libgnomevfs2-dev,libgnomevfs2-common|exe,dev,doc,nls
 no|gnumeric||exe,dev,doc,nls| #gtk2
 yes|gnutls|gnutls-bin,libgnutls30,libgnutls28-dev,libopts25,libopts25-dev,libgnutls-openssl27,libgnutls-dane0,libunbound8,libgnutlsxx28,libneon27-gnutls|exe,dev,doc,nls
