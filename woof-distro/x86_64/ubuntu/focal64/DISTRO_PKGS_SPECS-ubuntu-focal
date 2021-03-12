@@ -397,7 +397,7 @@ no|libgeoip|libgeoip1,libgeoip-dev|exe,dev,doc,nls
 yes|libgif|libgif7,libgif-dev|exe,dev,doc,nls
 yes|libglade2|libglade2-0,libglade2-dev|exe,dev,doc,nls
 no|libgles|libgles2,libgles2-mesa-dev|exe,dev,doc,nls
-yes|libglvnd|libglvnd0,libglvnd-dev,libglvnd-core-dev,libgl1,libegl1,libglx0,libglx-mesa0,libglx-dev,libgl-dev,libegl-dev,libopengl0|exe,dev,doc,nls
+yes|libglvnd|libglvnd0,libglvnd-dev,libgles-dev,libglvnd-core-dev,libgl1,libegl1,libglx0,libglx-mesa0,libglx-dev,libgl-dev,libegl-dev,libopengl0|exe,dev,doc,nls
 no|libgnome|libgnome-2-0,libgnome2-0,libgnome2-bin,libgnome2-common,libgnome2-dev|exe,dev,doc,nls| 
 yes|libgnomecanvas|libgnomecanvas2-common,libgnomecanvas2-0,libgnomecanvas2-dev|exe,dev,doc,nls| 
 no|libgnome-keyring|libgnome-keyring-common,libgnome-keyring0|exe,dev,doc,nls|
@@ -607,7 +607,7 @@ yes|patchutils|patchutils|exe>dev,dev,doc,nls
 no|pcd||exe
 yes|pciutils|pciutils,libpci3,libpci-dev|exe,dev,doc,nls
 yes|pcmciautils|pcmciautils|exe,dev,doc,nls
-yes|pcre|libpcre16-3,libpcre3,libpcre2-16-0,libpcre2-dev,libpcre32-3,libpcre3-dev,libpcrecpp0v5|exe,dev,doc,nls| #MERGED 20150717-08
+yes|pcre|libpcre16-3,libpcre3,libpcre2-16-0,libpcre2-dev,libpcre2-32-0,libpcre2-posix2,libpcre32-3,libpcre3-dev,libpcrecpp0v5|exe,dev,doc,nls| #MERGED 20150717-08
 no|pdiag||exe| #diagnostic tool created by rerwin.
 no|pdvdrsab||exe
 no|peasydisc||exe
