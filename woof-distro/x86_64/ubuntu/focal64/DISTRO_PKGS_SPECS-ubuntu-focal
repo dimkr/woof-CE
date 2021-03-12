@@ -71,7 +71,7 @@ no|bcrypt||exe
 yes|bdb|libdb5.3,libdb-dev,libdb5.3-dev|exe,dev,doc,nls
 no|beediff||exe,dev,doc,nls
 yes|bin86|bin86|exe>dev,dev,doc,nls
-yes|binutils|binutils,libbinutils,binutils-common,binutils-x86-64-linux-gnu,binutils-dev|exe>dev,dev,doc,nls
+yes|binutils|binutils,libbinutils,binutils-common,binutils-x86-64-linux-gnu,binutils-dev,libctf0,libctf-nobfd0|exe>dev,dev,doc,nls
 yes|bison|bison|exe>dev,dev,doc,nls
 no|bluez||exe,dev,doc,nls
 no|bluez-alsa||exe,dev,doc,nls
