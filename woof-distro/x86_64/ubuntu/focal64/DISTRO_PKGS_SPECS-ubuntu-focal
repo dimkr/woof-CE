@@ -52,7 +52,7 @@ yes|aspell|libaspell15,libaspell-dev|exe,dev,doc,nls| #needed by abiword.
 no|asunder||exe,dev,doc,nls| 
 yes|atk|gir1.2-atk-1.0,libatk1.0-0,libatk1.0-data,libatk1.0-dev|exe,dev,doc,nls|
 no|atkmm|libatkmm-1.6-1v5,libatkmm-1.6-dev|exe,dev,doc,nls
-no|at-spi2-atk|libatspi2.0-0,libatspi2.0-dev,libatk-bridge2.0-0,libatk-adaptor,libatk-bridge2.0-dev|exe,dev,doc,nls| #needed by gtk+3.
+yes|at-spi2-atk|libatspi2.0-0,libatspi2.0-dev,libatk-bridge2.0-0,libatk-adaptor,libatk-bridge2.0-dev|exe,dev,doc,nls| #needed by gtk+3.
 yes|attr|libattr1,libattr1-dev|exe,dev,doc,nls
 yes|audiofile|libaudiofile1,libaudiofile-dev|exe,dev,doc,nls
 yes|audit|libaudit-common,libaudit1,libaudit-dev|exe,dev,doc,nls| #needed by xorg.
