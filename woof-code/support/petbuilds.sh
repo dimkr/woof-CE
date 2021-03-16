@@ -244,7 +244,6 @@ done
 [ $HAVE_ROOTFS -eq 1 ] && rm -rf petbuild-rootfs-complete
 
 for NAME in $PKGS; do
-    echo "Copying ${NAME}"
     mkdir -p ../packages-${DISTRO_FILE_PREFIX}/${NAME}
     cp -a ../petbuild-output/${NAME}-latest/* ../packages-${DISTRO_FILE_PREFIX}/${NAME}/
 
@@ -255,5 +254,5 @@ for NAME in $PKGS; do
         TARGET=adrv
     fi
 
-    copy_pkgs_to_build "$NAME" $TARGET
+    (cd .. && copy_pkgs_to_build "$NAME" $TARGET)
 done
