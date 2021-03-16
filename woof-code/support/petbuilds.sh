@@ -245,14 +245,8 @@ done
 
 for NAME in $PKGS; do
     echo "Copying ${NAME}"
-
-    cp -a ../petbuild-output/${NAME}-latest/* rootfs-complete/
-
-    if [ -f ../rootfs-petbuilds/${NAME}/pinstall.sh ]; then
-        echo >> /tmp/rootfs_pkgs_pinstall.sh
-        cat ../rootfs-petbuilds/${NAME}/pinstall.sh >> /tmp/rootfs_pkgs_pinstall.sh
-        echo >> /tmp/rootfs_pkgs_pinstall.sh
-    fi
-
-    cat ../rootfs-petbuilds/${NAME}/pet.specs >> /tmp/rootfs-petbuilds.specs
+    mkdir -p ../packages-${DISTRO_FILE_PREFIX}/${NAME}
+    cp -a ../petbuild-output/${NAME}-latest/* ../packages-${DISTRO_FILE_PREFIX}/${NAME}/
 done
+
+copy_pkgs_to_build "$PKGS" rootfs-complete
