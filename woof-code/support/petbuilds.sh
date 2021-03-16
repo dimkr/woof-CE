@@ -250,7 +250,7 @@ for NAME in $PKGS; do
     cp -a ../petbuild-output/${NAME}-latest/* ../packages-${DISTRO_FILE_PREFIX}/${NAME}/
 
     # redirect packages with menu entries to adrv; ROX-Filer is a 'core' package like JWM
-    if [ "$NAME" != "$rox_filer" ] && [ -n "$ADRV_INC" ] && [ -n "`ls ../packages-${DISTRO_FILE_PREFIX}/${NAME}/usr/share/applications/*.desktop 2>/dev/null`" ]; then
+    if [ "$NAME" != "rox_filer" ] && [ -n "$ADRV_INC" ] && [ -n "`ls ../packages-${DISTRO_FILE_PREFIX}/${NAME}/usr/share/applications/*.desktop 2>/dev/null`" ]; then
         ADRVPETBUILDS="$ADRVPETBUILDS $NAME"
     else
         MAINPETBUILDS="$MAINPETBUILDS $NAME"
