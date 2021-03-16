@@ -52,9 +52,10 @@ for i in ../rootfs-petbuilds/busybox ../rootfs-petbuilds/*; do
         continue
     fi
 
-    if [ $HAVE_ROOTFS -eq 0 ]; then
+    if [ $HAVE_ROOTFS -eq 1 ]; then
         if chroot petbuild-rootfs-complete pkg-config --atleast-version=3.24.24 gtk+-3.0; then
             [ "$NAME" = "leafpad" ] && continue
+            echo "Choosing leafpad, using GTK+ < 3.24.24"
         elif [ "$NAME" = "l3afpad" ]; then
             continue
         fi
@@ -266,18 +267,18 @@ done
 
 [ $HAVE_ROOTFS -eq 1 ] && rm -rf petbuild-rootfs-complete
 
-MAINPETBUILDS=
-
-echo "Copying petbuilds"
-
 for NAME in $PKGS; do
+    echo "Copying ${NAME}"
     mkdir -p ../packages-${DISTRO_FILE_PREFIX}/${NAME}
     cp -a ../petbuild-output/${NAME}-latest/* ../packages-${DISTRO_FILE_PREFIX}/${NAME}/
 
     # redirect packages with menu entries to adrv; ROX-Filer is a 'core' package like JWM
     if [ -n "$ADRV_INC" ] && [ "$NAME" != "rox_filer" ] && [ -n "`ls ../packages-${DISTRO_FILE_PREFIX}/${NAME}/usr/share/applications/*.desktop 2>/dev/null`" ]; then
+        echo "Redirecting to adrv"
         ADRV_INC="$ADRV_INC $NAME"
     else
+        echo "Copying to rootfs-complete"
         (cd .. && copy_pkgs_to_build "$NAME" rootfs-complete)
+        echo
     fi
 done
