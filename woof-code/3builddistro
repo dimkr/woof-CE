@@ -49,6 +49,8 @@ export NLSXSFS="nlsx_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs"
 
 if [ "$BUILD_ZIP" = "yes" ]; then
 	SDFLAG="zip"
+elif [ "$BUILD_CROS_IMAGE" = "yes" ]; then
+	CROSFLAG=1
 elif [ "$DISTRO_TARGETARCH" = "arm" ]; then
 	SDFLAG=1
 fi
@@ -135,6 +137,10 @@ and edit it to include your customised package list.
 		pgprs)
 			state=false
 			grep -q 'yes|ppp|' $PKGSSPECS && state=true
+			;;
+		pm6_updater)
+			state=false
+			[ "$CROSFLAG" ] && state=true
 			;;
 		*)
 			state=true
@@ -428,7 +434,7 @@ for i in $(ls sandbox3/rootfs-complete/usr/share/doc); do
 	fi
 done
 for i in share/doc share/info share/man usr/share/info \
-	usr/share/gtk-doc usr/share/gnome/help usr/info usr/man usr/share/cups/doc-root/help
+	usr/share/gtk-doc usr/share/gnome/help usr/info usr/man usr/share/cups/doc-root/help usr/share/bug usr/share/lintian
 do
 	if [ -d sandbox3/rootfs-complete/${i} ] ; then
 		rm -rf sandbox3/rootfs-complete/${i}
@@ -629,19 +635,25 @@ touch ../devx-only-installed-packages
 cp ../devx-only-installed-packages rootfs-complete${PACKAGES_DIR}/
 
 # certain utilities are not appropriate when booting on an arm board...
-if [ "$SDFLAG" ];then
+if [ "$SDFLAG" -o "$CROSFLAG" ]; then
 	for i in usr/sbin/grubconfig usr/sbin/remasterpup2 \
 		usr/share/applications/Grub-bootloader-config.desktop \
 		usr/share/applications/BootFlash-usb-installer.desktop \
 		usr/share/applications/Puppy-universal-installer.desktop \
 		usr/share/applications/Remaster-Puppy-live-CD.desktop
 	do rm -f rootfs-complete/${i} ; done
-	if [ "$SDFLAG" != "zip" ]; then
+	if [ "$SDFLAG" != "zip" -o "$CROSFLAG" ]; then
 		rm -f rootfs-complete/usr/sbin/resizepfile.sh \
 		      rootfs-complete/usr/share/applications/Resize-personal-storage-file.desktop \
 		      rootfs-skeleton/usr/sbin/pupsave-backup \
 		      rootfs-complete/usr/share/applications/Pupsave-hot-backup.desktop
 	fi
+fi
+
+# we're using overlayfs and sfs_load doesn't work
+if [ "$CROSFLAG" ]; then
+	rm -f rootfs-complete/usr/sbin/sfs_load \
+	      rootfs-complete/usr/share/applications/SFS-Load.desktop
 fi
 
 # puppyPDF needs Abiword
@@ -789,9 +801,12 @@ fi
 if [ "$SDFLAG" != "" ];then
 	#this also reduces writes to flash card... um, relatime seems to be the default anyway... 120707 change to noatime...
 	echo "BOOT_ATIME='noatime'" >> rootfs-complete/etc/rc.d/BOOTCONSTRAINED #rc.sysinit will remount / with 'relatime' (constrains updating access time). 120707 change to noatime.
-	echo "BOOT_DIRTYWRITE='1500'" >> rootfs-complete/etc/rc.d/BOOTCONSTRAINED #defer writing to disk. refer: http://www.lesswatts.org/tips/disks.php
 	echo "BOOT_SCHEDULER='deadline'" >> rootfs-complete/etc/rc.d/BOOTCONSTRAINED #my kernel defaults to 'cfq', change to 'deadline'. refer: http://tombuntu.com/index.php/2008/09/04/four-tweaks-for-using-linux-with-solid-state-drives/
 	echo "BOOT_UDEVDCHILDREN='1'" >> rootfs-complete/etc/rc.d/BOOTCONSTRAINED #120709 is this a good idea? append --children-max=1 to udevd in rc.sysinit.
+fi
+
+if [ "$SDFLAG" != "" -o "$CROSFLAG" != "" ];then
+	echo "BOOT_DIRTYWRITE='1500'" >> rootfs-complete/etc/rc.d/BOOTCONSTRAINED #defer writing to disk. refer: http://www.lesswatts.org/tips/disks.php
 	echo "BOOT_BOARD='${BOOT_BOARD}'" >> rootfs-complete/etc/rc.d/BOOTCONSTRAINED #120714 read by quicksetup.
 fi
 
@@ -879,6 +894,11 @@ if [ "$WOOF_HOSTARCH" = "$WOOF_TARGETARCH" -o -n "$QEMU" ] ; then
 		cp -a -f "rootfs-complete${ONESYMLINK}" devx${UPONE}/
 		rm -f "rootfs-complete$ONESYMLINK"
 	done
+fi
+
+if [ "$CROSFLAG" ]; then # Chrome OS image
+	echo "PUPMODE='6'" > rootfs-complete/etc/rc.d/PUPSTATE
+	echo "PUNIONFS='overlay'" >> rootfs-complete/etc/rc.d/PUPSTATE
 fi
 
 sync
@@ -1029,8 +1049,10 @@ if [ "$SDFLAG" = "" ] ; then #120506
 		mv -f ${NLSXSFS} ../${WOOF_OUTPUT}/
 		( cd ../${WOOF_OUTPUT} ; md5sum ${NLSXSFS} > ${NLSXSFS}.md5.txt )
 	fi
-	echo "Running ../support/mk_iso.sh"
-	../support/mk_iso.sh || exit 1
+	if [ ! "$CROSFLAG" ]; then
+		echo "Running ../support/mk_iso.sh"
+		../support/mk_iso.sh || exit 1
+	fi
 fi
 
 #==================================================================================
@@ -1085,6 +1107,12 @@ if [ "$SDFLAG" = "zip" ];then
 		fi
 	fi
 	rm -rf tmp/ # we're still in sandbox3
+
+elif [ "$CROSFLAG" ]; then # Chrome OS image
+
+	WOOF_OUTPUT="woof-output-${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}"
+	mkdir -p ../$WOOF_OUTPUT
+	. ../support/cros_image.sh
 
 elif [ "$SDFLAG" ]; then #120506 sd image
 
