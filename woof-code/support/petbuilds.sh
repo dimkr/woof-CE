@@ -42,13 +42,19 @@ for i in ../rootfs-petbuilds/busybox ../rootfs-petbuilds/*; do
         continue
     fi
 
+    if [ "$NAME" = "pa-applet" ] && [ -n "`grep '^yes|apulse|' ../DISTRO_PKGS_SPECS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}`" ]; then
+        echo "Skipping pa-applet, apulse is installed"
+        continue
+    fi
+
     if [ "$NAME" = "xarchiver" ] && [ -n "`grep '^yes|xarchive|' ../DISTRO_PKGS_SPECS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}`" ]; then
         echo "Skipping xarchiver, using xarchive"
         continue
     fi
 
-    if [ "$NAME" = "l3afpad" ] && [ -n "`grep '^yes|leafpad|' ../DISTRO_PKGS_SPECS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}`" ]; then
-        echo "Skipping l3afpad, using leafpad"
+    if pkg-config --atleast-version=3.24.24 gtk+-3.0; then
+        [ "$NAME" = "leafpad" ] && continue
+    elif [ "$NAME" = "l3afpad" ]; then
         continue
     fi
 
@@ -222,7 +228,7 @@ for i in ../rootfs-petbuilds/busybox ../rootfs-petbuilds/*; do
             for LIBDIR in $LIBDIRS; do
                 mkdir -p ../petbuild-output/${NAME}-${HASH}/${LIBDIR}/${ARCHDIR}
                 for SO in `ls ../petbuild-output/${NAME}-${HASH}/${LIBDIR}/*.so* 2>/dev/null`; do
-                    mv -f $SO /../petbuild-output/${NAME}-${HASH}/${LIBDIR}/${ARCHDIR}/
+                    mv -f $SO ../petbuild-output/${NAME}-${HASH}/${LIBDIR}/${ARCHDIR}/
                 done
             done
             ;;

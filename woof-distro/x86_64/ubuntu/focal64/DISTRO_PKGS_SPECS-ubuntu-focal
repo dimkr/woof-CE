@@ -470,7 +470,6 @@ yes|libpng14||exe,dev>null,doc,nls|
 yes|libpolkit-gobject|libpolkit-gobject-1-0,libpolkit-gobject-1-dev|exe>dev,dev,doc,nls| #needed by sysprof
 yes|libproxy|libproxy1v5,libproxy-dev|exe,dev,doc,nls
 yes|libpthread-stubs|libpthread-stubs0-dev|exe>dev,dev,doc,nls
-yes|libpulse|libpulse-mainloop-glib0,libpulse0|exe,dev,doc,nls| #needed by mplayer, gnome-mplayer and gmtk
 yes|libqpdf|libqpdf26|exe,dev,doc,nls
 yes|libraw1394|libraw1394-11,libraw1394-dev|exe,dev,doc,nls
 yes|librest|librest-0.7-0,librest-dev|exe,dev,doc,nls
@@ -544,7 +543,7 @@ yes|lsb-base|lsb-base|exe,dev,doc,nls
 yes|lvm2|dmsetup,libaio1,libaio-dev,liblvm2cmd2.*,liblvm2-dev|exe,dev,doc,nls|
 no|lxappearance|lxappearance|exe,dev,doc,nls
 yes|lxrandr||exe,dev,doc,nls
-yes|lxtask|lxtask|exe,dev,doc
+no|lxtask|lxtask|exe,dev,doc
 yes|lzma|lzma,lzma-dev|exe,dev,doc,nls
 yes|lzo2|liblzo2-2,liblzo2-dev|exe,dev,doc,nls
 yes|m4|m4|exe>dev,dev,doc,nls
@@ -668,6 +667,7 @@ no|programchooser||exe
 no|pschedule||exe
 yes|psip||exe,dev,doc,nls
 yes|psmisc|psmisc|exe,dev>null,doc,nls
+yes|pulseaudio|libpulse-mainloop-glib0,libpulse0|exe,dev,doc,nls| #needed by mplayer, gnome-mplayer and gmtk
 yes|PupClockset||exe|
 yes|Pup-SysInfo||exe|
 yes|puppyinputdetect||exe
@@ -771,7 +771,7 @@ yes|util-linux|util-linux,fdisk,mount,uuid-runtime,bsdutils,libuuid1,libblkid1,l
 yes|vala|valac,libvala-0.48-*|exe>dev,dev,doc>dev,nls
 yes|vamps|vamps|exe,dev,doc,nls
 yes|vcdimager|libvcdinfo0,libvcdinfo-dev,vcdimager|exe,dev,doc,nls| #MERGED 20150717-08
-yes|viewnior||exe,dev,doc,nls|
+no|viewnior||exe,dev,doc,nls|
 yes|vo-aacenc|libvo-aacenc0,libvo-aacenc-dev|exe,dev,doc,nls| #ADDED 20150717-08
 yes|vo-amrwbenc|libvo-amrwbenc0,libvo-amrwbenc-dev|exe,dev,doc,nls| #ADDED 20150717-08
 yes|vobcopy|vobcopy|exe,dev,doc,nls
