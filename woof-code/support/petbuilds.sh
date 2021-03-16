@@ -243,16 +243,37 @@ done
 
 [ $HAVE_ROOTFS -eq 1 ] && rm -rf petbuild-rootfs-complete
 
+MAINPETBUILDS=
+ADRVPETBUILDS=
+
 for NAME in $PKGS; do
     mkdir -p ../packages-${DISTRO_FILE_PREFIX}/${NAME}
     cp -a ../petbuild-output/${NAME}-latest/* ../packages-${DISTRO_FILE_PREFIX}/${NAME}/
 
-    TARGET=rootfs-complete
-
     # redirect packages with menu entries to adrv; ROX-Filer is a 'core' package like JWM
     if [ "$NAME" != "$rox_filer" ] && [ -n "$ADRV_INC" ] && [ -n "`ls ../packages-${DISTRO_FILE_PREFIX}/${NAME}/usr/share/applications/*.desktop 2>/dev/null`" ]; then
-        TARGET=adrv
+        ADRVPETBUILDS="$ADRVPETBUILDS $NAME"
+    else
+        MAINPETBUILDS="$MAINPETBUILDS $NAME"
     fi
-
-    (cd .. && copy_pkgs_to_build "$NAME" $TARGET)
 done
+
+if [ -n "$MAINPETBUILDS" ]; then
+    echo "Copying main SFS petbuilds"
+
+    for NAME in $MAINPETBUILDS; do
+        (cd .. && copy_pkgs_to_build "$NAME" rootfs-complete)
+    done
+
+    echo
+fi
+
+if [ -n "$ADRVPETBUILDS" ]; then
+    echo "Copying adrv petbuilds"
+
+    for NAME in $ADRVPETBUILDS; do
+        (cd .. && copy_pkgs_to_build "$NAME" adrv)
+    done
+
+    echo
+fi
