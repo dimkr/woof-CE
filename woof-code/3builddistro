@@ -148,7 +148,7 @@ and edit it to include your customised package list.
 fi
 
 . $CHOICE
-rm -f /tmp/rootfs-packages.specs /tmp/rootfs-petbuilds.specs /tmp/rootfs_pkgs_pinstall.sh
+rm -f /tmp/rootfs-packages.specs /tmp/rootfs_pkgs_pinstall.sh
 
 while read line
 do 

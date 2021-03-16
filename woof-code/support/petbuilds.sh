@@ -244,7 +244,6 @@ done
 [ $HAVE_ROOTFS -eq 1 ] && rm -rf petbuild-rootfs-complete
 
 MAINPETBUILDS=
-ADRVPETBUILDS=
 
 for NAME in $PKGS; do
     mkdir -p ../packages-${DISTRO_FILE_PREFIX}/${NAME}
@@ -268,12 +267,8 @@ if [ -n "$MAINPETBUILDS" ]; then
     echo
 fi
 
-if [ -n "$ADRVPETBUILDS" ]; then
-    echo "Copying adrv petbuilds"
-
-    for NAME in $ADRVPETBUILDS; do
-        (cd .. && copy_pkgs_to_build "$NAME" adrv)
-    done
-
-    echo
+if [ -z "$ADRV_INC" ]; then
+    ADRV_INC="$ADRVPETBUILDS"
+else
+    ADRV_INC="$ADRV_INC $ADRVPETBUILDS"
 fi
