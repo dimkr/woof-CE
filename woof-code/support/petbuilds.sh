@@ -247,6 +247,13 @@ for NAME in $PKGS; do
     echo "Copying ${NAME}"
     mkdir -p ../packages-${DISTRO_FILE_PREFIX}/${NAME}
     cp -a ../petbuild-output/${NAME}-latest/* ../packages-${DISTRO_FILE_PREFIX}/${NAME}/
-done
 
-copy_pkgs_to_build "$PKGS" rootfs-complete
+    TARGET=rootfs-complete
+
+    # redirect packages with menu entries to adrv; ROX-Filer is a 'core' package like JWM
+    if [ "$NAME" != "$rox_filer" ] && [ -n "$ADRV_INC" ] && [ -n "`ls ../packages-${DISTRO_FILE_PREFIX}/${NAME}/usr/share/applications/*.desktop 2>/dev/null`"]; then
+        TARGET=adrv
+    fi
+
+    copy_pkgs_to_build "$NAME" $TARGET
+done
