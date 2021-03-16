@@ -52,10 +52,12 @@ for i in ../rootfs-petbuilds/busybox ../rootfs-petbuilds/*; do
         continue
     fi
 
-    if pkg-config --atleast-version=3.24.24 gtk+-3.0; then
-        [ "$NAME" = "leafpad" ] && continue
-    elif [ "$NAME" = "l3afpad" ]; then
-        continue
+    if [ $HAVE_ROOTFS -eq 0 ]; then
+        if chroot petbuild-rootfs-complete pkg-config --atleast-version=3.24.24 gtk+-3.0; then
+            [ "$NAME" = "leafpad" ] && continue
+        elif [ "$NAME" = "l3afpad" ]; then
+            continue
+        fi
     fi
 
     if [ "$NAME" = "sylpheed" ] && [ -n "`grep '^yes|claws-mail|' ../DISTRO_PKGS_SPECS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}`" ]; then
@@ -69,7 +71,9 @@ for i in ../rootfs-petbuilds/busybox ../rootfs-petbuilds/*; do
     fi
 
     HASH=`cat ../DISTRO_PKGS_SPECS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION} ../DISTRO_COMPAT_REPOS ../DISTRO_COMPAT_REPOS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION} ../DISTRO_PET_REPOS $i/petbuild 2>/dev/null | md5sum | awk '{print $1}'`
-    if [ ! -d "../petbuild-output/${NAME}-${HASH}" ]; then
+    if [ -d "../petbuild-output/${NAME}-${HASH}" ]; then
+        echo "Skipping ${NAME}, using cache"
+    else
         if [ $HAVE_ROOTFS -eq 0 ]; then
             echo "Preparing build environment"
             rm -rf petbuild-rootfs-complete
@@ -264,30 +268,16 @@ done
 
 MAINPETBUILDS=
 
+echo "Copying petbuilds"
+
 for NAME in $PKGS; do
     mkdir -p ../packages-${DISTRO_FILE_PREFIX}/${NAME}
     cp -a ../petbuild-output/${NAME}-latest/* ../packages-${DISTRO_FILE_PREFIX}/${NAME}/
 
     # redirect packages with menu entries to adrv; ROX-Filer is a 'core' package like JWM
-    if [ "$NAME" != "rox_filer" ] && [ -n "$ADRV_INC" ] && [ -n "`ls ../packages-${DISTRO_FILE_PREFIX}/${NAME}/usr/share/applications/*.desktop 2>/dev/null`" ]; then
-        ADRVPETBUILDS="$ADRVPETBUILDS $NAME"
+    if [ -n "$ADRV_INC" ] && [ "$NAME" != "rox_filer" ] && [ -n "`ls ../packages-${DISTRO_FILE_PREFIX}/${NAME}/usr/share/applications/*.desktop 2>/dev/null`" ]; then
+        ADRV_INC="$ADRV_INC $NAME"
     else
-        MAINPETBUILDS="$MAINPETBUILDS $NAME"
+        (cd .. && copy_pkgs_to_build "$NAME" rootfs-complete)
     fi
 done
-
-if [ -n "$MAINPETBUILDS" ]; then
-    echo "Copying main SFS petbuilds"
-
-    for NAME in $MAINPETBUILDS; do
-        (cd .. && copy_pkgs_to_build "$NAME" rootfs-complete)
-    done
-
-    echo
-fi
-
-if [ -z "$ADRV_INC" ]; then
-    ADRV_INC="$ADRVPETBUILDS"
-else
-    ADRV_INC="$ADRV_INC $ADRVPETBUILDS"
-fi
