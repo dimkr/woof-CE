@@ -1,6 +1,8 @@
 #!/bin/bash
 # new for fatdog style kernel
 
+[ -n "$GITPOD_WORKSPACE_ID" -a "`id -u`" -ne 0 ] && exec fakeroot @0"$@"
+
 export LANG=C #faster.
 export BUILDSYS=yes
 export MWD=$(pwd)

@@ -6,6 +6,8 @@
 #121116 0setup also runs in running puppy called from ppm. some o/p needs to be translated, done in /usr/share/sss/script_strings/script_strings. see below all LANGORG insertions.
 #130316 debdb2pupdb does not use /tmp/0setupcompletelistpkgs in a running puppy.
 
+[ -n "$GITPOD_WORKSPACE_ID" -a "`id -u`" -ne 0 ] && exec fakeroot $0 "$@"
+
 LANGORG="$(locale | grep '^LANG=' | cut -d '=' -f 2)" #121116
 export LANG=C #faster.
 
