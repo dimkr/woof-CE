@@ -42,7 +42,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Create cache directories
       run: |
-        mkdir -p local-repositories petbuild-sources petbuild-cache petbuild-output kernel-kit-output
+        mkdir -p local-repositories petbuild-sources petbuild-cache petbuild-output kernel-kit-output packages
         ln -s `pwd`/local-repositories ../local-repositories
     - name: Get cached local-repositories
       uses: actions/cache@v2
@@ -51,6 +51,13 @@ jobs:
         key: ${{ github.workflow }}-local-repositories-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-local-repositories-
+    - name: Get cached packages
+      if: github.event_name != 'workflow_dispatch'
+      id: get_packages
+      uses: actions/cache@v2
+      with:
+        path: packages
+        key: ${{ github.workflow }}-packages-${{ hashFiles('woof-distro/x86/slackware/14.2/**', 'woof-code/packages-templates/**', 'woof-code/2createpackages', 'woof-code/_00func', 'woof-code/support/findpkgs') }}
     - name: Prepare build environment
       run: |
         [ -f local-repositories/vercmp ] || (curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o ../local-repositories/vercmp -)
@@ -75,6 +82,7 @@ jobs:
         cd ../woof-out_x86_x86_slackware_14.2
         sudo -E linux32 ./0setup
     - name: 1download
+      if: steps.get_packages.outputs.cache-hit != 'true'
       run: |
         cd ../woof-out_x86_x86_slackware_14.2
         sudo -E linux32 ./1download
@@ -105,7 +113,13 @@ jobs:
         cd ../woof-out_x86_x86_slackware_14.2/kernel-kit
         sudo cp -f slacko-7-build.conf build.conf
         sudo -E ./build.sh
+    - name: Move cached packages
+      if: steps.get_packages.outputs.cache-hit == 'true'
+      run: |
+        sudo chown -R root:root packages
+        sudo mv packages ../woof-out_x86_x86_slackware_14.2/packages-slacko
     - name: 2createpackages
+      if: steps.get_packages.outputs.cache-hit != 'true'
       run: |
         cd ../woof-out_x86_x86_slackware_14.2
         echo | sudo -E linux32 ./2createpackages
