@@ -22,6 +22,10 @@ Puppy can be built directly on GitHub, saving the hassle of preparing a suitable
 
 5. Test your Puppy and open a pull request to woof-CE, if you want your changes to be officially incorporated into woof-CE.
 
+# Contributing to woof-CE
+
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/puppylinux-woof-CE/woof-CE)
+
 # Directory Structure
 
 Woof-CE has five directories:
