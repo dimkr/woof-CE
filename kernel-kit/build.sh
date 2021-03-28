@@ -3,7 +3,11 @@
 # see README
 # Compile fatdog style kernel [v3+ - 3.10+ recommended].
 
-. ./build.conf || exit 1
+if [ -n "$1" ] ; then
+    . "$1" || exit 1
+else
+    . ./build.conf || exit 1
+fi
 . ./funcs.sh
 
 # if we're also building a Puppy, takes its SFS compression parameters

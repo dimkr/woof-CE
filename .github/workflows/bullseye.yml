@@ -72,16 +72,9 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-local-repositories-
     - name: Prepare build environment
-      run: |
-        [ -f local-repositories/vercmp ] || (curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o ../local-repositories/vercmp -)
-        sudo install -m 755 local-repositories/vercmp /usr/local/bin/vercmp
-        sudo install -D -m 644 woof-code/rootfs-skeleton/usr/local/petget/categories.dat /usr/local/petget/categories.dat
-        echo "dash dash/sh boolean false" | sudo debconf-set-selections
-        sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
-        sudo ln -s bash /bin/ash
+      run: ./ci/build_env.sh
     - name: merge2out
-      run: |
-        (echo 2; echo 1; echo 1; echo; echo) | sudo -E linux32 ./merge2out
+      run: yes "" | sudo -E linux32 ./merge2out woof-distro/x86/debian/bullseye
     - name: Set version
       if: github.event_name == 'workflow_dispatch'
       run: sudo sed -i s/^DISTRO_VERSION=.*/DISTRO_VERSION=${{ github.event.inputs.version }}/ ../woof-out_x86_x86_debian_bullseye/DISTRO_SPECS
@@ -107,12 +100,6 @@ jobs:
         key: ${{ github.workflow }}-kernel-kit-output-${{ hashFiles('kernel-kit/**') }}
     - name: Move cached kernel-kit output
       run: sudo mv kernel-kit-output ../woof-out_x86_x86_debian_bullseye/kernel-kit/output
-    - name: Install kernel-kit dependencies
-      if: steps.get_kernel_kit_output_cache.outputs.cache-hit != 'true'
-      run: |
-        sudo apt-get update -qq
-        sudo apt-get install -y --no-install-recommends ccache libelf-dev libssl-dev
-        ccache --set-config=hash_dir=false --set-config=max_size=2.0G
     - name: Get cached ~/.ccache
       if: github.event_name != 'workflow_dispatch' && steps.get_kernel_kit_output_cache.outputs.cache-hit != 'true'
       uses: actions/cache@v2
@@ -121,10 +108,7 @@ jobs:
         key: ${{ github.workflow }}-ccache-${{ hashFiles('kernel-kit/**') }}
     - name: kernel-kit
       if: steps.get_kernel_kit_output_cache.outputs.cache-hit != 'true'
-      run: |
-        cd ../woof-out_x86_x86_debian_bullseye/kernel-kit
-        sudo cp -f bullseye-build.conf build.conf
-        sudo -E ./build.sh
+      run: ./ci/build_kernel.sh ../woof-out_x86_x86_debian_bullseye bullseye-build.conf
     - name: 2createpackages
       run: |
         cd ../woof-out_x86_x86_debian_bullseye
@@ -153,10 +137,7 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-petbuild-output-
     - name: Install 3builddistro dependencies
-      run: |
-        sudo dpkg --add-architecture i386
-        sudo apt-get update -qq
-        sudo apt-get install -y --no-install-recommends libuuid1:i386
+      run: ./ci/32bit_deps.sh
     - name: Install cdrtools
       run: |
         [ -f local-repositories/mkisofs ] || (curl -L https://sourceforge.net/projects/cdrtools/files/alpha/cdrtools-3.02a09.tar.bz2/download | tar -xjf- && cd cdrtools-3.02 && make -j`nproc` && mv mkisofs/OBJ/x86_64-linux-cc/mkisofs ../local-repositories/mkisofs)
