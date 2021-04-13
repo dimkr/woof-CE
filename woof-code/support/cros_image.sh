@@ -131,7 +131,7 @@ x86*)
 	parted --script ${LEGACY_IMG_BASE} set 1 boot on
 	LOOP=`losetup -Pf --show ${LEGACY_IMG_BASE}`
 	PARTUUID=`blkid -s PARTUUID -o value ${LOOP}p1`
-	mkfs.ext4 -F -b 1024 -m 0 -O ^has_journal ${LOOP}p1
+	mkfs.ext4 -F -b 4096 -m 0 -O ^has_journal,encrypt ${LOOP}p1
 
 	mkdir -p /mnt/legacyimagep1
 	mount-FULL -o noatime ${LOOP}p1 /mnt/legacyimagep1
