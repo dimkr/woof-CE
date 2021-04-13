@@ -89,8 +89,8 @@ create_image() {
 	end=`cgpt show $1 | grep 'Sec GPT table' | awk '{print $1}'`
 	size=$(($end - $start))
 	cgpt add -i 2 -t data -b $start -s $size -l Root $1
-	# $size is in 512 byte blocks while ext4 uses a block size of 1024 bytes
-	mkfs.ext4 -F -b 1024 -m 0 -O ^has_journal -E offset=$(($start * 512)) $1 $(($size / 2))
+	# $size is in 512 byte blocks while encrypted ext4 uses a block size of 4096 bytes
+	mkfs.ext4 -F -b 4096 -m 0 -O ^has_journal,encrypt -E offset=$(($start * 512)) $1 $(($size / 8))
 }
 
 create_image ${SD_IMG_BASE} 50M 40
