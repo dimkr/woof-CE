@@ -383,6 +383,7 @@ jobs:
       with:
         keep_latest: 2
         delete_tag_pattern: dpupos-${{ github.job }}-1-rolling
+        delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Move cached directories
