@@ -136,7 +136,7 @@ jobs:
       with:
         tag_name: dpupos-${{ github.job }}-${{ github.event.inputs.version }}${{ github.event.inputs.suffix }}
         release_name: dpupos-${{ github.job }}-${{ github.event.inputs.version }}${{ github.event.inputs.suffix }}
-        draft: false
+        draft: true
         prerelease: true
     - name: Upload tarball
       if: github.event_name == 'workflow_dispatch'
@@ -275,7 +275,7 @@ jobs:
       with:
         tag_name: dpupos-${{ github.job }}-${{ github.event.inputs.version }}${{ github.event.inputs.suffix }}
         release_name: dpupos-${{ github.job }}-${{ github.event.inputs.version }}${{ github.event.inputs.suffix }}
-        draft: false
+        draft: true
         prerelease: true
     - name: Upload tarball
       if: github.event_name == 'workflow_dispatch'
@@ -406,7 +406,7 @@ jobs:
       with:
         tag_name: dpupos-${{ github.job }}-${{ github.event.inputs.version }}${{ github.event.inputs.suffix }}
         release_name: dpupos-${{ github.job }}-${{ github.event.inputs.version }}${{ github.event.inputs.suffix }}
-        draft: false
+        draft: true
         prerelease: true
     - name: Upload tarball
       if: github.event_name == 'workflow_dispatch'
