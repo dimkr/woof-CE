@@ -1,0 +1,108 @@
+name: push
+
+on:
+  push:
+    branches:
+      - dpupos
+      - testing
+    paths:
+      - 'woof-distro/x86_64/debian/dpupos/**'
+  workflow_dispatch:
+    branches:
+      - testing
+      - dpupos
+
+jobs:
+  x86_64:
+    runs-on: [self-hosted]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Update package lists
+      run: sudo apt-get update -qq
+    - name: Create cache directories
+      run: |
+        mkdir -p local-repositories petbuild-sources petbuild-cache petbuild-output
+        ln -s `pwd`/local-repositories ../local-repositories
+    - name: Get cached local-repositories
+      uses: actions/cache@v2
+      with:
+        path: local-repositories
+        key: ${{ github.workflow }}-${{ github.job }}-local-repositories-${{ github.sha }}
+        restore-keys: |
+          ${{ github.workflow }}-${{ github.job }}-local-repositories-
+    - name: Prepare build environment
+      run: |
+        [ -f local-repositories/vercmp ] || (curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o ../local-repositories/vercmp -)
+        sudo install -m 755 local-repositories/vercmp /usr/local/bin/vercmp
+        sudo install -D -m 644 woof-code/rootfs-skeleton/usr/local/petget/categories.dat /usr/local/petget/categories.dat
+        echo "dash dash/sh boolean false" | sudo debconf-set-selections
+        sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+    - name: Fix cache ownership
+      run: sudo chown -R root:root local-repositories
+    - name: merge2out
+      run: yes "" | sudo -E ./merge2out woof-distro/x86_64/debian/dpupos
+    - name: 0setup
+      run: |
+        cd ../woof-out_x86_64_x86_64_debian_dpupos
+        sudo -E ./0setup
+    - name: 1download
+      run: |
+        cd ../woof-out_x86_64_x86_64_debian_dpupos
+        sudo -E ./1download
+    - name: 2createpackages
+      run: |
+        cd ../woof-out_x86_64_x86_64_debian_dpupos
+        echo | sudo -E ./2createpackages
+    - name: Get cached kernel-kit output
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        repo: puppylinux-woof-CE/woof-CE
+        branch: testing
+        workflow: kernel-kit.yml
+        workflow_conclusion: success
+        name: kernel-kit-output-5.10.x-x86_64
+        path: kernel-kit-output
+    - name: Move cached kernel-kit output
+      run: sudo mv kernel-kit-output ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit/output
+    - name: Get cached petbuild-sources
+      uses: actions/cache@v2
+      with:
+        path: petbuild-sources
+        key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
+        restore-keys: |
+          ${{ github.workflow }}-petbuild-sources-
+    - name: Get cached petbuild-cache
+      uses: actions/cache@v2
+      with:
+        path: petbuild-cache
+        key: ${{ github.workflow }}-${{ github.job }}-petbuild-cache-${{ github.sha }}
+        restore-keys: |
+          ${{ github.workflow }}-${{ github.job }}-petbuild-cache-
+    - name: Get cached petbuild-output
+      uses: actions/cache@v2
+      with:
+        path: petbuild-output
+        key: ${{ github.workflow }}-${{ github.job }}-petbuild-output-${{ github.sha }}
+        restore-keys: |
+          ${{ github.workflow }}-${{ github.job }}-petbuild-output-
+    - name: Install 3builddistro dependencies
+      run: |
+        sudo apt-get install -y --no-install-recommends vboot-kernel-utils cgpt extlinux
+        sudo ln -s /usr/bin/mount /usr/local/bin/mount-FULL
+    - name: 3builddistro
+      run: |
+        sudo chown -R root:root petbuild-output
+        sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_x86_64_debian_dpupos/
+        cd ../woof-out_x86_64_x86_64_debian_dpupos
+        sudo -E HOME=/root ./3builddistro release
+    - name: Compress legacy image
+      run: |
+        sudo gzip -1 ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-8.0/dpupos-8.0-ext4-2gb-legacy.img
+        sudo mv -f ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-8.0/dpupos-8.0-ext4-2gb-legacy.img.gz .
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: dpupos-8.0-ext4-2gb-legacy-${{ github.run_number }}.img.gz
+        path: dpupos-8.0-ext4-2gb-legacy.img.gz
+        retention-days: 3
