@@ -124,6 +124,7 @@ jobs:
     - name: 3builddistro
       run: |
         sudo chown -R root:root petbuild-output
+        sudo rm -rvf petbuild-sources/gtk3_theme_*
         sudo mv petbuild-{sources,cache,output} ../woof-out_x86_64_x86_64_debian_dpupos/
         cd ../woof-out_x86_64_x86_64_debian_dpupos
         sudo -E HOME=/root DISTRO_EXTRAVERSION=${{ github.event.inputs.suffix }} ./3builddistro release

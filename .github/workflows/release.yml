@@ -109,6 +109,7 @@ jobs:
         sudo install -m 755 local-repositories/mkisofs /usr/local/bin/mkisofs
     - name: 3builddistro
       run: |
+        sudo rm -rvf petbuild-sources/gtk3_theme_*
         sudo mv petbuild-sources ../woof-out_*/
         cd ../woof-out_*
         sudo -E HOME=/root linuxn ./3builddistro release
