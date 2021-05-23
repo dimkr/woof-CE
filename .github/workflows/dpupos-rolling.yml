@@ -107,6 +107,8 @@ jobs:
       run: sudo gzip -1 ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb.img
     - name: Compress legacy image
       run: sudo gzip -1 ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-legacy.img
+    - name: Compress UEFI image
+      run: sudo gzip -1 ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-uefi.img
     - name: Upload image
       uses: actions/upload-release-asset@v1
       env:
@@ -124,6 +126,15 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-legacy.img.gz
         asset_name: dpupos-1-ext4-2gb-legacy.img.gz
+        asset_content_type: application/octet-stream
+    - name: Upload UEFI image
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-uefi.img.gz
+        asset_name: dpupos-1-ext4-2gb-uefi.img.gz
         asset_content_type: application/octet-stream
     - name: Upload kernel sources
       uses: actions/upload-release-asset@v1

@@ -141,19 +141,40 @@ for NAME in *.sfs; do
     fi
 done
 
+echo "Updating frugalify"
+mv -f init ../init
+chmod 755 ../init
+
 echo "Updating the kernel"
 if [ -e ../vmlinuz ]; then
     rm -f ../vmlinuz
     ln -s "${RELEASE_TAG}/vmlinuz" ../vmlinuz
+elif [ -h "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
+    mkdir -p /mnt/efi
+
+    mount "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" /mnt/efi
+    if [ $? -ne 0 ]; then
+        echo "Failed to mount EFI partition"
+        cd ..
+        [ "$1" = ask ] && read
+        exit 1
+    fi
+
+    cp -f vmlinuz.efi /mnt/efi/EFI/BOOT/BOOTX64.EFI
+    if [ $? -ne 0 ]; then
+        echo "Failed to copy kernel to EFI partitoin"
+        cd ..
+        [ "$1" = ask ] && read
+        exit 1
+    fi
+
+    umount -l /mnt/efi
+    rm -f vmlinuz vmlinuz.efi vmlinux.kpart
 else
     # TODO: detect the partition instead of relying on a fixed UUID
     dd if=vmlinux.kpart of=/dev/disk/by-partuuid/b361601a-103d-374c-ba2c-35b8533a199d
-    rm -f vmlinuz vmlinux.kpart
+    rm -f vmlinuz vmlinuz.efi vmlinux.kpart
 fi
-
-echo "Updating frugalify"
-mv -f init ../init
-chmod 755 ../init
 
 # if the files are not flushed to disk, we're left in non-bootable state
 sync

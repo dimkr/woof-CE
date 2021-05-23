@@ -8,6 +8,7 @@ INSTALL_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-2gb-install.img
 
 SSD_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-16gb.img
 LEGACY_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-2gb-legacy.img
+UEFI_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-2gb-uefi.img
 
 # and an archive containing the files needed for update
 TAR_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}.tar
@@ -155,11 +156,47 @@ EOF
 	;;
 esac
 
+if [ "$WOOF_TARGETARCH" = "x86_64" ]; then
+	dd if=/dev/zero of=${UEFI_IMG_BASE} bs=50M count=40 conv=sparse
+	parted --script ${UEFI_IMG_BASE} mklabel gpt
+	parted --script ${UEFI_IMG_BASE} mkpart "${DISTRO_FILE_PREFIX}_esp" fat32 1MiB 261MiB
+	parted --script ${UEFI_IMG_BASE} set 1 esp on
+	parted --script ${UEFI_IMG_BASE} mkpart "${DISTRO_FILE_PREFIX}_root" ext4 261MiB 100%
+	LOOP=`losetup -Pf --show ${UEFI_IMG_BASE}`
+	mkfs.fat -F 32 ${LOOP}p1
+	mkfs.ext4 -F -b 4096 -m 0 -O ^has_journal,encrypt ${LOOP}p2
+
+	mkdir -p /mnt/uefiimagep1 /mnt/uefiimagep2
+
+	unsquashfs -d kernel_sources ../kernel-kit/output/kernel_sources-*.sfs
+	cd kernel_sources/usr/src/linux
+	cat << EOF >> .config
+CONFIG_EFI_STUB=y
+CONFIG_CMDLINE_BOOL=y
+CONFIG_CMDLINE="root=PARTLABEL=${DISTRO_FILE_PREFIX}_root init=/init rootfstype=ext4 rootwait rw"
+EOF
+	make -j`nproc` bzImage
+	mount-FULL -o noatime ${LOOP}p1 /mnt/uefiimagep1
+	install -D -m 644 arch/x86/boot/bzImage /mnt/uefiimagep1/EFI/BOOT/BOOTX64.EFI
+	busybox umount /mnt/uefiimagep1 2>/dev/null
+	cd ../../../..
+
+	mount-FULL -o noatime ${LOOP}p2 /mnt/uefiimagep2
+	cp -a /mnt/ssdimagep2/${VERSIONDIR} /mnt/ssdimagep2/*.sfs /mnt/ssdimagep2/init /mnt/uefiimagep2/
+	busybox umount /mnt/uefiimagep2 2>/dev/null
+
+	mv -f ${UEFI_IMG_BASE} ../${WOOF_OUTPUT}/
+fi
+
 # create an archive
 cp -a /mnt/ssdimagep2/${VERSIONDIR} .
 cp -a build/vmlinux.kpart /mnt/ssdimagep2/init ${VERSIONDIR}/
 case $WOOF_TARGETARCH in
-x86*)
+x86_64)
+	cp -f build/vmlinuz ${VERSIONDIR}/
+	cp -f kernel_sources/usr/src/linux/arch/x86/boot/bzImage ${VERSIONDIR}/vmlinuz.efi
+	;;
+x86)
 	cp -f build/vmlinuz ${VERSIONDIR}/
 	;;
 esac

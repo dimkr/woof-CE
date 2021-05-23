@@ -119,7 +119,7 @@ jobs:
           ${{ github.workflow }}-${{ github.job }}-petbuild-output-
     - name: Install 3builddistro dependencies
       run: |
-        sudo apt-get install -y --no-install-recommends vboot-kernel-utils cgpt extlinux
+        sudo apt-get install -y --no-install-recommends vboot-kernel-utils cgpt extlinux libelf-dev libssl-dev
         sudo ln -s /usr/bin/mount /usr/local/bin/mount-FULL
     - name: 3builddistro
       run: |
@@ -147,6 +147,19 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-${{ github.event.inputs.version }}/dpupos-${{ github.event.inputs.version }}.tar
         asset_name: dpupos-${{ github.event.inputs.version }}.tar
+        asset_content_type: application/octet-stream
+    - name: Compress UEFI image
+      if: github.event_name == 'workflow_dispatch'
+      run: sudo gzip -1 ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-${{ github.event.inputs.version }}/dpupos-${{ github.event.inputs.version }}-ext4-2gb-uefi.img
+    - name: Upload UEFI image
+      if: github.event_name == 'workflow_dispatch'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-${{ github.event.inputs.version }}/dpupos-${{ github.event.inputs.version }}-ext4-2gb-uefi.img.gz
+        asset_name: dpupos-${{ github.event.inputs.version }}-ext4-2gb-uefi.img.gz
         asset_content_type: application/octet-stream
     - name: Compress legacy image
       if: github.event_name == 'workflow_dispatch'
