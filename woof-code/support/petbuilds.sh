@@ -56,8 +56,6 @@ for i in ../rootfs-petbuilds/busybox ../rootfs-petbuilds/*; do
         echo "Skipping l3fpad, using leafpad"
     elif [ "$NAME" = "l3fpad" -a "$DISTRO_BINARY_COMPAT" = "slackware64" -a "$DISTRO_COMPAT_VERSION" = "14.2" ]; then
         echo "Skipping l3fpad, using leafpad"
-    elif [ "$NAME" = "l3fpad" -a "$DISTRO_BINARY_COMPAT" = "ubuntu" -a "$DISTRO_COMPAT_VERSION" = "focal" ]; then
-        echo "Skipping l3fpad, using leafpad"
     elif [ "$NAME" = "leafpad" ]; then
         echo "Skipping leafpad, using l3fpad"
         continue
@@ -70,6 +68,11 @@ for i in ../rootfs-petbuilds/busybox ../rootfs-petbuilds/*; do
 
     if [ "$NAME" = "gpicview" ] && [ -n "`grep '^yes|viewnior|' ../DISTRO_PKGS_SPECS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}`" ]; then
         echo "Skipping gpicview, using viewnior"
+        continue
+    fi
+
+    if [ "$NAME" = "cage" ] && [ -n "`grep '^yes|xserver_xorg|' ../DISTRO_PKGS_SPECS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}`" ]; then
+        echo "Skipping cage, using Xorg"
         continue
     fi
 
@@ -182,7 +185,7 @@ for i in ../rootfs-petbuilds/busybox ../rootfs-petbuilds/*; do
 
         cp -a ../petbuild-sources/${NAME}/* petbuild-rootfs-complete-${NAME}/tmp/
         cp -a ../rootfs-petbuilds/${NAME}/* petbuild-rootfs-complete-${NAME}/tmp/
-        CC="$WOOF_CC" CXX="$WOOF_CXX" CFLAGS="$WOOF_CFLAGS" CXXFLAGS="$WOOF_CXXFLAGS" LDFLAGS="$WOOF_LDFLAGS" MAKEFLAGS="$MAKEFLAGS" CCACHE_DIR=/root/.ccache CCACHE_NOHASHDIR=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" chroot petbuild-rootfs-complete-${NAME} sh -ec "cd /tmp && . ./petbuild && build"
+        CC="$WOOF_CC" CXX="$WOOF_CXX" CFLAGS="$WOOF_CFLAGS" CXXFLAGS="$WOOF_CXXFLAGS" LDFLAGS="$WOOF_LDFLAGS" MAKEFLAGS="$MAKEFLAGS" CCACHE_DIR=/root/.ccache CCACHE_NOHASHDIR=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" PYTHONDONTWRITEBYTECODE=1 chroot petbuild-rootfs-complete-${NAME} sh -ec "cd /tmp && . ./petbuild && build"
         ret=$?
         umount -l petbuild-rootfs-complete-${NAME}/root/.ccache
         umount -l petbuild-rootfs-complete-${NAME}/tmp
