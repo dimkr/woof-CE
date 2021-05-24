@@ -30,12 +30,10 @@ jobs:
             compiler: gcc
           - kernel-kit-config: 5.4.x-veyron-speedy
             compiler: gcc-arm-linux-gnueabihf
-          - kernel-kit-config: pi-zero
-            compiler:
           - kernel-kit-config: pi2
-            compiler:
+            compiler: gcc-arm-linux-gnueabihf
           - kernel-kit-config: pi4
-            compiler:
+            compiler: gcc-arm-linux-gnueabihf
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
