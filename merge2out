@@ -275,7 +275,7 @@ sed -i '/BUILD_FROM_WOOF=/d' ${WOOF_OUT}/DISTRO_SPECS
 if which git &>/dev/null && [ "`git log -n 1`" != "" ]; then
 	GITBRANCH=$(git rev-parse --abbrev-ref HEAD)
 	GITHEAD=$(git log -n 1 --pretty=format:"%h;%ci") # git rev-parse HEAD
-	GITREPO=$(git remote get-url origin | cut -f 4- -d /)
+	GITREPO=dpupos/woof-CE # hack to migrate existing users to the new repo
 	if [ "$ALTERNATE_BUILD" != "" -o "$EXTRA_MERGE" != "" ];then
 		echo "BUILD_FROM_WOOF='${GITBRANCH};${GITHEAD};ALTERNATE_BUILD=${ALTERNATE_BUILD##*/};EXTRA_MERGE=${EXTRA_MERGE##*/}'" >> ${WOOF_OUT}/DISTRO_SPECS
 	else
