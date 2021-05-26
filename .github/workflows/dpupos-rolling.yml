@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - dpupos
+      - testing
   schedule:
     - cron: '0 0 */3 * *'
   workflow_dispatch:
     branches:
       - dpupos
+      - testing
 
 jobs:
   x86_64:
