@@ -67,6 +67,7 @@ yes|ca-certificates|ca-certificates|exe,dev,doc,nls||deps:yes
 yes|cairo|libcairo2,libcairo2-dev,libcairo-gobject2,libcairo-gobject2,libcairo-script-interpreter2|exe,dev,doc,nls||deps:yes
 yes|ccache|ccache|exe>dev,dev,doc,nls||deps:yes
 no|cdparanoia|cdparanoia,libcdparanoia0,libcdparanoia-dev|exe,dev,doc,nls
+yes|cgpt|cgpt|exe>dev,dev,doc,nls||deps:yes
 no|cifs-utils|cifs-utils|exe,dev,doc,nls
 no|copy-fast||exe,doc,nls
 yes|coreutils|coreutils|exe,doc,nls||deps:yes
@@ -116,6 +117,7 @@ yes|ethtool|ethtool|exe,dev>null,doc,nls||deps:yes
 no|exiv2|exiv2,libexiv2-14,libexiv2-dev|exe,dev,doc,nls
 no|exfat|exfat-fuse,exfat-utils|exe,dev,doc,nls #requires fuse
 yes|expat|libexpat1,libexpat1-dev|exe,dev,doc,nls||deps:yes
+yes|extlinux|extlinux|exe>dev,dev,doc,nls||deps:yes
 no|f2fs-tools||exe,dev
 no|faac|libfaac0|exe,dev,doc,nls
 no|faad|faad,libfaad2,libfaad-dev|exe,dev,doc,nls
@@ -610,6 +612,7 @@ no|vala|valac,libvala-*|exe>dev,dev,doc>dev,nls
 no|vamps|vamps|exe,dev,doc,nls
 no|vobcopy|vobcopy|exe,dev,doc,nls
 no|vorbis-tools|vorbis-tools|exe,dev,doc,nls
+yes|vboot-kernel-utils|vboot-kernel-utils|exe->dev,dev,doc,nls||deps:yes
 yes|vte|libvte-2.91-0,libvte-2.91-common,libvte-2.91-dev|exe,dev,doc,nls||deps:yes
 yes|wayland|libwayland-client0,libwayland-cursor0,libwayland-server0,libwayland-dev,wayland-protocols,libwayland-bin|exe,dev,doc,nls||deps:yes
 no|wcpufreq||exe,dev| #using this instead of cpu-scaling-ondemand.
