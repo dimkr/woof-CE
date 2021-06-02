@@ -496,7 +496,7 @@ yes|p11-kit|libp11-kit0,libp11-kit-dev|exe,dev,doc,nls||deps:yes #needed by cups
 no|PackIt||exe,dev
 no|pam|libpam0g|exe,dev,doc,nls
 yes|pango|libpango-1.0-0,libpango1.0-dev,libpangoft2-1.0-0,libpangocairo-1.0-0,libpangoxft-1.0-0,gir1.2-pango-1.0|exe,dev,doc,nls||deps:yes
-no|parted|parted,libparted2,libparted-fs-resize0,libparted-dev|exe,dev,doc,nls #gparted
+yes|parted|parted|exe,dev,doc,nls||deps:yes
 yes|passwd|passwd|exe>null,dev>null,doc>null,nls>null
 yes|patch|patch|exe>dev,dev,doc,nls||deps:yes
 yes|patchutils|patchutils|exe>dev,dev,doc,nls||deps:yes
