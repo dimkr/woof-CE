@@ -78,7 +78,7 @@ jobs:
           ${{ github.workflow }}-petbuild-sources-
     - name: Install 3builddistro dependencies
       run: |
-        sudo apt-get install -y --no-install-recommends vboot-kernel-utils cgpt extlinux
+        sudo apt-get install -y --no-install-recommends vboot-kernel-utils cgpt extlinux libelf-dev libssl-dev
         sudo ln -s /usr/bin/mount /usr/local/bin/mount-FULL
     - name: 3builddistro
       run: |
