@@ -18,12 +18,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Update package lists
-      run: sudo apt-get update -qq
     - name: Create cache directories
       run: |
         mkdir -p local-repositories petbuild-sources
-        ln -s `pwd`/local-repositories ../local-repositories
+        ln -s `basename $(pwd)`/local-repositories ../local-repositories
     - name: Get cached local-repositories
       uses: actions/cache@v2
       with:
@@ -32,32 +30,21 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-${{ github.job }}-local-repositories-
     - name: Prepare build environment
-      run: |
-        [ -f local-repositories/vercmp ] || (curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o ../local-repositories/vercmp -)
-        sudo install -m 755 local-repositories/vercmp /usr/local/bin/vercmp
-        sudo install -D -m 644 woof-code/rootfs-skeleton/usr/local/petget/categories.dat /usr/local/petget/categories.dat
-        echo "dash dash/sh boolean false" | sudo debconf-set-selections
-        sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+      run: docker run --rm -it --privileged -v /dev:/dev -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)` -d --name builder ghcr.io/dpupos/container/dpupos:rolling
     - name: Fix cache ownership
       run: sudo chown -R root:root local-repositories
     - name: merge2out
-      run: yes "" | sudo -E ./merge2out woof-distro/x86_64/debian/dpupos
+      run: yes "" | docker exec builder ./merge2out woof-distro/x86_64/debian/dpupos
     - name: Set version
       run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_x86_64_x86_64_debian_dpupos/DISTRO_SPECS
     - name: Enable updates
       run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_x86_64_x86_64_debian_dpupos/rootfs-packages/pm6_updater/etc/pm6_updater.conf 
     - name: 0setup
-      run: |
-        cd ../woof-out_x86_64_x86_64_debian_dpupos
-        sudo -E ./0setup
+      run: docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && ./0setup"
     - name: 1download
-      run: |
-        cd ../woof-out_x86_64_x86_64_debian_dpupos
-        sudo -E ./1download
+      run: docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && ./1download"
     - name: 2createpackages
-      run: |
-        cd ../woof-out_x86_64_x86_64_debian_dpupos
-        echo | sudo -E ./2createpackages
+      run: docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && ./2createpackages"
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -76,15 +63,10 @@ jobs:
         key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-petbuild-sources-
-    - name: Install 3builddistro dependencies
-      run: |
-        sudo apt-get install -y --no-install-recommends vboot-kernel-utils cgpt extlinux libelf-dev libssl-dev
-        sudo ln -s /usr/bin/mount /usr/local/bin/mount-FULL
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_x86_64_x86_64_debian_dpupos/
-        cd ../woof-out_x86_64_x86_64_debian_dpupos
-        sudo -E HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release
+        docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -162,12 +144,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Update package lists
-      run: sudo apt-get update -qq
     - name: Create cache directories
       run: |
         mkdir -p local-repositories petbuild-sources
-        ln -s `pwd`/local-repositories ../local-repositories
+        ln -s `basename $(pwd)`/local-repositories ../local-repositories
     - name: Get cached local-repositories
       uses: actions/cache@v2
       with:
@@ -177,31 +157,23 @@ jobs:
           ${{ github.workflow }}-${{ github.job }}-local-repositories-
     - name: Prepare build environment
       run: |
-        [ -f local-repositories/vercmp ] || (curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o ../local-repositories/vercmp -)
-        sudo install -m 755 local-repositories/vercmp /usr/local/bin/vercmp
-        sudo install -D -m 644 woof-code/rootfs-skeleton/usr/local/petget/categories.dat /usr/local/petget/categories.dat
-        echo "dash dash/sh boolean false" | sudo debconf-set-selections
-        sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+        sudo apt-get update -qq
+        sudo apt-get install -y --no-install-recommends qemu-user-static binfmt-support
+        docker run --rm -it --privileged -v /dev:/dev -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)` -d --name builder ghcr.io/dpupos/container/dpupos:rolling
     - name: Fix cache ownership
       run: sudo chown -R root:root local-repositories
     - name: merge2out
-      run: yes "" | sudo -E ./merge2out woof-distro/arm/debian/dpupos-veyron-speedy
+      run: yes "" | docker exec builder ./merge2out woof-distro/arm/debian/dpupos-veyron-speedy
     - name: Set version
       run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/DISTRO_SPECS
     - name: Enable updates
       run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/rootfs-packages/pm6_updater/etc/pm6_updater.conf 
     - name: 0setup
-      run: |
-        cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/
-        sudo -E ./0setup
+      run: docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && ./0setup"
     - name: 1download
-      run: |
-        cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/
-        sudo -E ./1download
+      run: docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && ./1download"
     - name: 2createpackages
-      run: |
-        cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/
-        echo | sudo -E ./2createpackages
+      run: docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && ./2createpackages"
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -220,15 +192,10 @@ jobs:
         key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-petbuild-sources-
-    - name: Install 3builddistro dependencies
-      run: |
-        sudo apt-get install -y --no-install-recommends vboot-kernel-utils u-boot-tools device-tree-compiler cgpt qemu-user-static binfmt-support
-        sudo ln -s /usr/bin/mount /usr/local/bin/mount-FULL
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/
-        cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/
-        sudo -E HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release
+        docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -275,12 +242,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Update package lists
-      run: sudo apt-get update -qq
     - name: Create cache directories
       run: |
         mkdir -p local-repositories petbuild-sources
-        ln -s `pwd`/local-repositories ../local-repositories
+        ln -s `basename $(pwd)`/local-repositories ../local-repositories
     - name: Get cached local-repositories
       uses: actions/cache@v2
       with:
@@ -289,32 +254,21 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-${{ github.job }}-local-repositories-
     - name: Prepare build environment
-      run: |
-        [ -f local-repositories/vercmp ] || (curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o ../local-repositories/vercmp -)
-        sudo install -m 755 local-repositories/vercmp /usr/local/bin/vercmp
-        sudo install -D -m 644 woof-code/rootfs-skeleton/usr/local/petget/categories.dat /usr/local/petget/categories.dat
-        echo "dash dash/sh boolean false" | sudo debconf-set-selections
-        sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+      run: docker run --rm -it --privileged -v /dev:/dev -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)` -d --name builder ghcr.io/dpupos/container/dpupos:rolling32
     - name: Fix cache ownership
       run: sudo chown -R root:root local-repositories
     - name: merge2out
-      run: yes "" | sudo -E linux32 ./merge2out woof-distro/x86/debian/dpupos
+      run: yes "" | docker exec builder linux32 ./merge2out woof-distro/x86/debian/dpupos
     - name: Set version
       run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_x86_x86_debian_dpupos/DISTRO_SPECS
     - name: Enable updates
       run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_x86_x86_debian_dpupos/rootfs-packages/pm6_updater/etc/pm6_updater.conf 
     - name: 0setup
-      run: |
-        cd ../woof-out_x86_x86_debian_dpupos
-        sudo -E linux32 ./0setup
+      run: docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && linux32 ./0setup"
     - name: 1download
-      run: |
-        cd ../woof-out_x86_x86_debian_dpupos
-        sudo -E linux32 ./1download
+      run: docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && linux32 ./1download"
     - name: 2createpackages
-      run: |
-        cd ../woof-out_x86_x86_debian_dpupos
-        echo | sudo -E linux32 ./2createpackages
+      run: docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && linux32 ./2createpackages"
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -333,15 +287,10 @@ jobs:
         key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
         restore-keys: |
           ${{ github.workflow }}-petbuild-sources-
-    - name: Install 3builddistro dependencies
-      run: |
-        sudo apt-get install -y --no-install-recommends vboot-kernel-utils cgpt extlinux
-        sudo ln -s /usr/bin/mount /usr/local/bin/mount-FULL
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_x86_x86_debian_dpupos/
-        cd ../woof-out_x86_x86_debian_dpupos
-        sudo -E HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} linux32 ./3builddistro release
+        docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} linux32 ./3builddistro release"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
