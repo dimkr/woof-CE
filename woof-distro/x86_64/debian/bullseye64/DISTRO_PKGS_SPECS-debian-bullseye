@@ -677,6 +677,7 @@ x86_64)
     PKGS_SPECS_TABLE="$PKGS_SPECS_TABLE
 yes|device-tree-compiler|device-tree-compiler|exe>dev,dev,doc,nls||deps:yes
 yes|extlinux|extlinux|exe>dev,dev,doc,nls||deps:yes
+yes|gcc-arm-linux-gnueabihf|gcc-arm-linux-gnueabihf|exe>dev,dev,doc,nls||deps:yes
 yes|gcc_lib|libasan6,libatomic1,libcc1-0,libgcc-s1,libgcc-10-dev,libgomp1,libisl23,libitm1,libquadmath0|exe,dev,doc,nls||deps:yes #libcloog-isl4 and libisl15 removed for Bullseye
 yes|qemu-user-static|qemu-user-static|exe>dev,dev,doc,nls||deps:yes
 yes|u-boot-tools|u-boot-tools|exe>dev,dev,doc,nls||deps:yes
