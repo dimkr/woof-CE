@@ -50,7 +50,7 @@ jobs:
       with:
         repo: dpupos/woof-CE
         branch: testing
-        workflow: kernel-kit.yml
+        workflow: dpupos-kernel.yml
         workflow_conclusion: success
         name: dpupos-kernel-5.4.x-x86_64
         path: kernel-kit-output
@@ -126,8 +126,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit/output/kernel_sources-5.4-kernel-kit.sfs
-        asset_name: kernel_sources-5.4-kernel-kit.sfs
+        asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit/output/kernel_sources-5.4-dpupos.sfs
+        asset_name: kernel_sources-5.4-dpupos.sfs
         asset_content_type: application/octet-stream
     - name: Delete old releases
       uses: dev-drprasad/delete-older-releases@v0.2.0
@@ -179,7 +179,7 @@ jobs:
       with:
         repo: dpupos/woof-CE
         branch: testing
-        workflow: kernel-kit.yml
+        workflow: dpupos-kernel.yml
         workflow_conclusion: success
         name: dpupos-kernel-5.4.x-veyron-speedy
         path: kernel-kit-output
@@ -274,7 +274,7 @@ jobs:
       with:
         repo: dpupos/woof-CE
         branch: testing
-        workflow: kernel-kit.yml
+        workflow: dpupos-kernel.yml
         workflow_conclusion: success
         name: dpupos-kernel-4.19.x-x86
         path: kernel-kit-output
@@ -339,8 +339,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_x86_debian_dpupos/kernel-kit/output/kernel_sources-4.19-kernel-kit.sfs
-        asset_name: kernel_sources-4.19-kernel-kit.sfs
+        asset_path: ../woof-out_x86_x86_debian_dpupos/kernel-kit/output/kernel_sources-4.19-dpupos.sfs
+        asset_name: kernel_sources-4.19-dpupos.sfs
         asset_content_type: application/octet-stream
     - name: Delete old releases
       uses: dev-drprasad/delete-older-releases@v0.2.0
