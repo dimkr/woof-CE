@@ -1,0 +1,42 @@
+name: dpupos-kernel
+
+on:
+  push:
+    branches:
+      - testing
+    paths:
+      - 'kernel-kit/**'
+      - '!kernel-kit/patches/**'
+      - '!kernel-kit/README'
+      - '!kernel-kit/ZNOTES'
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.event_name != 'schedule' || (github.repository == 'dpupos/woof-CE' && github.ref == 'refs/heads/testing')
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        include:
+          - kernel-kit-config: 5.4.x-x86_64
+          - kernel-kit-config: 5.4.x-veyron-speedy
+          - kernel-kit-config: 4.19.x-x86
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare build environment
+      - name: Build kernel
+        run: |
+          cd kernel-kit
+          cp -f ${{ matrix.kernel-kit-config }}-build.conf build.conf
+          /bin/echo -e '\npackage_name_suffix=dpupos' >> build.conf
+          docker run --rm -it -v `pwd`/../..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)/..`/kernel-kit ghcr.io/dpupos/container/dpupos:rolling ./build.sh
+          mkdir small-output
+          mv output/*.{sfs,tar}* small-output/
+      - name: Upload kernel
+        uses: actions/upload-artifact@v2
+        with:
+          name: dpupos-kernel-${{ matrix.kernel-kit-config }}
+          path: kernel-kit/small-output
+          retention-days: 14
