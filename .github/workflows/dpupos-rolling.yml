@@ -45,8 +45,17 @@ jobs:
       run: docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && ./1download"
     - name: 2createpackages
       run: docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && ./2createpackages"
-    - name: Build kernel
-      run: docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit && cp -f 5.4.x-x86_64-build.conf build.conf && ./build.sh"
+    - name: Get cached kernel-kit output
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        repo: dpupos/woof-CE
+        branch: testing
+        workflow: kernel-kit.yml
+        workflow_conclusion: success
+        name: dpupos-kernel-5.4.x-x86_64
+        path: kernel-kit-output
+    - name: Move cached kernel-kit output
+      run: sudo mv kernel-kit-output ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit/output
     - name: Get cached petbuild-sources
       uses: actions/cache@v2
       with:
@@ -165,8 +174,17 @@ jobs:
       run: docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && ./1download"
     - name: 2createpackages
       run: docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && ./2createpackages"
-    - name: Build kernel
-      run: docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/kernel-kit && cp -f 5.4.x-veyron-speedy-build.conf build.conf && ./build.sh"
+    - name: Get cached kernel-kit output
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        repo: dpupos/woof-CE
+        branch: testing
+        workflow: kernel-kit.yml
+        workflow_conclusion: success
+        name: dpupos-kernel-5.4.x-veyron-speedy
+        path: kernel-kit-output
+    - name: Move cached kernel-kit output
+      run: sudo mv kernel-kit-output ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/kernel-kit/output
     - name: Get cached petbuild-sources
       uses: actions/cache@v2
       with:
@@ -251,8 +269,17 @@ jobs:
       run: docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && linux32 ./1download"
     - name: 2createpackages
       run: docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && linux32 ./2createpackages"
-    - name: Build kernel
-      run: docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos/kernel-kit && cp -f 4.19.x-x86-build.conf build.conf && linux32 ./build.sh"
+    - name: Get cached kernel-kit output
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        repo: dpupos/woof-CE
+        branch: testing
+        workflow: kernel-kit.yml
+        workflow_conclusion: success
+        name: dpupos-kernel-4.19.x-x86
+        path: kernel-kit-output
+    - name: Move cached kernel-kit output
+      run: sudo mv kernel-kit-output ../woof-out_x86_x86_debian_dpupos/kernel-kit/output
     - name: Get cached petbuild-sources
       uses: actions/cache@v2
       with:
