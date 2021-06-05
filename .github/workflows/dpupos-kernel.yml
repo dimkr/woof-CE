@@ -39,5 +39,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dpupos-kernel-${{ matrix.kernel-kit-config }}
-          path: kernel-kit/small-output
+          path: small-output
           retention-days: 14
