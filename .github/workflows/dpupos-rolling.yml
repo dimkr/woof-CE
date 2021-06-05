@@ -66,7 +66,7 @@ jobs:
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_x86_64_x86_64_debian_dpupos/
-        docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release"
+        docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -195,7 +195,7 @@ jobs:
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/
-        docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release"
+        docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -290,7 +290,7 @@ jobs:
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_x86_x86_debian_dpupos/
-        docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} linux32 ./3builddistro release"
+        docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} linux32 ./3builddistro release && rm -rf sandbox3"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
