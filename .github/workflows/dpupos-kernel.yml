@@ -30,7 +30,7 @@ jobs:
           cd kernel-kit
           cp -f ${{ matrix.kernel-kit-config }}-build.conf build.conf
           /bin/echo -e '\npackage_name_suffix=dpupos' >> build.conf
-          docker run --rm -it -v `pwd`/../..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)/..`/kernel-kit ghcr.io/dpupos/container/dpupos:rolling ./build.sh
+          docker run --rm -v `pwd`/../..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)/..`/kernel-kit ghcr.io/dpupos/container/dpupos:rolling ./build.sh
           mkdir small-output
           mv output/*.{sfs,tar}* small-output/
       - name: Upload kernel
