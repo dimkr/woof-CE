@@ -25,7 +25,6 @@ jobs:
           - kernel-kit-config: 4.19.x-x86
     steps:
       - uses: actions/checkout@v2
-      - name: Prepare build environment
       - name: Build kernel
         run: |
           cd kernel-kit
