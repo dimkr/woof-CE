@@ -36,15 +36,15 @@ jobs:
     - name: merge2out
       run: yes "" | docker exec builder ./merge2out woof-distro/x86_64/debian/dpupos
     - name: Set version
-      run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_x86_64_x86_64_debian_dpupos/DISTRO_SPECS
+      run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_*/DISTRO_SPECS
     - name: Enable updates
-      run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_x86_64_x86_64_debian_dpupos/rootfs-packages/pm6_updater/etc/pm6_updater.conf 
+      run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_*/rootfs-packages/pm6_updater/etc/pm6_updater.conf
     - name: 0setup
-      run: docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && ./0setup"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./0setup"
     - name: 1download
-      run: docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && ./1download"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./1download"
     - name: 2createpackages
-      run: docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && ./2createpackages"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./2createpackages"
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -53,9 +53,9 @@ jobs:
         workflow: dpupos-kernel.yml
         workflow_conclusion: success
         name: dpupos-kernel-5.4.x-x86_64
-        path: kernel-kit-output
+        path: output
     - name: Move cached kernel-kit output
-      run: sudo mv kernel-kit-output ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit/output
+      run: sudo mv output ../woof-out_*/kernel-kit/
     - name: Get cached petbuild-sources
       uses: actions/cache@v2
       with:
@@ -65,8 +65,8 @@ jobs:
           ${{ github.workflow }}-petbuild-sources-
     - name: 3builddistro
       run: |
-        sudo mv petbuild-sources ../woof-out_x86_64_x86_64_debian_dpupos/
-        docker exec builder sh -c "cd ../woof-out_x86_64_x86_64_debian_dpupos && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
+        sudo mv petbuild-sources ../woof-out_*/
+        docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -88,11 +88,11 @@ jobs:
         asset_name: dpupos-1.tar
         asset_content_type: application/octet-stream
     - name: Compress image
-      run: sudo gzip -1 ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb.img
+      run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb.img
     - name: Compress legacy image
-      run: sudo gzip -1 ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-legacy.img
+      run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb-legacy.img
     - name: Compress UEFI image
-      run: sudo gzip -1 ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-uefi.img
+      run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb-uefi.img
     - name: Upload image
       uses: actions/upload-release-asset@v1
       env:
@@ -138,7 +138,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Move cached directories
-      run: sudo mv ../woof-out_x86_64_x86_64_debian_dpupos/petbuild-sources .
+      run: sudo mv ../woof-out_*/petbuild-sources .
   veyron-speedy:
     runs-on: ubuntu-20.04
     steps:
@@ -165,15 +165,15 @@ jobs:
     - name: merge2out
       run: yes "" | docker exec builder ./merge2out woof-distro/arm/debian/dpupos-veyron-speedy
     - name: Set version
-      run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/DISTRO_SPECS
+      run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_*/DISTRO_SPECS
     - name: Enable updates
-      run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/rootfs-packages/pm6_updater/etc/pm6_updater.conf 
+      run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_*/rootfs-packages/pm6_updater/etc/pm6_updater.conf
     - name: 0setup
-      run: docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && ./0setup"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./0setup"
     - name: 1download
-      run: docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && ./1download"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./1download"
     - name: 2createpackages
-      run: docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && ./2createpackages"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./2createpackages"
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -182,9 +182,9 @@ jobs:
         workflow: dpupos-kernel.yml
         workflow_conclusion: success
         name: dpupos-kernel-5.4.x-veyron-speedy
-        path: kernel-kit-output
+        path: output
     - name: Move cached kernel-kit output
-      run: sudo mv kernel-kit-output ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/kernel-kit/output
+      run: sudo mv output ../woof-out_*/kernel-kit/
     - name: Get cached petbuild-sources
       uses: actions/cache@v2
       with:
@@ -194,8 +194,8 @@ jobs:
           ${{ github.workflow }}-petbuild-sources-
     - name: 3builddistro
       run: |
-        sudo mv petbuild-sources ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/
-        docker exec builder sh -c "cd ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
+        sudo mv petbuild-sources ../woof-out_*/
+        docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -217,7 +217,7 @@ jobs:
         asset_name: dpupos-1.tar
         asset_content_type: application/octet-stream
     - name: Compress image
-      run: sudo gzip -1 ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/woof-output-dpupos-1/dpupos-1-ext4-2gb.img
+      run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb.img
     - name: Upload image
       uses: actions/upload-release-asset@v1
       env:
@@ -236,7 +236,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Move cached directories
-      run: sudo mv ../woof-out_x86_64_arm_debian_dpupos-veyron-speedy/petbuild-sources .
+      run: sudo mv ../woof-out_*/petbuild-sources .
   x86:
     runs-on: ubuntu-20.04
     steps:
@@ -260,15 +260,15 @@ jobs:
     - name: merge2out
       run: yes "" | docker exec builder linux32 ./merge2out woof-distro/x86/debian/dpupos
     - name: Set version
-      run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_x86_x86_debian_dpupos/DISTRO_SPECS
+      run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_*/DISTRO_SPECS
     - name: Enable updates
-      run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_x86_x86_debian_dpupos/rootfs-packages/pm6_updater/etc/pm6_updater.conf 
+      run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_*/rootfs-packages/pm6_updater/etc/pm6_updater.conf
     - name: 0setup
-      run: docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && linux32 ./0setup"
+      run: docker exec builder sh -c "cd ../woof-out_* && linux32 ./0setup"
     - name: 1download
-      run: docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && linux32 ./1download"
+      run: docker exec builder sh -c "cd ../woof-out_* && linux32 ./1download"
     - name: 2createpackages
-      run: docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && linux32 ./2createpackages"
+      run: docker exec builder sh -c "cd ../woof-out_* && linux32 ./2createpackages"
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -277,9 +277,9 @@ jobs:
         workflow: dpupos-kernel.yml
         workflow_conclusion: success
         name: dpupos-kernel-4.19.x-x86
-        path: kernel-kit-output
+        path: output
     - name: Move cached kernel-kit output
-      run: sudo mv kernel-kit-output ../woof-out_x86_x86_debian_dpupos/kernel-kit/output
+      run: sudo mv output ../woof-out_*/kernel-kit/
     - name: Get cached petbuild-sources
       uses: actions/cache@v2
       with:
@@ -289,8 +289,8 @@ jobs:
           ${{ github.workflow }}-petbuild-sources-
     - name: 3builddistro
       run: |
-        sudo mv petbuild-sources ../woof-out_x86_x86_debian_dpupos/
-        docker exec builder sh -c "cd ../woof-out_x86_x86_debian_dpupos && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} linux32 ./3builddistro release && rm -rf sandbox3"
+        sudo mv petbuild-sources ../woof-out_*/
+        docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} linux32 ./3builddistro release && rm -rf sandbox3"
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -312,9 +312,9 @@ jobs:
         asset_name: dpupos-1.tar
         asset_content_type: application/octet-stream
     - name: Compress image
-      run: sudo gzip -1 ../woof-out_x86_x86_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb.img
+      run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb.img
     - name: Compress legacy image
-      run: sudo gzip -1 ../woof-out_x86_x86_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-legacy.img
+      run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb-legacy.img
     - name: Upload image
       uses: actions/upload-release-asset@v1
       env:
@@ -351,4 +351,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Move cached directories
-      run: sudo mv ../woof-out_x86_x86_debian_dpupos/petbuild-sources .
+      run: sudo mv ../woof-out_*/petbuild-sources .
