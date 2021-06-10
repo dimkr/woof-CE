@@ -1,10 +1,6 @@
 name: dpupos-rolling
 
 on:
-  push:
-    branches:
-      - dpupos
-      - testing
   schedule:
     - cron: '0 0 */3 * *'
   workflow_dispatch:
