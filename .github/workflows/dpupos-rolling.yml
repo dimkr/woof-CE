@@ -63,6 +63,7 @@ jobs:
       run: |
         sudo mv petbuild-sources ../woof-out_*/
         docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
+        docker stop builder
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -192,6 +193,7 @@ jobs:
       run: |
         sudo mv petbuild-sources ../woof-out_*/
         docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
+        docker stop builder
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
@@ -287,6 +289,7 @@ jobs:
       run: |
         sudo mv petbuild-sources ../woof-out_*/
         docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} linux32 ./3builddistro release && rm -rf sandbox3"
+        docker stop builder
     - name: Create release
       id: create_release
       uses: actions/create-release@v1
