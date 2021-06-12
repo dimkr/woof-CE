@@ -34,10 +34,6 @@ jobs:
       run: yes "" | docker exec builder ./merge2out woof-distro/x86_64/debian/dpupos
     - name: Set version
       run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=2/ -i ../woof-out_*/DISTRO_SPECS
-    - name: Set compression algorithm
-      run: |
-        echo | sudo tee -a ../woof-out_*/_00build.conf
-        echo 'SFSCOMP="-comp lzo -Xalgorithm lzo1x_1"' | sudo tee -a ../woof-out_*/_00build.conf
     - name: 0setup
       run: docker exec builder sh -c "cd ../woof-out_* && ./0setup"
     - name: 1download
