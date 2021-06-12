@@ -160,20 +160,28 @@ elif [ -h "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
         exit 1
     fi
 
-    cp -f vmlinuz.efi /mnt/efi/EFI/BOOT/BOOTX64.EFI
+    cp -f efilinux.efi /mnt/efi/EFI/BOOT/BOOTX64.EFI
     if [ $? -ne 0 ]; then
-        echo "Failed to copy kernel to EFI partitoin"
+        echo "Failed to copy efilinux to EFI partition"
+        cd ..
+        [ "$1" = ask ] && read
+        exit 1
+    fi
+
+    cp -f vmlinuz /mnt/efi/EFI/BOOT/vmlinuz
+    if [ $? -ne 0 ]; then
+        echo "Failed to copy kernel to EFI partition"
         cd ..
         [ "$1" = ask ] && read
         exit 1
     fi
 
     umount -l /mnt/efi
-    rm -f vmlinuz vmlinuz.efi vmlinux.kpart
+    rm -f vmlinux.kpart
 else
     # TODO: detect the partition instead of relying on a fixed UUID
     dd if=vmlinux.kpart of=/dev/disk/by-partuuid/b361601a-103d-374c-ba2c-35b8533a199d
-    rm -f vmlinuz vmlinuz.efi vmlinux.kpart
+    rm -f vmlinuz efilinux.efi
 fi
 
 # if the files are not flushed to disk, we're left in non-bootable state

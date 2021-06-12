@@ -157,6 +157,8 @@ EOF
 esac
 
 if [ "$WOOF_TARGETARCH" = "x86_64" ]; then
+	wget --tries=1 --timeout=10 -O build/efilinux.efi https://github.com/dpupos/efilinux/releases/latest/download/efilinux.efi
+
 	dd if=/dev/zero of=${UEFI_IMG_BASE} bs=50M count=40 conv=sparse
 	parted --script ${UEFI_IMG_BASE} mklabel gpt
 	parted --script ${UEFI_IMG_BASE} mkpart "${DISTRO_FILE_PREFIX}_esp" fat32 1MiB 261MiB
@@ -168,18 +170,11 @@ if [ "$WOOF_TARGETARCH" = "x86_64" ]; then
 
 	mkdir -p /mnt/uefiimagep1 /mnt/uefiimagep2
 
-	unsquashfs -d kernel_sources ../kernel-kit/output/kernel_sources-*.sfs
-	cd kernel_sources/usr/src/linux
-	cat << EOF >> .config
-CONFIG_EFI_STUB=y
-CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="root=PARTLABEL=${DISTRO_FILE_PREFIX}_root init=/init rootfstype=ext4 rootwait rw"
-EOF
-	make -j`nproc` bzImage
 	mount-FULL -o noatime ${LOOP}p1 /mnt/uefiimagep1
-	install -D -m 644 arch/x86/boot/bzImage /mnt/uefiimagep1/EFI/BOOT/BOOTX64.EFI
+	install -D -m 644 build/efilinux.efi /mnt/uefiimagep1/EFI/BOOT/BOOTX64.EFI
+	install -D -m 644 build/vmlinuz /mnt/uefiimagep1/EFI/BOOT/vmlinuz
+	echo "-f 0:\EFI\BOOT\vmlinuz root=PARTLABEL=${DISTRO_FILE_PREFIX}_root init=/init rootfstype=ext4 rootwait rw" > /mnt/uefiimagep1/EFI/BOOT/efilinux.cfg
 	busybox umount /mnt/uefiimagep1 2>/dev/null
-	cd ../../../..
 
 	mount-FULL -o noatime ${LOOP}p2 /mnt/uefiimagep2
 	cp -a /mnt/ssdimagep2/${VERSIONDIR} /mnt/ssdimagep2/*.sfs /mnt/ssdimagep2/init /mnt/uefiimagep2/
@@ -191,15 +186,8 @@ fi
 # create an archive
 cp -a /mnt/ssdimagep2/${VERSIONDIR} .
 cp -a build/vmlinux.kpart /mnt/ssdimagep2/init ${VERSIONDIR}/
-case $WOOF_TARGETARCH in
-x86_64)
-	cp -f build/vmlinuz ${VERSIONDIR}/
-	cp -f kernel_sources/usr/src/linux/arch/x86/boot/bzImage ${VERSIONDIR}/vmlinuz.efi
-	;;
-x86)
-	cp -f build/vmlinuz ${VERSIONDIR}/
-	;;
-esac
+cp -f build/vmlinuz ${VERSIONDIR}/
+[ "$WOOF_TARGETARCH" != "x86_64" ] || cp -f build/efilinux.efi ${VERSIONDIR}/
 cd $VERSIONDIR
 tar -c * > ../../${WOOF_OUTPUT}/${TAR_BASE}
 cd ..
