@@ -655,6 +655,7 @@ no|yasm|yasm|exe>dev,dev>null,doc,nls
 no|YASSM||exe,dev>null,doc,nls
 yes|zip|zip|exe,dev>null,doc,nls||deps:yes
 yes|zlib|zlib1g,zlib1g-dev|exe,dev,doc,nls||deps:yes
+yes|zstd|zstd|exe,dev,doc,nls||deps:yes
 no|zzznet||exe
 '
 
