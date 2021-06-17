@@ -10,8 +10,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  x86_64:
+  build:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        include:
+          - arch: x86_64
+            kernel-version: 5.4.x
+            prefix:
+            tag: rolling
+          - arch: x86
+            kernel-version: 4.19.x
+            prefix: linux32
+            tag: rolling32
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -23,23 +34,23 @@ jobs:
       uses: actions/cache@v2
       with:
         path: local-repositories
-        key: ${{ github.workflow }}-${{ github.job }}-local-repositories-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ matrix.arch }}-local-repositories-${{ github.sha }}
         restore-keys: |
-          ${{ github.workflow }}-${{ github.job }}-local-repositories-
+          ${{ github.workflow }}-${{ matrix.arch }}-local-repositories-
     - name: Prepare build environment
-      run: docker run --rm -it --privileged -v /dev:/dev -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)` -d --name builder ghcr.io/dpupos/container/dpupos:rolling
+      run: docker run --rm -it --privileged -v /dev:/dev -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)` -d --name builder ghcr.io/dpupos/container/dpupos:${{ matrix.tag }}
     - name: Fix cache ownership
       run: sudo chown -R root:root local-repositories
     - name: merge2out
-      run: yes "" | docker exec builder ./merge2out woof-distro/x86_64/debian/dpupos
+      run: yes "" | docker exec builder ${{ matrix.prefix }} ./merge2out woof-distro/${{ matrix.arch }}/debian/dpupos
     - name: Set version
       run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=2/ -i ../woof-out_*/DISTRO_SPECS
     - name: 0setup
-      run: docker exec builder sh -c "cd ../woof-out_* && ./0setup"
+      run: docker exec builder sh -c "cd ../woof-out_* && ${{ matrix.prefix }} ./0setup"
     - name: 1download
-      run: docker exec builder sh -c "cd ../woof-out_* && ./1download"
+      run: docker exec builder sh -c "cd ../woof-out_* && ${{ matrix.prefix }} ./1download"
     - name: 2createpackages
-      run: docker exec builder sh -c "cd ../woof-out_* && ./2createpackages"
+      run: docker exec builder sh -c "cd ../woof-out_* && ${{ matrix.prefix }} ./2createpackages"
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -47,7 +58,7 @@ jobs:
         branch: testing
         workflow: dpupos-kernel.yml
         workflow_conclusion: success
-        name: dpupos-kernel-5.4.x-x86_64
+        name: dpupos-kernel-${{ matrix.kernel-version }}-${{ matrix.arch }}
         path: output
     - name: Move cached kernel-kit output
       run: sudo mv output ../woof-out_*/kernel-kit/
@@ -62,21 +73,21 @@ jobs:
       uses: actions/cache@v2
       with:
         path: petbuild-cache
-        key: ${{ github.workflow }}-${{ github.job }}-petbuild-cache-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ matrix.arch }}-petbuild-cache-${{ github.sha }}
         restore-keys: |
-          ${{ github.workflow }}-${{ github.job }}-petbuild-cache-
+          ${{ github.workflow }}-${{ matrix.arch }}-petbuild-cache-
     - name: Get cached petbuild-output
       uses: actions/cache@v2
       with:
         path: petbuild-output
-        key: ${{ github.workflow }}-${{ github.job }}-petbuild-output-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ matrix.arch }}-petbuild-output-${{ github.sha }}
         restore-keys: |
-          ${{ github.workflow }}-${{ github.job }}-petbuild-output-
+          ${{ github.workflow }}-${{ matrix.arch }}-petbuild-output-
     - name: 3builddistro
       run: |
         sudo chown -R root:root petbuild-output
         sudo mv petbuild-{sources,cache,output} ../woof-out_*/
-        docker exec builder sh -c "cd ../woof-out_* && HOME=/root ./3builddistro release"
+        docker exec builder sh -c "cd ../woof-out_* && HOME=/root ${{ matrix.prefix }} ./3builddistro release"
         docker stop builder
         sudo rm -rf ../woof-out_*/sandbox3
         sudo mv ../woof-out_*/petbuild-{sources,cache,output} .
@@ -85,6 +96,6 @@ jobs:
     - name: Upload tarball
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ github.workflow }}-${{ github.job }}-${{ github.run_number }}
+        name: ${{ github.workflow }}-${{ matrix.arch }}-${{ github.run_number }}
         path: dpupos-2.tar
         retention-days: 3
