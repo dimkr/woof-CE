@@ -16,7 +16,7 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            kernel-version: 5.4.x
+            kernel-version: 5.10.x
             prefix:
             tag: rolling
           - arch: x86
