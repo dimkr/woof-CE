@@ -9,6 +9,8 @@ INSTALL_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-2gb-install.img
 SSD_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-16gb.img
 LEGACY_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-2gb-legacy.img
 UEFI_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-2gb-uefi.img
+UEFI_SMALL_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-2gb-uefi-small.img
+UEFI_BAREBONES_IMG_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-ext4-2gb-uefi-barebones.img
 
 # and an archive containing the files needed for update
 TAR_BASE=${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}.tar
@@ -179,8 +181,17 @@ if [ "$WOOF_TARGETARCH" = "x86_64" ]; then
 	mount-FULL -o noatime ${LOOP}p2 /mnt/uefiimagep2
 	cp -a /mnt/ssdimagep2/${VERSIONDIR} /mnt/ssdimagep2/*.sfs /mnt/ssdimagep2/init /mnt/uefiimagep2/
 	busybox umount /mnt/uefiimagep2 2>/dev/null
+	cp -vf ${UEFI_IMG_BASE} ../${WOOF_OUTPUT}/
 
-	mv -f ${UEFI_IMG_BASE} ../${WOOF_OUTPUT}/
+	mount-FULL -o noatime ${LOOP}p2 /mnt/uefiimagep2
+	rm -vf /mnt/uefiimagep2/*x_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs /mnt/uefiimagep2/${VERSIONDIR}/*x_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs
+	busybox umount /mnt/uefiimagep2 2>/dev/null
+	cp -vf ${UEFI_IMG_BASE} ../${WOOF_OUTPUT}/${UEFI_SMALL_IMG_BASE}
+
+	mount-FULL -o noatime ${LOOP}p2 /mnt/uefiimagep2
+	rm -vf /mnt/uefiimagep2/adrv_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs /mnt/uefiimagep2/${VERSIONDIR}/adrv_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs
+	busybox umount /mnt/uefiimagep2 2>/dev/null
+	mv -vf ${UEFI_IMG_BASE} ../${WOOF_OUTPUT}/${UEFI_BAREBONES_IMG_BASE}
 fi
 
 # create an archive
