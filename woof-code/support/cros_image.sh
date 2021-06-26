@@ -152,6 +152,7 @@ EOF
 	cp -f build/vmlinuz /mnt/legacyimagep1/${VERSIONDIR}/
 	ln -s ${VERSIONDIR}/vmlinuz /mnt/legacyimagep1/
 	busybox umount /mnt/legacyimagep1 2>/dev/null
+	losetup -d ${LOOP}
 	mv -f ${LEGACY_IMG_BASE} ../${WOOF_OUTPUT}/
 	;;
 esac
@@ -179,6 +180,7 @@ if [ "$WOOF_TARGETARCH" = "x86_64" ]; then
 	mount-FULL -o noatime ${LOOP}p2 /mnt/uefiimagep2
 	cp -a /mnt/ssdimagep2/${VERSIONDIR} /mnt/ssdimagep2/*.sfs /mnt/ssdimagep2/init /mnt/uefiimagep2/
 	busybox umount /mnt/uefiimagep2 2>/dev/null
+	losetup -d ${LOOP}
 
 	mv -f ${UEFI_IMG_BASE} ../${WOOF_OUTPUT}/
 fi
