@@ -87,7 +87,7 @@ jobs:
       run: |
         sudo chown -R root:root petbuild-output
         sudo mv petbuild-{sources,cache,output} ../woof-out_*/
-        docker exec builder sh -c "cd ../woof-out_* && HOME=/root ${{ matrix.prefix }} ./3builddistro release"
+        docker exec builder sh -c "cd ../woof-out_* && HOME=/root ${{ matrix.prefix }} ./3builddistro"
         docker stop builder
         sudo rm -rf ../woof-out_*/sandbox3
         sudo mv ../woof-out_*/petbuild-{sources,cache,output} .
