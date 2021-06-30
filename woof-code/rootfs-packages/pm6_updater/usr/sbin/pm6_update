@@ -159,7 +159,7 @@ for i in $ASSET_CHOICE; do
     fi
 
     rm -f sha256.sum
-fi
+done
 
 # it's important to make sure all assets are flushed to disk
 echo "Flushing /initrd/${RELEASE_TAG} to disk"
