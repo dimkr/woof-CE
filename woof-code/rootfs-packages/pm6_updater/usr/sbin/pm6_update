@@ -83,18 +83,21 @@ fi
 RELEASE_ASSETS=`echo "$RELEASES" | jq -r ".[$RELEASE_CHOICE].assets"`
 COUNT=`echo "$RELEASE_ASSETS" | jq length`
 
-# download the kernel and every SFS in the release
-ASSET_CHOICE=-1
+ASSET_CHOICE=
 for i in `seq 0 $(($COUNT - 1))`; do
     ASSET_NAME=`echo "$RELEASE_ASSETS" | jq -r ".[$i].name"`
 
-    if [ "$ASSET_NAME" = "${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}.tar" ]; then
-        ASSET_CHOICE=$i
-        break
-    fi
+    case "$ASSET_NAME" in
+    ${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}.tar)
+        ASSET_CHOICE="$ASSET_CHOICE $i"
+        ;;
+    ${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-delta.tar)
+        ASSET_CHOICE="$i $ASSET_CHOICE"
+        ;;
+    esac
 done
 
-if [ $ASSET_CHOICE -lt 0 ]; then
+if [ -z "$ASSET_CHOICE" ]; then
     echo "No $RELEASE_CHANNEL update available"
     rm -rf "/initrd/${RELEASE_TAG}"
     [ "$1" = ask ] && read
@@ -103,36 +106,60 @@ fi
 
 cd "/initrd/${RELEASE_TAG}"
 
-echo "Downloading $ASSET_NAME"
-ASSET_URL=`echo "$RELEASE_ASSETS" | jq -r ".[$ASSET_CHOICE].url"`
-wget -O "$ASSET_NAME" --header "Accept: application/octet-stream" "$ASSET_URL"
-if [ $? -ne 0 ]; then
-    echo "Failed to download $ASSET_NAME"
-    cd ..
-    rm -rf "${RELEASE_TAG}"
-    [ "$1" = ask ] && read
-    exit 1
-fi
+DELTAFAILED=0
+for i in $ASSET_CHOICE; do
+    ASSET_NAME=`echo "$RELEASE_ASSETS" | jq -r ".[$i].name"`
+    echo "Downloading $ASSET_NAME"
+    ASSET_URL=`echo "$RELEASE_ASSETS" | jq -r ".[$i].url"`
+    wget -O "$ASSET_NAME" --header "Accept: application/octet-stream" "$ASSET_URL"
+    if [ $? -ne 0 ]; then
+        echo "Failed to download $ASSET_NAME"
+        cd ..
+        rm -rf "${RELEASE_TAG}"
+        [ "$1" = ask ] && read
+        exit 1
+    fi
 
-tar xf "${ASSET_NAME}"
-if [ $? -ne 0 ]; then
-    echo "Failed to update to $RELEASE_TAG"
-    cd ..
-    rm -rf "${RELEASE_TAG}"
-    [ "$1" = ask ] && read
-    exit 1
-fi
+    tar xf "${ASSET_NAME}"
+    if [ $? -ne 0 ]; then
+        echo "Failed to extract $ASSET_NAME"
+        cd ..
+        rm -rf "${RELEASE_TAG}"
+        [ "$1" = ask ] && read
+        exit 1
+    fi
 
-sha256sum -c sha256.sum
-if [ $? -ne 0 ]; then
-    echo "Failed to verify $RELEASE_TAG tarball"
-    cd ..
-    rm -rf "${RELEASE_TAG}"
-    [ "$1" = ask ] && read
-    exit 1
-fi
+    rm -f "${ASSET_NAME}"
 
-rm -f "${ASSET_NAME}" sha256.sum
+    if [ "${ASSET_NAME}" = "${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-delta.tar" ]; then
+        for DELTA in *.delta; do
+            NAME=${DELTA%.delta}
+
+            xdelta3 -d -c -s "../${NAME}" "${DELTA}" > "${NAME}"
+            if [ $? -ne 0 ]; then
+                echo "Failed to apply $DELTA"
+                rm -f *
+                DELTAFAILED=1
+                break
+            fi
+        done
+
+        [ $DELTAFAILED -eq 1 ] && continue
+    fi
+
+    sha256sum -c sha256.sum
+    if [ $? -ne 0 ]; then
+        [ "${ASSET_NAME}" = "${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}-delta.tar" ] && continue
+
+        echo "Failed to verify $RELEASE_TAG files"
+        cd ..
+        rm -rf "${RELEASE_TAG}"
+        [ "$1" = ask ] && read
+        exit 1
+    fi
+
+    rm -f sha256.sum
+fi
 
 # it's important to make sure all assets are flushed to disk
 echo "Flushing /initrd/${RELEASE_TAG} to disk"
