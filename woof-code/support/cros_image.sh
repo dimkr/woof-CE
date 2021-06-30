@@ -191,6 +191,7 @@ cp -a build/vmlinux.kpart /mnt/ssdimagep2/init ${VERSIONDIR}/
 cp -f build/vmlinuz ${VERSIONDIR}/
 [ "$WOOF_TARGETARCH" != "x86_64" ] || cp -f build/efilinux.efi ${VERSIONDIR}/
 cd $VERSIONDIR
+sha256sum * > sha256.sum
 tar -c * > ../../${WOOF_OUTPUT}/${TAR_BASE}
 cd ..
 

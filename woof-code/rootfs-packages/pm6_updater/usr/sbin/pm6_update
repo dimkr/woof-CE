@@ -123,7 +123,16 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-rm -f "${ASSET_NAME}"
+sha256sum -c sha256.sum
+if [ $? -ne 0 ]; then
+    echo "Failed to verify $RELEASE_TAG tarball"
+    cd ..
+    rm -rf "${RELEASE_TAG}"
+    [ "$1" = ask ] && read
+    exit 1
+fi
+
+rm -f "${ASSET_NAME}" sha256.sum
 
 # it's important to make sure all assets are flushed to disk
 echo "Flushing /initrd/${RELEASE_TAG} to disk"
