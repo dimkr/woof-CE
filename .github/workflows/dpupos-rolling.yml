@@ -67,7 +67,7 @@ jobs:
         docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
     - name: Generate delta update
       run: |
-        docker exec builder sh -c "./scripts/gen-tarball-delta ${{ github.job }} `pwd`/../woof-out_*/woof-output-dpupos-1/dpupos-1.tar dpupos-1-delta.tar"
+        docker exec builder sh -c "./scripts/gen-tarball-delta.sh ${{ github.job }} `pwd`/../woof-out_*/woof-output-dpupos-1/dpupos-1.tar dpupos-1-delta.tar"
         docker stop builder
     - name: Create release
       id: create_release
@@ -211,7 +211,7 @@ jobs:
         docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
     - name: Generate delta update
       run: |
-        docker exec builder sh -c "./scripts/gen-tarball-delta ${{ github.job }} `pwd`/../woof-out_*/woof-output-dpupos-1/dpupos-1.tar dpupos-1-delta.tar"
+        docker exec builder sh -c "./scripts/gen-tarball-delta.sh ${{ github.job }} `pwd`/../woof-out_*/woof-output-dpupos-1/dpupos-1.tar dpupos-1-delta.tar"
         docker stop builder
     - name: Create release
       id: create_release
@@ -321,7 +321,7 @@ jobs:
         docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} linux32 ./3builddistro release && rm -rf sandbox3"
     - name: Generate delta update
       run: |
-        docker exec builder sh -c "./scripts/gen-tarball-delta ${{ github.job }} `pwd`/../woof-out_*/woof-output-dpupos-1/dpupos-1.tar dpupos-1-delta.tar"
+        docker exec builder sh -c "./scripts/gen-tarball-delta.sh ${{ github.job }} `pwd`/../woof-out_*/woof-output-dpupos-1/dpupos-1.tar dpupos-1-delta.tar"
         docker stop builder
     - name: Create release
       id: create_release
