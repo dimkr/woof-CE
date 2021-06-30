@@ -159,6 +159,7 @@ for i in $ASSET_CHOICE; do
     fi
 
     rm -f sha256.sum
+    break
 done
 
 # it's important to make sure all assets are flushed to disk
