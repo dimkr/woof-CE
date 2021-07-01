@@ -138,7 +138,7 @@ yes|flac|libflac8|exe,dev,doc,nls||deps:yes
 yes|flex|flex|exe>dev,dev,doc,nls||deps:yes
 no|foomatic-db-engine|foomatic-db-engine|exe,dev,doc,nls
 no|foomatic-filters|foomatic-filters|exe,dev,doc,nls
-yes|fonts-noto|fonts-noto-core,fonts-noto-mono,fonts-croscore,fonts-crosextra-caladea,fonts-crosextra-carlito,fonts-noto-color-emoji|exe,dev,doc,nls||deps:yes
+yes|fonts-noto|fonts-noto-core,fonts-croscore|exe,dev,doc,nls||deps:yes
 no|fonts-liberation|fonts-liberation|exe,dev,doc,nls||deps:yes
 no|fpm2||exe,dev
 no|freeglut|freeglut3,freeglut3-dev|exe,dev,doc,nls
