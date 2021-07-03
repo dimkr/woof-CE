@@ -98,30 +98,8 @@ jobs:
         asset_path: dpupos-1-delta.tar
         asset_name: dpupos-1-delta.tar
         asset_content_type: application/octet-stream
-    - name: Compress image
-      run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb.img
-    - name: Compress legacy image
-      run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb-legacy.img
     - name: Compress UEFI image
       run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb-uefi.img
-    - name: Upload image
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb.img.gz
-        asset_name: dpupos-1-ext4-2gb.img.gz
-        asset_content_type: application/octet-stream
-    - name: Upload legacy image
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-legacy.img.gz
-        asset_name: dpupos-1-ext4-2gb-legacy.img.gz
-        asset_content_type: application/octet-stream
     - name: Upload UEFI image
       uses: actions/upload-release-asset@v1
       env:
@@ -352,19 +330,8 @@ jobs:
         asset_path: dpupos-1-delta.tar
         asset_name: dpupos-1-delta.tar
         asset_content_type: application/octet-stream
-    - name: Compress image
-      run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb.img
     - name: Compress legacy image
       run: sudo gzip -1 ../woof-out_*/woof-output-*/*-ext4-2gb-legacy.img
-    - name: Upload image
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_x86_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb.img.gz
-        asset_name: dpupos-1-ext4-2gb.img.gz
-        asset_content_type: application/octet-stream
     - name: Upload legacy image
       uses: actions/upload-release-asset@v1
       env:
