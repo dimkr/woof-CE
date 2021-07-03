@@ -124,6 +124,7 @@ esac
 wget --tries=1 --timeout=10 -O /mnt/ssdimagep2/init https://github.com/dpupos/frugalify/releases/latest/download/${FRUGALIFY}
 chmod 755 /mnt/ssdimagep2/init
 cp -a /mnt/ssdimagep2/${VERSIONDIR} /mnt/ssdimagep2/*.sfs /mnt/ssdimagep2/init /mnt/sdimagep2/
+[ ! -e build/ucode.cpio ] || install -m 644 build/ucode.cpio /mnt/ssdimagep2/ucode.cpio
 
 case $WOOF_TARGETARCH in
 x86*)
@@ -140,15 +141,26 @@ x86*)
 
 	extlinux -i /mnt/legacyimagep1
 	dd if=/usr/lib/EXTLINUX/mbr.bin of=${LOOP}
-	cat << EOF > /mnt/legacyimagep1/extlinux.conf
+	if [ -e /mnt/ssdimagep2/ucode.cpio ]; then
+		cat << EOF > /mnt/legacyimagep1/extlinux.conf
 DEFAULT puppy
 
 LABEL puppy
 	LINUX vmlinuz
 	APPEND root=PARTUUID=$PARTUUID init=/init rootfstype=ext4 rootwait rw
 EOF
+	else
+		cat << EOF > /mnt/legacyimagep1/extlinux.conf
+DEFAULT puppy
 
+LABEL puppy
+	LINUX vmlinuz
+	INITRD ucode.cpio
+	APPEND root=PARTUUID=$PARTUUID init=/init rootfstype=ext4 rootwait rw
+EOF
+	fi
 	cp -a /mnt/ssdimagep2/${VERSIONDIR} /mnt/ssdimagep2/*.sfs /mnt/ssdimagep2/init /mnt/legacyimagep1/
+	[ ! -e /mnt/ssdimagep2/ucode.cpio ] || cp -a /mnt/ssdimagep2/ucode.cpio /mnt/legacyimagep1/
 	cp -f build/vmlinuz /mnt/legacyimagep1/${VERSIONDIR}/
 	ln -s ${VERSIONDIR}/vmlinuz /mnt/legacyimagep1/
 	busybox umount /mnt/legacyimagep1 2>/dev/null
@@ -174,7 +186,12 @@ if [ "$WOOF_TARGETARCH" = "x86_64" ]; then
 	mount-FULL -o noatime ${LOOP}p1 /mnt/uefiimagep1
 	install -D -m 644 build/efilinux.efi /mnt/uefiimagep1/EFI/BOOT/BOOTX64.EFI
 	install -D -m 644 build/vmlinuz /mnt/uefiimagep1/EFI/BOOT/vmlinuz
-	echo "-f 0:\EFI\BOOT\vmlinuz root=PARTLABEL=${DISTRO_FILE_PREFIX}_root init=/init rootfstype=ext4 rootwait rw" > /mnt/uefiimagep1/EFI/BOOT/efilinux.cfg
+	if [ -e build/ucode.cpio ]; then
+		install -m 644 build/ucode.cpio /mnt/uefiimagep1/EFI/BOOT/ucode.cpio
+		echo "-f 0:\EFI\BOOT\vmlinuz root=PARTLABEL=${DISTRO_FILE_PREFIX}_root initrd=ucode.cpio init=/init rootfstype=ext4 rootwait rw" > /mnt/uefiimagep1/EFI/BOOT/efilinux.cfg
+	else
+		echo "-f 0:\EFI\BOOT\vmlinuz root=PARTLABEL=${DISTRO_FILE_PREFIX}_root init=/init rootfstype=ext4 rootwait rw" > /mnt/uefiimagep1/EFI/BOOT/efilinux.cfg
+	fi
 	busybox umount /mnt/uefiimagep1 2>/dev/null
 
 	mount-FULL -o noatime ${LOOP}p2 /mnt/uefiimagep2
@@ -189,6 +206,7 @@ fi
 cp -a /mnt/ssdimagep2/${VERSIONDIR} .
 cp -a build/vmlinux.kpart /mnt/ssdimagep2/init ${VERSIONDIR}/
 cp -f build/vmlinuz ${VERSIONDIR}/
+[ ! -e build/ucode.cpio ] || cp -f build/ucode.cpio ${VERSIONDIR}/
 [ "$WOOF_TARGETARCH" != "x86_64" ] || cp -f build/efilinux.efi ${VERSIONDIR}/
 cd $VERSIONDIR
 sha256sum * > sha256.sum
