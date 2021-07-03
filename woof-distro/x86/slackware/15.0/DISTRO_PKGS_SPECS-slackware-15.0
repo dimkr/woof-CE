@@ -18,7 +18,7 @@ FALLBACKS_COMPAT_VERSIONS='15.0 14.2 14.1'
 PKGS_SPECS_TABLE='
 yes|aaa_libraries|aaa_libraries|exe
 yes|a52dec||exe,dev,doc,nls
-yes|aaa_puplibs64||exe
+yes|aaa_puplibs||exe
 yes|abiword||exe,dev,doc
 yes|acl|acl|exe,dev,doc,nls
 no|acpid-busibox||exe
@@ -55,7 +55,7 @@ yes|cairo|cairo|exe,dev,doc,nls
 yes|cairomm|cairomm|exe,dev,doc,nls
 no|caps||exe,dev
 yes|cdrtools|cdrtools|exe,dev,doc,nls
-yes|celluloid||exe,dev,doc,nls
+no|celluloid||exe,dev,doc,nls
 yes|cifs-utils|cifs-utils|exe,dev,doc,nls
 yes|cmake|cmake,libidn|exe>dev,dev,doc,nls
 yes|coreutils|coreutils|exe,dev>null,doc,nls
@@ -162,8 +162,10 @@ yes|glipper-lite||exe,dev,nls
 yes|gmeasures||exe,dev>null,doc,nls
 yes|gmp|gmp|exe,dev,doc,nls
 yes|gmrun||exe,dev,doc,nls
-yes|gnome-icon-theme||exe>dev,dev,doc,nls| #too bloated for main fs so send to devx, needed to compile some progs
+no|gnome-icon-theme||exe>dev,dev,doc,nls| #too bloated for main fs so send to devx, needed to compile some progs
 no|gnome-menus||exe,dev,doc,nls
+yes|gnome-mplayer||exe,dev,doc,nls
+yes|gmtk||exe,dev,doc,nls
 yes|gnu-efi|gnu-efi|exe,dev,doc
 yes|gnumeric||exe,dev,doc,nls
 no|gnumeric|gnumeric|exe,dev,doc,nls
@@ -214,9 +216,6 @@ yes|icu4c|icu4c|exe,dev,doc,nls
 yes|imake|imake|exe>dev,dev,doc,nls
 no|inkscapelite||exe,dev,doc,nls
 yes|inotify-tools|inotify-tools|exe,dev,doc,nls
-yes|install-chrome_opera||exe
-yes|install-brave||exe
-yes|install-vivaldi||exe
 yes|installwatch||exe
 yes|intltool|intltool|exe>dev,dev,doc,nls
 yes|inxi||exe,dev,doc
@@ -358,10 +357,11 @@ yes|metamail|metamail|exe,dev>null,doc,nls
 yes|mhwaveedit||exe,dev,nls
 yes|mkwallpaper||exe,dev
 yes|mokutil||exe,dev,doc
+yes|MPlayer||exe,dev,doc
 yes|firefox|mozilla-firefox|exe,dev>null,doc>null| #must keep maintained if used, no from patches repo
 yes|mozilla-nss|mozilla-nss|exe,dev,doc,nls
 yes|mpfr|mpfr|exe,dev,doc,nls
-yes|mpv||exe,dev,doc
+no|mpv||exe,dev,doc
 yes|mpscan||exe,dev
 no|mtpaint||exe,dev,doc,nls
 yes|mtpaint_help||exe
