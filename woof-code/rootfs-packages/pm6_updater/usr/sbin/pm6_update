@@ -142,10 +142,14 @@ for i in $ASSET_CHOICE; do
                 DELTAFAILED=1
                 break
             fi
+
+            rm -f "${DELTA}"
         done
 
         [ $DELTAFAILED -eq 1 ] && continue
     fi
+
+    rm -f *.delta
 
     sha256sum -c sha256.sum
     if [ $? -ne 0 ]; then
