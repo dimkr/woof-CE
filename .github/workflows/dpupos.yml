@@ -20,7 +20,7 @@ jobs:
             prefix:
             tag: rolling
           - arch: x86
-            kernel-version: 5.4.x
+            kernel-version: 5.10.x
             prefix: linux32
             tag: rolling32
     steps:
