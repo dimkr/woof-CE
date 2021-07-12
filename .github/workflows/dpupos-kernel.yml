@@ -24,7 +24,7 @@ jobs:
             container-tag: rolling
           - kernel-kit-config: 5.4.x-veyron-speedy
             container-tag: rolling
-          - kernel-kit-config: 4.19.x-x86
+          - kernel-kit-config: 5.10.x-x86
             container-tag: rolling32
     steps:
       - uses: actions/checkout@v2
