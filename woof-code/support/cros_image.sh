@@ -118,7 +118,8 @@ for SFS in build/*.sfs ../${WOOF_OUTPUT}/*.sfs; do
 	ln -s ${VERSIONDIR}/${BASE} /mnt/ssdimagep2/${BASE}
 done
 case $WOOF_TARGETARCH in
-x86*) FRUGALIFY=frugalify-overlayfs-i386 ;;
+x86_64) FRUGALIFY=frugalify-overlayfs-x86_64;;
+x86) FRUGALIFY=frugalify-overlayfs-i386 ;;
 arm|aarch64) FRUGALIFY=frugalify-overlayfs-arm ;;
 esac
 wget --tries=1 --timeout=10 -O /mnt/ssdimagep2/init https://github.com/dpupos/frugalify/releases/latest/download/${FRUGALIFY}
