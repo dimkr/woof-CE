@@ -193,7 +193,7 @@ if [ -e ../vmlinuz ]; then
 
     echo "Updating microcode"
     rm -f ../ucode.cpio
-    ln -s "${RELEASE_TAG}/ucode.cpio" ../ucode.cpio
+    [ ! -e "${RELEASE_TAG}/ucode.cpio" ] || ln -s "${RELEASE_TAG}/ucode.cpio" ../ucode.cpio
 elif [ -h "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
     mkdir -p /mnt/efi
 
@@ -223,13 +223,16 @@ elif [ -h "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
         exit 1
     fi
 
-    echo "Updating microcode"
-    cp -f ucode.cpio /mnt/efi/EFI/BOOT/ucode.cpio
-    if [ $? -ne 0 ]; then
-        echo "Failed to copy microcode to EFI partition"
-        cd ..
-        [ "$1" = ask ] && read
-        exit 1
+    rm -f /mnt/efi/EFI/BOOT/ucode.cpio
+    if [ -e ucode.cpio ]; then
+        echo "Updating microcode"
+        cp -f ucode.cpio /mnt/efi/EFI/BOOT/ucode.cpio
+        if [ $? -ne 0 ]; then
+            echo "Failed to copy microcode to EFI partition"
+            cd ..
+            [ "$1" = ask ] && read
+            exit 1
+        fi
     fi
 
     umount -l /mnt/efi
