@@ -188,7 +188,7 @@ if [ "$WOOF_TARGETARCH" = "x86_64" ]; then
 	install -D -m 644 build/efilinux.efi /mnt/uefiimagep1/EFI/BOOT/BOOTX64.EFI
 	install -m 644 build/vmlinuz /mnt/uefiimagep1/EFI/BOOT/vmlinuz
 	if [ -e build/ucode.cpio ]; then
-		install -m 644 build/vmlinuz build/ucode.cpio /mnt/uefiimagep1/EFI/BOOT/ucode.cpio
+		install -m 644 build/ucode.cpio /mnt/uefiimagep1/EFI/BOOT/ucode.cpio
 		echo "-f 0:\EFI\BOOT\vmlinuz initrd=0:\EFI\BOOT\ucode.cpio root=PARTLABEL=${DISTRO_FILE_PREFIX}_root init=/init rootfstype=ext4 rootwait rw" > /mnt/uefiimagep1/EFI/BOOT/efilinux.cfg
 	else
 		echo "-f 0:\EFI\BOOT\vmlinuz root=PARTLABEL=${DISTRO_FILE_PREFIX}_root init=/init rootfstype=ext4 rootwait rw" > /mnt/uefiimagep1/EFI/BOOT/efilinux.cfg
