@@ -186,10 +186,14 @@ echo "Updating frugalify"
 mv -f init ../init
 chmod 755 ../init
 
-echo "Updating the kernel"
 if [ -e ../vmlinuz ]; then
+    echo "Updating the kernel"
     rm -f ../vmlinuz
     ln -s "${RELEASE_TAG}/vmlinuz" ../vmlinuz
+
+    echo "Updating microcode"
+    rm -f ../ucode.cpio
+    ln -s "${RELEASE_TAG}/ucode.cpio" ../ucode.cpio
 elif [ -h "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
     mkdir -p /mnt/efi
 
@@ -201,6 +205,7 @@ elif [ -h "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
         exit 1
     fi
 
+    echo "Updating boot loader"
     cp -f efilinux.efi /mnt/efi/EFI/BOOT/BOOTX64.EFI
     if [ $? -ne 0 ]; then
         echo "Failed to copy efilinux to EFI partition"
@@ -209,9 +214,19 @@ elif [ -h "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
         exit 1
     fi
 
+    echo "Updating the kernel"
     cp -f vmlinuz /mnt/efi/EFI/BOOT/vmlinuz
     if [ $? -ne 0 ]; then
         echo "Failed to copy kernel to EFI partition"
+        cd ..
+        [ "$1" = ask ] && read
+        exit 1
+    fi
+
+    echo "Updating microcode"
+    cp -f ucode.cpio /mnt/efi/EFI/BOOT/ucode.cpio
+    if [ $? -ne 0 ]; then
+        echo "Failed to copy microcode to EFI partition"
         cd ..
         [ "$1" = ask ] && read
         exit 1
@@ -221,8 +236,9 @@ elif [ -h "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
     rm -f vmlinux.kpart
 else
     # TODO: detect the partition instead of relying on a fixed UUID
+    echo "Updating the kernel"
     dd if=vmlinux.kpart of=/dev/disk/by-partuuid/b361601a-103d-374c-ba2c-35b8533a199d
-    rm -f vmlinuz efilinux.efi
+    rm -f vmlinuz efilinux.efi ucode.cpio
 fi
 
 # if the files are not flushed to disk, we're left in non-bootable state

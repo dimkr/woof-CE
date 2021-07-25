@@ -565,11 +565,22 @@ if [ ! "$CROSFLAG" ]; then
 		./build.sh -prebuilt -auto -arch ${WOOF_TARGETARCH:-default} ${INITRD_LANG} ${INITRD_KM}
 	)
 	mv -fv ../initrd-progs/initrd.[gx]z build/ || exit 1
+	
 
 	case $WOOF_TARGETARCH in x86*)
 		cp -fv ../initrd-progs/0initrd/README.txt build/ ;;
 	esac
 fi
+
+case $WOOF_TARGETARCH in x86*)
+	# ucode.cpio
+	if [ -n "$UCODE_EXEC" ];then
+		$UCODE_EXEC || exit 1
+		rm -f build/ucode.cpio
+		[ -e /tmp/ucode.cpio ] && cp /tmp/ucode.cpio build/ || exit 1
+	fi
+	;;
+esac
 
 if [ "$SDFLAG" ] ; then
 	cp -fv ../initrd-progs/ZZ_initrd-expanded/bin/busybox rootfs-complete/bin/busybox_static
@@ -708,7 +719,9 @@ if [ "$XERRS_FLG" = 'yes' ];then
 fi
 
 #shared library loading...
+mkdir -p rootfs-complete/etc/ld.so.conf.d/ # may not be there
 ( # > rootfs-complete/etc/ld.so.conf
+	echo 'include /etc/ld.so.conf.d/*.conf'
 	echo "/lib${lsuffix}"
 	echo "/usr/lib${lsuffix}"
 	if [ "$ARCHDIR" = "x86_64-linux-gnu" ] ; then #WOOF_TARGETARCH='x86_64'
