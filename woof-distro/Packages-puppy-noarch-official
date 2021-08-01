@@ -1,15 +1,15 @@
-JWMDesk-2.5|JWMDesk|2.5||Desktop|269K||JWMDesk-2.5.pet||JWM desk manager||||
-ListDD-2.1|ListDD|2.1||Utility|19K||ListDD-2.1.pet||List dynamic dependencies||||
+JWMDesk-3.0|JWMDesk|3.0||Desktop|1444K||JWMDesk-3.0.pet||JWM Desk Manager||||
+ListDD-2.2|ListDD|2.2||Utility|56K||ListDD-2.2.pet||List dynamic dependencies||||
 PackIt-packit-1.15|PackIt|packit-1.15||Utility|112K||packit-1.15.pet||Archiving/Compressing GUI||||
-Pup-Kview-1.3.6|Pup-Kview|1.3.6||System|35K||Pup-Kview-1.3.6.pet||Kernel module viewer||||
-Pup-SysInfo-2.8.6|Pup-SysInfo|2.8.6||System|195K||Pup-SysInfo-2.8.6.pet||System information utility||||
+Pup-Kview-1.4|Pup-Kview|1.4||System|64K||Pup-Kview-1.4.pet||Kernel module viewer||||
+Pup-SysInfo-3.0|Pup-SysInfo|3.0||System|244K||Pup-SysInfo-3.0.pet||System information utility||||
 PupApps-3.1|PupApps|3.1||Utility|229K||PupApps-3.1.pet||Launch favorite applications||||
 PupClockset-2.7|PupClockset|2.7||Desktop|125K||PupClockset-2.7.pet||PupClockset manager||||
-PupControl-3.3|PupControl|3.3||Setup|562K||PupControl-3.3.pet||Control panel||||
-PupMenu-6.2.1|PupMenu|6.2.1||Utility|442K||PupMenu-6.2.1.pet||Menu item launcher and editor||||
+PupControl-3.4|PupControl|3.4||Setup|808K||PupControl-3.4.pet||Control panel||||
+PupMenu-6.3|PupMenu|6.3||Utility|1012K||PupMenu-6.3.pet||Find, launch or edit menu items||||
 Qemu_Control_Center-0.7|Qemu_Control_Center|0.7||System|44K||Qemu_Control_Center-0.7.pet||PC Emulator||||
 SaveFolderBackup-1.2|SaveFolderBackup|1.2||Utility|44K||SaveFolderBackup-1.2.pet||Save folder backup and restore||||
-UrxvtControl-1.3|UrxvtControl|1.3||Utility|41K||UrxvtControl-1.3.pet||Urxvt configuration||||
+UrxvtControl-1.4|UrxvtControl|1.4||Utility|76K||UrxvtControl-1.4.pet||Urxvt configuration||||
 YASSM-4.1-1|YASSM|4.1-1||Network|64K||YASSM-4.1-1.pet||Mounts Samba shares||||
 acpid-busibox-4|acpid-busibox|4||BuildingBlock|120K||acpid-busibox-4.pet||acpi deamon with dialog box and lid supend||||
 bbwireless-0.1-noarch|bbwireless|0.1-noarch||Network|88K||bbwireless-0.1-noarch.pet||BBwireless network manager||||
@@ -86,12 +86,11 @@ firmware_usbserial-170511|firmware_usbserial|170511||BuildingBlock|32||firmware_
 firmware_zd1201-170511|firmware_zd1201|170511||BuildingBlock|164K||firmware_zd1201-170511.pet||firmware||||
 fix_pi_overscan-0.3-rpi_all|fix_pi_overscan|0.3-rpi_all||Desktop|68K||fix_pi_overscan-0.3-rpi_all.pet||Pi Overscan or Underscan||||
 frisbee-1.4.4|frisbee|1.4.4||Network|280K||frisbee-1.4.4.pet|+gtkdialog&ge0.8.4|Frisbee network manager||||
-frugalpup-33|frugalpup|33||Setup|3296K||frugalpup-33.pet||FrugalPup - flexible frugal installer||||
-get_browser-0.5|get_browser|0.5||Setup|100K||get_browser-0.5.pet|+libarchive|Download Chrome, Vivaldi or Opera||||
+frugalpup-34|frugalpup|34||Setup|3292K||frugalpup-34.pet||FrugalPup - flexible frugal installer||||
 get_libreoffice-0.43|get_libreoffice|0.43||Document|82K||get_libreoffice-0.43.pet||Get LibreOffice download and install LibreOffice||||
-getflash-1.9.1|getflash|1.9.1||Internet|92K||getflash-1.9.1.pet|+gtkdialog,+Xdialog|download adobe flash player||||
 grub2_efi-2.02.2018.08-fd64|grub2_efi|2.02.2018.08-fd64||BuildingBlock|5588||grub2_efi-2.02.2018.08-fd64.pet||No description provided||||
 grub4dos-0.4.4.v1.9.4|grub4dos|0.4.4.v1.9.4||System|480K||grub4dos-0.4.4.v1.9.4.pet||Grub4Dos bootloader config||precise||
+grub4dos_u-0.4.4.v1.9.4|grub4dos_u|0.4.4.v1.9.4||System|476K||grub4dos_u-0.4.4.v1.9.4.pet||Grub4Dos bootloader config||||
 gtk_theme_ShallowThought-0.2|gtk_theme_ShallowThought|0.2||BuildingBlock|224K||gtk_theme_ShallowThought-0.2.pet||gtk desktop theme||||
 gtk_theme_citrus_cut-1.2|gtk_theme_citrus_cut|1.2||Desktop|172K||gtk_theme_citrus_cut-1.2.pet|+gtk+|gtk2 orangy theme||||
 gtk_theme_collection_vicmz-20121106|gtk_theme_collection_vicmz|20121106||Desktop|10736K||gtk_theme_collection_vicmz-20121106.pet|+gtk+|A large collection of GTK themes for Puppy Linux. collected by vicmz.||||
@@ -116,9 +115,7 @@ gtkthememaker-1.4|gtkthememaker|1.4||Desktop|68K||gtkthememaker-1.4.pet||GTK The
 hunspell-en-us-2|hunspell-en-us|2||BuildingBlock|725K||hunspell-en-us-2.pet|+hunspell,+enchant|US English dictionary|||official|
 iconfinder-1.4|iconfinder|1.4||Graphic;viewer|60K||iconfinder-1.4.pet||Find icons in your system||||
 iconfinder_NLS-1.4|iconfinder_NLS|1.4||Graphic;viewer|4K||iconfinder_NLS-1.4.pet||Find icons in your system||||
-install-brave_rpm-0.3|install-brave_rpm|0.3||Setup|80K||install-brave_rpm-0.3.pet||Download Brave Browser||||
-install-chrome_opera-0.5-noarch|install-chrome_opera|0.5-noarch||Setup|76K||install-chrome_opera-0.5-noarch.pet||Download Chrome or Opera||||
-install-vivaldi-0.6-noarch|install-vivaldi|0.6-noarch||Setup|80K||install-vivaldi-0.6-noarch.pet|+gtkdialog|Download Vivaldi Browser||||
+install-vivaldi-0.7-noarch|install-vivaldi|0.7-noarch||Setup|80K||install-vivaldi-0.7-noarch.pet|+gtkdialog|Download Vivaldi Browser||||
 inxi-2.3.8-noarch_all|inxi|2.3.8-noarch_all||BuildingBlock|524||inxi-2.3.8-noarch_all.pet||a command line system information tool||||
 inxi_DEV-2.3.8-noarch_all|inxi_DEV|2.3.8-noarch_all||BuildingBlock|20||inxi_DEV-2.3.8-noarch_all.pet|+inxi|inxi development|slackware64|14.2||
 inxi_DOC-2.3.8-noarch_all|inxi_DOC|2.3.8-noarch_all||BuildingBlock|224||inxi_DOC-2.3.8-noarch_all.pet|+inxi|inxi documentation||||
@@ -160,7 +157,7 @@ network_roxapp_samba-0.13|network_roxapp_samba|0.13||Network|88K||network_roxapp
 orientxauto-0.2-noarch|orientxauto|0.2-noarch||Desktop;settings|64K||orientxauto-0.2-noarch.pet|+pyhton,+pygobject|detect an accelerometer and rotate screen for e galax touchscreens||||
 pArchive-2.2.1|pArchive|2.2.1||Utility|154K||pArchive-2.2.1.pet||Archive manager||||
 pAudio_2barks_alt_fanfare-1|pAudio_2barks_alt_fanfare|1||BuildingBlock|32K||pAudio_2barks_alt_fanfare-1.pet||Fanfare alternative sound for 2barks.au||||
-pRun-1.3|pRun|1.3||Utility|51K||pRun-1.3.pet||Run dialog utility||||
+pRun-1.6|pRun|1.6||Utility|160K||pRun-1.6.pet||Run dialog utility||||
 pavrecord-0.9.6-1|pavrecord|0.9.6-1||Internet|124K||pavrecord-0.9.6-1.pet||Pavrecord Audio-Video recorder/player||||
 pavrecord-precise-0.9.4|pavrecord-precise|0.9.4||Internet|116K||pavrecord-precise-0.9.4.pet|+ffmpeg,+ffplay,+gtkdialog3,+lame,+alsa-utils|Pavrecord Audio-Video recorder/player||||
 pawdioconverter-1.3|pawdioconverter|1.3||Multimedia|212K||pawdioconverter-1.3.pet|+gtkdialog3,+sox|PawdioConverter audio conversion||||
@@ -189,6 +186,7 @@ pgprs2-0.5|pgprs2|0.5||Network|60K||pgprs2-0.5.pet|+ppp|Connect via GPRS or 3G m
 phash-2|phash|2||Desktop|24K||phash-2.pet|+rox_filer|adds to rox right-click menu, calc md5sum/sha1sum of a file||||
 pkg-1.9.22-noarch|pkg|1.9.22-noarch||Setup|1980K||pkg-1.9.22-noarch.pet||Pkg - command-line package manager||||
 playmusic_mplayer-0.1.7-noarch|playmusic_mplayer|0.1.7-noarch||Multimedia|164K||playmusic_mplayer-0.1.7-noarch.pet||A simple lightweight GUI for audio players||||
+pmaterial_icons-0.2|pmaterial_icons|0.2||BuildingBlock|12732K||pmaterial_icons-0.2.pet||icons for puppy loosely based on material design||||
 pmetatagger-2.2|pmetatagger|2.2||Multimedia|100K||pmetatagger-2.2.pet|+gtkdialog3,+id3lib,+vorbis-tools|meta tagger||||
 pmirrorget-0.2.1-1|pmirrorget|0.2.1-1||Internet|32K||pmirrorget-0.2.1-1.pet|+gtkdialog4|Website File Grabber||||
 pmusic-5.6.2|pmusic|5.6.2||Multimedia|1492K||pmusic-5.6.2.pet|+ffpmeg&ge1.2,+gtkdialog&ge0.8.4,+alsa,+bash&ge4.0|-player -manager -grabber||||
@@ -212,6 +210,8 @@ pupmd5sum-1.8|pupmd5sum|1.8||Utility|44K||pupmd5sum-1.8.pet||Calculate MD5sum|||
 pupmixer-1.0|pupmixer|1.0||Multimedia|48K||pupmixer-1.0.pet|+gtkdialog,+alsa-utils,+alsa|ALSA Sound Mixer||||
 puppy-podcast-grabber-1.2|puppy-podcast-grabber|1.2||Internet;transfer|80K||puppy-podcast-grabber-1.2.pet||podcast grabber||||
 puppy_clock-0.5.2-1|puppy_clock|0.5.2-1||Personal|112K||puppy_clock-0.5.2-1.pet||puppyClock Time tools||||
+puppy_flat_icons-0.5|puppy_flat_icons|0.5||BuildingBlock|12732K||puppy_flat_icons-0.5.pet||flat puppy icon theme||||
+puppy_standard_icons-0.9|puppy_standard_icons|0.9||BuildingBlock|12584K||puppy_standard_icons-0.9.pet||puppy standard icons||||
 pupradio-0.19|pupradio|0.19||Multimedia|72K||pupradio-0.19.pet||pupRadio/pupTelly streaming media||||
 pupradio_NLS-0.19|pupradio_NLS|0.19||BuildingBlock|80K||pupradio_NLS-0.19.pet||pupradio translations||||
 pupsaveconfig-2.2.6|pupsaveconfig|2.2.6||Setup|196K||pupsaveconfig-2.2.6.pet||PupSave personal storage setup||||

@@ -18,10 +18,10 @@ FALLBACKS_COMPAT_VERSIONS='15.0 14.2 14.1'
 PKGS_SPECS_TABLE='
 yes|aaa_libraries|aaa_libraries|exe
 yes|a52dec||exe,dev,doc,nls
-yes|aaa_puplibs64||exe
+yes|aaa_puplibs||exe
 yes|abiword||exe,dev,doc
 yes|acl|acl|exe,dev,doc,nls
-yes|acpid-busibox||exe
+no|acpid-busibox||exe
 yes|adwaita-icon-theme|adwaita-icon-theme|exe,dev,doc,nls
 yes|alsa-lib|alsa-lib|exe,dev,doc,nls
 yes|alsa-utils|alsa-utils|exe,dev,doc,nls
@@ -123,6 +123,7 @@ yes|findutils|findutils|exe,dev>null,doc,nls
 no|firewallstatus||exe,dev
 yes|flac|flac|exe,dev,doc,nls
 yes|flex|flex|exe,dev,doc,nls
+yes|floppy|floppy|exe,dev,doc,nls
 yes|fpm2||exe,dev,doc
 no|freememapplet||exe,dev
 yes|freetype|freetype|exe,dev,doc,nls
@@ -180,8 +181,8 @@ yes|graphite|graphite2|exe,dev,doc,nls
 yes|grep|grep|exe,dev>null,doc,nls
 yes|groff|groff|exe>dev,dev,doc,nls
 yes|grsync||exe,dev,doc,nls
-yes|grub2_efi||exe
-yes|grub4dos||exe
+no|grub2_efi||exe
+yes|grub4dos_u||exe
 yes|gsettings-desktop-schemas|gsettings-desktop-schemas|exe,dev,doc,nls
 yes|gtk+|gtk+2,libffi|exe,dev,doc,nls
 yes|gtk+3|gtk+3,at-spi2-atk,at-spi2-core|exe,dev,doc,nls
@@ -209,12 +210,13 @@ yes|htop||exe,dev
 no|hunspell||exe,dev,doc,nls
 yes|hunspell|hunspell|exe,dev,doc,nls
 yes|hunspell-en-us||exe
-yes|icu4c|icu4c|exe,dev,doc,nls
+yes|iasl||exe>dev
+yes|icu|icu4c|exe,dev,doc,nls
 yes|imake|imake|exe>dev,dev,doc,nls
 no|inkscapelite||exe,dev,doc,nls
 yes|inotify-tools|inotify-tools|exe,dev,doc,nls
 yes|install-chrome_opera||exe
-yes|install-brave_rpm||exe
+yes|install-brave||exe
 yes|install-vivaldi||exe
 yes|installwatch||exe
 yes|intltool|intltool|exe>dev,dev,doc,nls
@@ -227,6 +229,7 @@ yes|itstool|itstool|exe>dev,dev,doc
 yes|iw|iw|exe,dev,doc,nls
 yes|jansson|jansson|exe,dev,doc,nls
 yes|jasper|jasper|exe,dev,doc,nls
+yes|json-glib|json-glib|exe,dev,doc,nls
 no|jwm||exe,dev,doc,nls
 yes|keyutils|keyutils|exe,dev,doc,nls
 yes|kernel_headers_musl||exe>dev
@@ -307,6 +310,7 @@ yes|libpsl|libpsl|exe,dev,doc,nls
 yes|libpthread-stubs|libpthread-stubs|exe>dev,dev,doc,nls
 yes|libraw1394|libraw1394|exe,dev,doc,nls
 yes|librsvg|librsvg|exe,dev,doc,nls
+yes|libsecret|libsecret|exe,dev,doc,nls
 yes|libsigc++|libsigc++|exe,dev,doc,nls
 yes|libsigsegv|libsigsegv|exe,dev,doc,nls
 yes|libsndfile|libsndfile|exe,dev,doc,nls
@@ -338,6 +342,7 @@ yes|libxkbcommon|libxkbcommon|exe,dev,doc,nls
 yes|libxml2|libxml2|exe,dev,doc,nls
 yes|libxshmfence|libxshmfence|exe,dev,doc,nls
 yes|libxslt|libxslt|exe,dev,doc,nls
+yes|libzip|libzip|exe,dev,doc,nls
 yes|linux-header|kernel-headers|exe>dev,dev,doc,nls
 yes|llvm-cut|llvm|exe,dev>null,doc,nls
 yes|lm_sensors|lm_sensors|exe,dev,doc,nls
@@ -353,6 +358,7 @@ yes|m4|m4|exe>dev,dev,doc,nls
 yes|make|make|exe>dev,dev,doc,nls
 yes|man|man-db|exe>dev,dev,doc,nls
 yes|mesa|mesa,freeglut,glew,glu|exe,dev,doc,nls
+yes|meson|meson|exe>dev,dev,doc,nls
 yes|metamail|metamail|exe,dev>null,doc,nls
 yes|mhwaveedit||exe,dev,nls
 yes|mkwallpaper||exe,dev
@@ -371,12 +377,13 @@ no|nasm||exe>dev,dev,doc,nls
 yes|nasm|nasm|exe>dev,dev,doc,nls
 yes|nbtscan||exe,dev
 yes|ncurses|ncurses|exe,dev,doc,nls
-yes|neon|neon|exe>dev,dev,doc,nls
+no|neon|neon|exe>dev,dev,doc,nls
 no|netmon_wce||exe,dev,doc,nls
 yes|netpbm||exe,dev,doc
 yes|net-tools|net-tools|exe,dev,doc,nls
 yes|network_roxapp_samba||exe
 yes|nghttp2|nghttp2|exe,dev,doc,nls
+yes|ninja|ninja|exe>dev,dev,doc,nls
 yes|notecase||exe,doc>exe,dev,nls
 no|npapi-sdk||exe>dev,dev
 yes|ntfs-3g|ntfs-3g|exe,dev,doc,nls
@@ -404,7 +411,7 @@ yes|pciutils|pciutils|exe,dev,doc,nls
 yes|pcmciautils|pcmciautils|exe,dev,doc,nls
 yes|pcre|pcre,pcre2|exe,dev,doc,nls
 yes|pcurlftp_file_sharing||exe
-yes|pdiag||exe
+no|pdiag||exe   # in rootfs-packages
 yes|pdvdrsab||exe
 yes|peasydiff||exe
 yes|peasyglue||exe
@@ -443,6 +450,7 @@ yes|python|python2|exe>dev,dev,doc,nls
 yes|python_lib|python2,python3|exe,dev>null,doc>null,nls>null
 yes|python3|python3|exe>dev,dev,doc,nls
 yes|qemu||exe>dev,dev
+yes|qemu_uefi_bios||exe>dev
 yes|qpdf|qpdf|exe,dev,doc,nls| #needed for cups
 yes|rdesktop|rdesktop,libsamplerate|exe,dev,doc,nls
 yes|readline|readline|exe,dev,doc,nls
@@ -497,6 +505,7 @@ no|updates_notice||exe
 yes|usb-modeswitch||exe,dev
 yes|usb-modeswitch-data||exe,dev 
 yes|usbutils|usbutils|exe,dev,doc,nls
+yes|utf8proc|utf8proc|exe>dev,dev,doc,nls
 yes|util-linux|util-linux|exe,dev,doc,nls
 yes|util-macros|util-macros|exe>dev,dev,doc,nls
 yes|v4l-utils|v4l-utils|exe,dev,doc,nls
@@ -522,7 +531,6 @@ no|xcur2png||exe,dev,doc
 no|xdelta||exe,dev
 no|xdg_puppy_jwm||exe
 no|Xdialog||exe,dev,doc,nls
-yes|xdialog||exe,dev,doc,nls
 no|xf86-video-fbdev||exe,dev,doc| #virtualbox with UEFI needs this
 yes|xf86-video-fbdev|xf86-video-fbdev|exe,dev,doc
 no|xinvaders3d||exe,dev

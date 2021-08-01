@@ -32,7 +32,7 @@ if [ -d ./support -a -f ./DISTRO_SPECS -a -d ./rootfs-skeleton ] ;then
   . ./PKGS_MANAGEMENT
   . ./DISTRO_PET_REPOS
   RUNNINGPUP='no'
-  [ ! -f /usr/local/petget/debdb2pupdb ] && DEBDB2PUPDB="$(pwd)/support/debdb2pupdb"
+  DEBDB2PUPDB="$(pwd)/support/debdb2pupdb"
   FIND_CAT="$(pwd)/support/find_cat"
   #note, 3builddistro copies it into rootfs-complete/usr/local/petget when building a pup.
 else
@@ -192,7 +192,7 @@ do
     fi
     #create an intermediate-converted file...
     #121113 added "Section"... 121113 insert STARTMARKER...
-    MANIPULATED1="$(grep -E '^Package:|^Installed\-Size:|^Architecture:|^Version:|^Depends:|^Filename:|^Description:|^Homepage:|^Section:' ${ONE_PKGLISTS_COMPAT}pre | tr '[\t"|`]' ' ' | tr -s ' ' | sed -e 's%^Installed\-Size%InstalledSize%' -e 's%^Package:%STARTMARKER|PKG\nPackage:%' -e 's%: %|%' -e 's% $%%')" #`geany
+    MANIPULATED1="$(grep -E '^Package:|^Installed\-Size:|^Architecture:|^Version:|^Pre-Depends:|^Depends:|^Filename:|^Description:|^Homepage:|^Section:' ${ONE_PKGLISTS_COMPAT}pre | tr '[\t"|`]' ' ' | tr -s ' ' | sed -e 's%^Installed\-Size%InstalledSize%' -e 's%^Package:%STARTMARKER|PKG\nPackage:%' -e 's%: %|%' -e 's% $%%')" #`geany
     #call new app. note, this in turn calls /usr/local/petget/find_pkgs...
     if [ -n "$MANIPULATED1" ];then
      echo "$MANIPULATED1" > /tmp/woof-debdb.in

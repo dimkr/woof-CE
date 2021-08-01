@@ -400,8 +400,6 @@ else #-- anything other than PUPMODE 2 (full install) --
 	 #now re-evaluate all the layers...
 	 busybox mount -t aufs -o remount,udba=reval unionfs / #remount with faster evaluation mode.
 	 [ $? -ne 0 ] && logger -s -t "installpkg.sh" "Failed to remount aufs / with udba=reval"
-
-	 sync
 	fi
 
 fi
@@ -418,7 +416,6 @@ do
 	[ ! -e "$DIRECTSAVEPATH/$i" ] && continue
 	cd $DIRECTSAVEPATH/
 	LANG=$LANG_USER sh ${i}
-	sync
 	rm -f ${i}
 done
 rm -rf $DIRECTSAVEPATH/install
@@ -447,6 +444,28 @@ fi
 #v424 .pet pkgs may have a post-uninstall script...
 if [ -f $DIRECTSAVEPATH/puninstall.sh ];then
  mv -f $DIRECTSAVEPATH/puninstall.sh /root/.packages/${DLPKG_NAME}.remove
+fi
+
+#Non-puppy packages stores start/stop daemon scripts to /etc/rc.d, however it was reserved for puppy core scripts. Just relocate the scripts to /etc/init.d
+
+rm -f /tmp/pkg-rcd-files 2>/dev/null
+
+if [ "$EXT" != ".pet" ]; then
+
+ #Get all files stored on /etc/rc.d and /etc/rc.d/init.d of non-puppy package
+ cat /var/packages/${DLPKG_NAME}.files | grep "^\/etc\/rc\.d\/|^\/etc\/rc\.d\/init\.d\/" > /tmp/pkg-rcd-files
+
+ while IFS= read -r line
+ do
+  rcbname="$(basename $line)"
+  #Move files to /etc/init.d
+  [ -f $line ] && mv -f "$line" /etc/init.d/$rcbname
+  [ -L $line ] && mv -f "$line" /etc/init.d/$rcbname
+ done < /tmp/pkg-rcd-files
+
+ #Update the package files list
+ sed -i -e 's#^\/etc\/rc\.d\/init\.d\/#\/etc\/init\.d\/#g' -e 's#^\/etc\/rc\.d\/#\/etc\/init\.d\/#g' /var/packages/${DLPKG_NAME}.files
+
 fi
 
 
