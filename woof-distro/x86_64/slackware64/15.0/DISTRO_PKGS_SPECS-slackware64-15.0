@@ -44,6 +44,8 @@ yes|bcrypt||exe,dev
 yes|bin86|bin|exe>dev,dev,doc,nls
 yes|binutils|binutils|exe>dev,dev,doc,nls
 yes|bison|bison|exe>dev,dev,doc,nls
+yes|blueman|blueman|exe,dev,doc,nls
+yes|bluez|bluez|exe,dev,doc,nls
 yes|boost|boost|exe>dev,dev,doc,nls
 yes|btrfs-progs|btrfs-progs|exe,dev,doc,nls
 yes|brotli|brotli|exe,dev,doc,nls
