@@ -1,0 +1,20 @@
+download() {
+	if [ -f pmaterial_icons.tar.xz ] ;then
+		MTIME=$(date -r pmaterial_icons.tar.xz "+%s")
+		CURTIME=$(date +%s)
+		DIFTIME=$(($CURTIME - $MTIME))
+		if [ $DIFTIME -gt  604800 ];then # 7 days =  604800 seconds
+			echo "deleting pmaterial_icons.tar.xz and re-downloading"
+			rm -f .pmaterial_icons.tar.xz
+			wget -t 3 -T 10 https://github.com/puppylinux-woof-CE/Pmaterial/releases/latest/download/pmaterial_icons.tar.xz
+		else
+			echo "Pmaterial is still current"
+		fi
+	else
+		wget -t 3 -T 10 https://github.com/puppylinux-woof-CE/Pmaterial/releases/latest/download/pmaterial_icons.tar.xz
+	fi    
+}
+
+build() {
+    tar xJf pmaterial_icons.tar.xz -C /
+}
