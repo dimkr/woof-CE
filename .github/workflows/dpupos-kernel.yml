@@ -21,18 +21,15 @@ jobs:
       matrix:
         include:
           - kernel-kit-config: 5.10.x-x86_64
-            container-tag: rolling
           - kernel-kit-config: 5.4.x-veyron-speedy
-            container-tag: rolling
           - kernel-kit-config: 5.10.x-x86
-            container-tag: rolling32
     steps:
       - uses: actions/checkout@v2
       - name: Build kernel
         run: |
           cp -f kernel-kit/${{ matrix.kernel-kit-config }}-build.conf kernel-kit/build.conf
           /bin/echo -e '\npackage_name_suffix=dpupos' >> kernel-kit/build.conf
-          docker run --rm -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)`/kernel-kit ghcr.io/dpupos/container/dpupos:${{ matrix.container-tag }} ./build.sh
+          docker run --rm -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)`/kernel-kit ghcr.io/dpupos/container/dpupos:rolling ./build.sh
           mkdir small-output
           sudo mv kernel-kit/output/*.{sfs,tar}* small-output/
       - name: Upload kernel

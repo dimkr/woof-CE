@@ -260,7 +260,7 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-${{ github.job }}-local-repositories-
     - name: Prepare build environment
-      run: docker run --rm -it --privileged -v /dev:/dev -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)` -d --name builder ghcr.io/dpupos/container/dpupos:rolling32
+      run: docker run --rm -it --privileged -v /dev:/dev -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)` -d --name builder ghcr.io/dpupos/container/dpupos:rolling
     - name: Fix cache ownership
       run: sudo chown -R root:root local-repositories
     - name: merge2out

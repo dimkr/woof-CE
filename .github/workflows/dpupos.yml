@@ -17,10 +17,8 @@ jobs:
         include:
           - arch: x86_64
             kernel-version: 5.10.x
-            tag: rolling
           - arch: x86
             kernel-version: 5.10.x
-            tag: rolling32
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -36,7 +34,7 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-${{ matrix.arch }}-local-repositories-
     - name: Prepare build environment
-      run: docker run --rm -it --privileged -v /dev:/dev -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)` -d --name builder ghcr.io/dpupos/container/dpupos:${{ matrix.tag }}
+      run: docker run --rm -it --privileged -v /dev:/dev -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)` -d --name builder ghcr.io/dpupos/container/dpupos:rolling
     - name: Fix cache ownership
       run: sudo chown -R root:root local-repositories
     - name: merge2out
