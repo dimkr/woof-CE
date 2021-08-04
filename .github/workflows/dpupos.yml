@@ -17,11 +17,9 @@ jobs:
         include:
           - arch: x86_64
             kernel-version: 5.10.x
-            prefix:
             tag: rolling
           - arch: x86
             kernel-version: 5.10.x
-            prefix: linux32
             tag: rolling32
     steps:
     - name: Checkout code
@@ -42,15 +40,15 @@ jobs:
     - name: Fix cache ownership
       run: sudo chown -R root:root local-repositories
     - name: merge2out
-      run: yes "" | docker exec builder ${{ matrix.prefix }} ./merge2out woof-distro/${{ matrix.arch }}/debian/dpupos
+      run: yes "" | docker exec builder ./merge2out woof-distro/${{ matrix.arch }}/debian/dpupos
     - name: Set version
       run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=2/ -i ../woof-out_*/DISTRO_SPECS
     - name: 0setup
-      run: docker exec builder sh -c "cd ../woof-out_* && ${{ matrix.prefix }} ./0setup"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./0setup"
     - name: 1download
-      run: docker exec builder sh -c "cd ../woof-out_* && ${{ matrix.prefix }} ./1download"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./1download"
     - name: 2createpackages
-      run: docker exec builder sh -c "cd ../woof-out_* && ${{ matrix.prefix }} ./2createpackages"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./2createpackages"
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -87,7 +85,7 @@ jobs:
       run: |
         sudo chown -R root:root petbuild-output
         sudo mv petbuild-{sources,cache,output} ../woof-out_*/
-        docker exec builder sh -c "cd ../woof-out_* && HOME=/root ${{ matrix.prefix }} ./3builddistro"
+        docker exec builder sh -c "cd ../woof-out_* && HOME=/root ./3builddistro"
         docker stop builder
         sudo rm -rf ../woof-out_*/sandbox3
         sudo mv ../woof-out_*/petbuild-{sources,cache,output} .

@@ -264,17 +264,17 @@ jobs:
     - name: Fix cache ownership
       run: sudo chown -R root:root local-repositories
     - name: merge2out
-      run: yes "" | docker exec builder linux32 ./merge2out woof-distro/x86/debian/dpupos
+      run: yes "" | docker exec builder ./merge2out woof-distro/x86/debian/dpupos
     - name: Set version
       run: sudo sed s/^DISTRO_VERSION=.*/DISTRO_VERSION=1/ -i ../woof-out_*/DISTRO_SPECS
     - name: Enable updates
       run: sudo sed 's/RELEASE_CHANNEL=.*/RELEASE_CHANNEL=beta/' -i ../woof-out_*/rootfs-packages/pm6_updater/etc/pm6_updater.conf
     - name: 0setup
-      run: docker exec builder sh -c "cd ../woof-out_* && linux32 ./0setup"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./0setup"
     - name: 1download
-      run: docker exec builder sh -c "cd ../woof-out_* && linux32 ./1download"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./1download"
     - name: 2createpackages
-      run: docker exec builder sh -c "cd ../woof-out_* && linux32 ./2createpackages"
+      run: docker exec builder sh -c "cd ../woof-out_* && ./2createpackages"
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -296,10 +296,10 @@ jobs:
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_*/
-        docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} linux32 ./3builddistro release && rm -rf sandbox3"
+        docker exec builder sh -c "cd ../woof-out_* && HOME=/root DISTRO_EXTRAVERSION=-rolling${{ github.run_number }} ./3builddistro release && rm -rf sandbox3"
     - name: Generate delta update
       run: |
-        docker exec builder sh -c "./scripts/gen-tarball-delta.sh ${{ github.job }} ../woof-out_x86_x86_debian_dpupos/woof-output-dpupos-1/dpupos-1.tar dpupos-1-delta.tar"
+        docker exec builder sh -c "./scripts/gen-tarball-delta.sh ${{ github.job }} ../woof-out_x86_64_x86_debian_dpupos/woof-output-dpupos-1/dpupos-1.tar dpupos-1-delta.tar"
         docker stop builder
     - name: Create release
       id: create_release
@@ -318,7 +318,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_x86_debian_dpupos/woof-output-dpupos-1/dpupos-1.tar
+        asset_path: ../woof-out_x86_64_x86_debian_dpupos/woof-output-dpupos-1/dpupos-1.tar
         asset_name: dpupos-1.tar
         asset_content_type: application/octet-stream
     - name: Upload delta update
@@ -338,7 +338,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_x86_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-legacy.img.gz
+        asset_path: ../woof-out_x86_64_x86_debian_dpupos/woof-output-dpupos-1/dpupos-1-ext4-2gb-legacy.img.gz
         asset_name: dpupos-1-ext4-2gb-legacy.img.gz
         asset_content_type: application/octet-stream
     - name: Upload kernel sources
@@ -347,7 +347,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_x86_debian_dpupos/kernel-kit/output/kernel_sources-5.10-dpupos.sfs
+        asset_path: ../woof-out_x86_64_x86_debian_dpupos/kernel-kit/output/kernel_sources-5.10-dpupos.sfs
         asset_name: kernel_sources-5.10-dpupos.sfs
         asset_content_type: application/octet-stream
     - name: Delete old releases
