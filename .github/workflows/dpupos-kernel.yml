@@ -31,7 +31,7 @@ jobs:
           /bin/echo -e '\npackage_name_suffix=dpupos' >> kernel-kit/build.conf
           docker run --rm -v `pwd`/..:/tmp/share -e GITHUB_ACTIONS -w /tmp/share/`basename $(pwd)`/kernel-kit ghcr.io/dpupos/container/dpupos:rolling ./build.sh
           mkdir small-output
-          sudo mv kernel-kit/output/*.{sfs,tar}* small-output/
+          sudo mv `ls kernel-kit/output/kernel_sources-*.sfs* kernel-kit/output/*.tar* 2>/dev/null` small-output
       - name: Upload kernel
         uses: actions/upload-artifact@v2
         with:
