@@ -393,11 +393,14 @@ fi
 mv -f sandbox3/rootfs-complete/{*.xpm,*.png} sandbox3/rootfs-complete/usr/share/pixmaps 2>/dev/null
 
 # busybox applets...
-if [ ! -f packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox.lst ] ; then
+if [ -f packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox.lst ] ; then
+	cp -a -f packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox* ./sandbox3/rootfs-complete/bin/
+elif [ -f packages-${DISTRO_FILE_PREFIX}/busybox/usr/bin/busybox.lst ] ; then
+	cp -a -f packages-${DISTRO_FILE_PREFIX}/busybox/usr/bin/busybox* ./sandbox3/rootfs-complete/bin/
+else
 	echo "Please use the 'official' woofce busybox .pet package.."
 	exit 1
 fi
-cp -a -f packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox* ./sandbox3/rootfs-complete/bin/
 ./support/busybox_symlinks.sh sandbox3/rootfs-complete
 
 [ -f /tmp/rootfs_pkgs_pinstall.sh ] && cat /tmp/rootfs_pkgs_pinstall.sh >> sandbox3/pinstall.sh

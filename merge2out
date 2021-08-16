@@ -294,6 +294,13 @@ fi
 	cp -afv woof-arch/${TARGETARCH}/target/rootfs-skeleton/usr/sbin/pngoverlay-cairo ${WOOF_OUT}/support/ 2>&1
 ) | tee -a ${WOOF_OUT}/merge2out.log
 
+(
+	usrmerge ${WOOF_OUT}/rootfs-skeleton 1
+	for PKG in ${WOOF_OUT}/rootfs-packages/*; do
+		usrmerge ${PKG} 0
+	done
+) | tee -a ${WOOF_OUT}/merge2out.log
+
 echo
 echo "Directory '${WOOF_OUT}'
 is now normal (the workarounds have been removed). Note,

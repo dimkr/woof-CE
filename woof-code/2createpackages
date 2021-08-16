@@ -490,6 +490,10 @@ do
 	fi
  fi
 
+ for DIR in ${EXE_DIR} ${DEV_DIR} ${DOC_DIR} ${NLS_DIR}; do
+	[ -d ${DIR} ] && usrmerge ${DIR} 0
+ done
+
  [ -d packages-${DISTRO_FILE_PREFIX}/${GENERICNAME}_NULL ] && rm -rf packages-${DISTRO_FILE_PREFIX}/${GENERICNAME}_NULL
  [ -d /tmp/${GENERICNAME} ] && rm -rf /tmp/${GENERICNAME}
 

@@ -108,15 +108,19 @@ for NAME in $PETBUILDS; do
             chroot petbuild-rootfs-complete ldconfig
 
             # the shared-mime-info PET used by fossa64 doesn't put its pkg-config file in /usr/lib/x86_64-linux-gnu/pkgconfig
-            PKG_CONFIG_PATH=`dirname $(find petbuild-rootfs-complete devx -name '*.pc') | sed -e s/^petbuild-rootfs-complete//g -e s/^devx//g | sort | uniq | tr '\n' :`
+            PKG_CONFIG_PATH=`(dirname $(find petbuild-rootfs-complete devx -name '*.pc') | sort | uniq; find petbuild-rootfs-complete devx -type d -name lib -or -name lib64 | sed s~\$~/pkgconfig~g) | sed -e s/^petbuild-rootfs-complete//g -e s/^devx//g | tr '\n' :`
 
             HAVE_ROOTFS=1
         fi
 
         if [ $HAVE_BUSYBOX -eq 0 -a "$NAME" != "busybox" ]; then
             if [ ! -f petbuild-rootfs-complete/bin/busybox ]; then
-                if [ -f ../petbuild-output/busybox-latest/bin/busybox ]; then # busybox petbuild
+                if [ -f ../petbuild-output/busybox-latest/usr/bin/busybox ]; then # busybox petbuild
+                    install -D -m 755 ../petbuild-output/busybox-latest/usr/bin/busybox petbuild-rootfs-complete/bin/busybox
+                elif [ -f ../petbuild-output/busybox-latest/bin/busybox ]; then
                     install -D -m 755 ../petbuild-output/busybox-latest/bin/busybox petbuild-rootfs-complete/bin/busybox
+                elif [ -f ../packages-${DISTRO_FILE_PREFIX}/busybox/usr/bin/busybox ]; then
+                    install -D -m 755 ../packages-${DISTRO_FILE_PREFIX}/busybox/usr/bin/busybox petbuild-rootfs-complete/bin/busybox
                 elif [ -f ../packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox ]; then # prebuilt busybox
                     install -D -m 755 ../packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox petbuild-rootfs-complete/bin/busybox
                 elif [ "$NAME" != "busybox" ]; then
@@ -235,6 +239,8 @@ for NAME in $PETBUILDS; do
             *) cp -a $EXTRAFILE ../petbuild-output/${NAME}-${HASH}/
             esac
         done
+
+        usrmerge ../petbuild-output/${NAME}-${HASH} 0
     fi
 
     rm -f ../petbuild-output/${NAME}-latest
