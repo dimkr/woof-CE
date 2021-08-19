@@ -40,16 +40,16 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends make libelf-dev libssl-dev dwarves ${{ matrix.compiler }}
-          curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | sudo gcc -x c -o /usr/local/bin/vercmp -
+          apt-get update -qq
+          apt-get install -y --no-install-recommends make libelf-dev libssl-dev dwarves ${{ matrix.compiler }}
+          curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o /usr/local/bin/vercmp -
       - name: Build kernel
         run: |
           cd kernel-kit
-          sudo cp -f ${{ matrix.kernel-kit-config }}-build.conf build.conf
-          sudo -E ./build.sh
-          sudo mkdir small-output
-          sudo mv `ls output/kernel_sources-*.sfs* output/*.tar* 2>/dev/null` small-output
+          cp -f ${{ matrix.kernel-kit-config }}-build.conf build.conf
+          ./build.sh
+          mkdir small-output
+          mv `ls output/kernel_sources-*.sfs* output/*.tar* 2>/dev/null` small-output
       - name: Upload kernel
         uses: actions/upload-artifact@v2
         with:
