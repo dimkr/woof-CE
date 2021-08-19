@@ -17,6 +17,8 @@ jobs:
   build:
     if: github.event_name != 'schedule' || (github.repository == 'puppylinux-woof-CE/woof-CE' && github.ref == 'refs/heads/testing')
     runs-on: ubuntu-20.04
+    container:
+      image: debian:bullseye-slim
     strategy:
       matrix:
         include:
@@ -39,7 +41,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends libelf-dev libssl-dev dwarves ${{ matrix.compiler }}
+          sudo apt-get install -y --no-install-recommends make libelf-dev libssl-dev dwarves ${{ matrix.compiler }}
           curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | sudo gcc -x c -o /usr/local/bin/vercmp -
       - name: Build kernel
         run: |
