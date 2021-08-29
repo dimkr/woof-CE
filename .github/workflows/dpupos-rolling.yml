@@ -58,9 +58,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: petbuild-sources
-        key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ github.job }}-petbuild-sources-${{ github.sha }}
         restore-keys: |
-          ${{ github.workflow }}-petbuild-sources-
+          ${{ github.workflow }}-${{ github.job }}-petbuild-sources-
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_*/
@@ -180,9 +180,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: petbuild-sources
-        key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ github.job }}-petbuild-sources-${{ github.sha }}
         restore-keys: |
-          ${{ github.workflow }}-petbuild-sources-
+          ${{ github.workflow }}-${{ github.job }}-petbuild-sources-
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_*/
@@ -290,9 +290,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: petbuild-sources
-        key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ github.job }}-petbuild-sources-${{ github.sha }}
         restore-keys: |
-          ${{ github.workflow }}-petbuild-sources-
+          ${{ github.workflow }}-${{ github.job }}-petbuild-sources-
     - name: 3builddistro
       run: |
         sudo mv petbuild-sources ../woof-out_*/

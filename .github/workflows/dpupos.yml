@@ -62,9 +62,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: petbuild-sources
-        key: ${{ github.workflow }}-petbuild-sources-${{ github.sha }}
+        key: ${{ github.workflow }}-${{ matrix.arch }}-${{ github.sha }}
         restore-keys: |
-          ${{ github.workflow }}-petbuild-sources-
+          ${{ github.workflow }}-${{ matrix.arch }}-
     - name: Get cached petbuild-cache
       uses: actions/cache@v2
       with:
