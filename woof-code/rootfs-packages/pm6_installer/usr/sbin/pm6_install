@@ -1,0 +1,120 @@
+#!/bin/sh
+
+. /etc/rc.d/PUPSTATE
+. /etc/DISTRO_SPECS
+
+if [ $PUPMODE -ne 6 ]; then
+    echo "This installer supports only PUPMODE=6"
+    exit 1
+fi
+
+TARGET="$1"
+
+if [ -z "$TARGET" ]; then
+	if [ -z "$DISPLAY" ]; then
+		echo "Usage: $0 DEV"
+		exit 1
+	fi
+
+	set -ex
+
+	ENTRIES="--entry"
+	for DEVPATH in /sys/class/block/*; do
+		DEV=${DEVPATH##*/}
+		case "$DEV" in
+		sd*[^0-9]) ENTRIES="$ENTRIES $DEV" ;;
+		esac
+	done
+
+	TARGET=`yad --title Installer --window-icon=/usr/share/pixmaps/puppy/puppy_install.svg --text 'Please select the block device to install on:' --entry $ENTRIES`
+
+	yad --text "This will erase all data on ${TARGET} ($(echo `cat /sys/class/block/${TARGET}/device/vendor` `cat /sys/class/block/${TARGET}/device/model`)). Are you sure?" --button="gtk-yes:0" --button="gtk-no:1"
+
+	exec rxvt -e sh -c "${0} ${TARGET} && echo \"Done installing ${DISTRO_NAME} on ${TARGET}\" || echo \"Failed to install ${DISTRO_NAME} on ${TARGET}\"; read"
+fi
+
+if [ -L "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
+	parted --script /dev/${TARGET} mklabel gpt
+	blockdev --rereadpt /dev/${TARGET}
+	sleep 4
+	mkdir -p /mnt/efi
+    mount "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" /mnt/efi
+	parted --script /dev/${TARGET} mkpart "${DISTRO_FILE_PREFIX}_esp" fat32 1MiB 261MiB
+	parted --script /dev/${TARGET} set 1 esp on
+	parted --script /dev/${TARGET} mkpart "${DISTRO_FILE_PREFIX}_root" ext4 261MiB 100%
+	blockdev --rereadpt /dev/${TARGET}
+	sleep 4
+	mkfs.fat -F 32 /dev/${TARGET}1
+	mkfs.ext4 -F -b 4096 -m 0 -O ^has_journal,encrypt /dev/${TARGET}2
+
+	mkdir -p /mnt/targetp1 /mnt/targetp2
+
+	mount-FULL -o noatime /dev/${TARGET}1 /mnt/targetp1
+	install -D -m 644 /mnt/efi/EFI/BOOT/BOOTX64.EFI /mnt/targetp1/EFI/BOOT/BOOTX64.EFI
+	install -m 644 /mnt/efi/EFI/BOOT/vmlinuz /mnt/targetp1/EFI/BOOT/vmlinuz
+	if [ -e /mnt/efi/EFI/BOOT/ucode.cpio ]; then
+		install -m 644 /mnt/efi/EFI/BOOT/ucode.cpio /mnt/targetp1/EFI/BOOT/ucode.cpio
+		echo "-f 0:\EFI\BOOT\vmlinuz initrd=0:\EFI\BOOT\ucode.cpio root=PARTLABEL=${DISTRO_FILE_PREFIX}_root init=/init rootfstype=ext4 rootwait rw" > /mnt/targetp1/EFI/BOOT/efilinux.cfg
+	else
+		echo "-f 0:\EFI\BOOT\vmlinuz root=PARTLABEL=${DISTRO_FILE_PREFIX}_root init=/init rootfstype=ext4 rootwait rw" > /mnt/targetp1/EFI/BOOT/efilinux.cfg
+	fi
+	busybox umount /mnt/efi 2>/dev/null
+	busybox umount /mnt/targetp1 2>/dev/null
+	rmdir /mnt/efi /mnt/targetp1
+
+	mount-FULL -o noatime /dev/${TARGET}2 /mnt/targetp2
+	cp -a /initrd/*.sfs /initrd/init /mnt/targetp2/
+	for SFSLINK in /initrd/*.sfs; do
+		if [ -L "${SFSLINK}" ]; then
+			SFS=`readlink ${SFSLINK}`
+			install -D -m 644 "/initrd/${SFS}" "/mnt/targetp2/${SFS}"
+		fi
+	done
+	busybox umount /mnt/targetp2 2>/dev/null
+	rmdir /mnt/targetp2
+else
+	parted --script /dev/${TARGET} mklabel msdos
+	parted --script /dev/${TARGET} mkpart primary "" ext4 2048s 100%
+	parted --script /dev/${TARGET} set 1 boot on
+	blockdev --rereadpt /dev/${TARGET}
+	sleep 4
+	PARTUUID=`blkid -s PARTUUID -o value /dev/${TARGET}1`
+	mkfs.ext4 -F -b 4096 -m 0 -O ^has_journal,encrypt /dev/${TARGET}1
+
+	mkdir -p /mnt/targetp1
+	mount-FULL -o noatime /dev/${TARGET}1 /mnt/targetp1
+
+	extlinux -i /mnt/targetp1
+	dd if=/usr/lib/EXTLINUX/mbr.bin of=${LOOP}
+	if [ -e /initrd/ucode.cpio ]; then
+		cat << EOF > /mnt/targetp1/extlinux.conf
+DEFAULT puppy
+
+LABEL puppy
+	LINUX vmlinuz
+	INITRD ucode.cpio
+	APPEND root=PARTUUID=$PARTUUID init=/init rootfstype=ext4 rootwait rw
+EOF
+	else
+		cat << EOF > /mnt/targetp1/extlinux.conf
+DEFAULT puppy
+
+LABEL puppy
+	LINUX vmlinuz
+	APPEND root=PARTUUID=$PARTUUID init=/init rootfstype=ext4 rootwait rw
+EOF
+	fi
+
+	cp -a /initrd/*.sfs /initrd/vmlinuz /initrd/init /mnt/targetp1/
+	for LINK in /initrd/*.sfs /initrd/vmlinuz; do
+		if [ -L "${LINK}" ]; then
+			LINKTGT=`readlink ${LINK}`
+			install -D -m 644 "/initrd/${LINKTGT}" "/mnt/targetp1/${LINKTGT}"
+		fi
+	done
+	[ ! -e /initrd/ucode.cpio ] || cp -f /initrd/ucode.cpio /mnt/targetp1/
+	busybox umount /mnt/targetp1 2>/dev/null
+	rmdir /mnt/targetp1
+fi
+
+sync

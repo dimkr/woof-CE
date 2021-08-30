@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=System installer
+Icon=/usr/share/pixmaps/puppy/puppy_install.svg
+Comment=Install Puppy
+Exec=pm6_install
+Terminal=false
+Type=Application
+Categories=X-Setup-puppy
+GenericName=System installer
