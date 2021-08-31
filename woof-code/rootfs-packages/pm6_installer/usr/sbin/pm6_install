@@ -31,6 +31,8 @@ if [ -z "$TARGET" ]; then
 	yad --title Installer --window-icon=/usr/share/pixmaps/puppy/puppy_install.svg --text "This will erase all data on ${TARGET} ($(echo `cat /sys/class/block/${TARGET}/device/vendor` `cat /sys/class/block/${TARGET}/device/model`)). Are you sure?" --button="gtk-yes:0" --button="gtk-no:1"
 
 	exec rxvt -e sh -c "${0} ${TARGET} && echo \"Done installing ${DISTRO_NAME} on ${TARGET}\" || echo \"Failed to install ${DISTRO_NAME} on ${TARGET}\"; read"
+else
+	set -ex
 fi
 
 if [ -L "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
@@ -85,7 +87,7 @@ else
 	mount-FULL -o noatime /dev/${TARGET}1 /mnt/targetp1
 
 	extlinux -i /mnt/targetp1
-	dd if=/usr/lib/EXTLINUX/mbr.bin of=${LOOP}
+	dd if=/usr/lib/EXTLINUX/mbr.bin of=/dev/${TARGET}
 	if [ -e /initrd/ucode.cpio ]; then
 		cat << EOF > /mnt/targetp1/extlinux.conf
 DEFAULT puppy
