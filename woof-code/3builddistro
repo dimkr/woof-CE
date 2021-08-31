@@ -182,9 +182,14 @@ and edit it to include your customised package list.
 			change_kernels=false
 			[ "$DISTRO_KERNEL_PET" = 'Huge_Kernel' -a "$USR_SYMLINKS" != "yes" ] && change_kernels=true
 			;;
-		pm6_*)
+		pm6_updater)
 			state=false
 			[ "$CROSFLAG" ] && state=true
+			;;
+		pm6_installer)
+			state=false
+			[ "$CROSFLAG" ] && state=true
+			[ "$DISTRO_TARGETARCH" = "arm" ] && state=false
 			;;
 		*)
 			state=true
