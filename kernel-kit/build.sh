@@ -534,9 +534,7 @@ if [ "$AUFS" != "no" -a "$AUFS_UTIL" != "no" ] ; then
 	else
 		exit_error "aufs-util: cannot select git branch."
 	fi
-fi
 
-if [ "$AUFS" != "no" ] ; then
 	log_msg "Extracting the Aufs sources"
 	rm -rf aufs_sources
 	cp -a sources/${aufs_git_dir} aufs_sources
@@ -545,7 +543,6 @@ if [ "$AUFS" != "no" ] ; then
 		../patches/aufs_sources/apply ${kernel_version}
 	)
 fi
-
 ## extract the kernel
 log_msg "Extracting the kernel sources"
 if [ "$USE_GIT_KERNEL" ] ; then
