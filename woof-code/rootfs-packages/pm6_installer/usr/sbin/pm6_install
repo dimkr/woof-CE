@@ -18,17 +18,29 @@ if [ -z "$TARGET" ]; then
 
 	set -ex
 
-	ENTRIES="--entry"
+	ENTRIES=
 	for DEVPATH in /sys/class/block/*; do
 		DEV=${DEVPATH##*/}
 		case "$DEV" in
-		sd*[^0-9]) ENTRIES="$ENTRIES $DEV" ;;
+		sd*[^0-9])
+			if [ -z "$ENTRIES" ]; then
+				ENTRIES="$DEV
+`cat ${DEVPATH}/device/model`"
+			else
+				ENTRIES="$ENTRIES
+$DEV
+`cat ${DEVPATH}/device/model`"
+			fi
+			;;
 		esac
 	done
 
-	TARGET=`yad --title Installer --window-icon=/usr/share/pixmaps/puppy/puppy_install.svg --text 'Please select the block device to install on:' --entry $ENTRIES`
+	TARGET=
+	while [ -z "$TARGET" ]; do
+		TARGET=`echo "$ENTRIES" | yad --title Installer --window-icon=/usr/share/pixmaps/puppy/puppy_install.svg --image="/usr/share/doc/puppylogo96.png" --text "Please select the device to install ${DISTRO_NAME} on:" --list --column=Name --column=Description --separator= --print-column=1`
+	done
 
-	yad --title Installer --window-icon=/usr/share/pixmaps/puppy/puppy_install.svg --text "This will erase all data on ${TARGET} ($(echo `cat /sys/class/block/${TARGET}/device/vendor` `cat /sys/class/block/${TARGET}/device/model`)). Are you sure?" --button="gtk-yes:0" --button="gtk-no:1"
+	yad --title Installer --window-icon=/usr/share/pixmaps/puppy/puppy_install.svg --image="/usr/share/doc/puppylogo96.png" --text "This will erase all data on ${TARGET}. Are you sure?" --button="gtk-yes:0" --button="gtk-no:1"
 
 	exec rxvt -e sh -c "${0} ${TARGET} && echo \"Done installing ${DISTRO_NAME} on ${TARGET}\" || echo \"Failed to install ${DISTRO_NAME} on ${TARGET}\"; read"
 else
