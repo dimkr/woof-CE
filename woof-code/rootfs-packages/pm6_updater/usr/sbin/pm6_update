@@ -244,6 +244,26 @@ else
     rm -f vmlinuz efilinux.efi ucode.cpio
 fi
 
+KEPT=0
+
+ls -t .. | while read DIR; do
+    case "$DIR" in
+    ${RELEASE_TAG}) continue ;;
+    ${DISTRO_FILE_PREFIX}-*) ;;
+    *) continue ;;
+    esac
+
+    [ ! -d "../${DIR}" ] && continue
+
+    if [ $KEPT -lt $RELEASE_HISTORY ]; then
+        echo "Keeping ${DIR}"
+        KEPT=$(($KEPT + 1))
+    else
+        echo "Removing ${DIR}"
+        rm -rf "../${DIR}"
+    fi
+done
+
 # if the files are not flushed to disk, we're left in non-bootable state
 sync
 
