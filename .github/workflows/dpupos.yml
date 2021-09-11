@@ -50,11 +50,11 @@ jobs:
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
-        repo: dpupos/woof-CE
+        repo: puppylinux-woof-CE/woof-CE
         branch: testing
-        workflow: dpupos-kernel.yml
+        workflow: kernel-kit.yml
         workflow_conclusion: success
-        name: dpupos-kernel-${{ matrix.kernel-version }}-${{ matrix.arch }}
+        name: kernel-kit-output-${{ matrix.kernel-version }}-${{ matrix.arch }}
         path: output
     - name: Move cached kernel-kit output
       run: sudo mv output ../woof-out_*/kernel-kit/

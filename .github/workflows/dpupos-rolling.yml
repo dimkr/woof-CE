@@ -46,11 +46,11 @@ jobs:
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
-        repo: dpupos/woof-CE
+        repo: puppylinux-woof-CE/woof-CE
         branch: testing
-        workflow: dpupos-kernel.yml
+        workflow: kernel-kit.yml
         workflow_conclusion: success
-        name: dpupos-kernel-5.10.x-x86_64
+        name: kernel-kit-output-5.10.x-x86_64
         path: output
     - name: Move cached kernel-kit output
       run: sudo mv output ../woof-out_*/kernel-kit/
@@ -168,11 +168,11 @@ jobs:
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
-        repo: dpupos/woof-CE
+        repo: puppylinux-woof-CE/woof-CE
         branch: testing
-        workflow: dpupos-kernel.yml
+        workflow: kernel-kit.yml
         workflow_conclusion: success
-        name: dpupos-kernel-5.4.x-veyron-speedy
+        name: kernel-kit-output-5.4.x-veyron-speedy
         path: output
     - name: Move cached kernel-kit output
       run: sudo mv output ../woof-out_*/kernel-kit/
@@ -278,11 +278,11 @@ jobs:
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v2
       with:
-        repo: dpupos/woof-CE
+        repo: puppylinux-woof-CE/woof-CE
         branch: testing
-        workflow: dpupos-kernel.yml
+        workflow: kernel-kit.yml
         workflow_conclusion: success
-        name: dpupos-kernel-5.10.x-x86
+        name: kernel-kit-output-5.10.x-x86
         path: output
     - name: Move cached kernel-kit output
       run: sudo mv output ../woof-out_*/kernel-kit/
