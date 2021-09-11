@@ -115,8 +115,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit/output/kernel_sources-5.10-dpupos.sfs
-        asset_name: kernel_sources-5.10-dpupos.sfs
+        asset_path: ../woof-out_x86_64_x86_64_debian_dpupos/kernel-kit/output/kernel_sources-5.10-kernel-kit.sfs
+        asset_name: kernel_sources-5.10-kernel-kit.sfs
         asset_content_type: application/octet-stream
     - name: Delete old releases
       uses: dev-drprasad/delete-older-releases@v0.2.0
@@ -347,8 +347,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../woof-out_x86_64_x86_debian_dpupos/kernel-kit/output/kernel_sources-5.10-dpupos.sfs
-        asset_name: kernel_sources-5.10-dpupos.sfs
+        asset_path: ../woof-out_x86_64_x86_debian_dpupos/kernel-kit/output/kernel_sources-5.10-kernel-kit.sfs
+        asset_name: kernel_sources-5.10-kernel-kit.sfs
         asset_content_type: application/octet-stream
     - name: Delete old releases
       uses: dev-drprasad/delete-older-releases@v0.2.0
