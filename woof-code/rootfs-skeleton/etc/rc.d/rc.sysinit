@@ -112,10 +112,11 @@ loadswap_func() { #w481 made into a function.
 #================================================================
 #                         MAIN
 #================================================================
-# mount devtmpfs early
-busybox mount -t devtmpfs devtmpfs /dev 2>/dev/null
-
 . /etc/rc.d/PUPSTATE
+
+# mount devtmpfs early
+[ $PUPMODE -ne 6 ] && busybox mount -t devtmpfs devtmpfs /dev 2>/dev/null
+
 . /etc/DISTRO_SPECS
 . /etc/rc.d/BOOTCONSTRAINED # has BOOT_DISABLESWAP, BOOT_ATIME, BOOT_DIRTYWRITE.
 . /etc/rc.d/MODULESCONFIG #modules loading configuration.
@@ -146,8 +147,10 @@ STATUS=0
 
 echo -n "Making the filesystem usable..." >/dev/console
 
-# busybox mount /proc before remounting / as rw (full install)
-busybox mount -t proc none /proc 2>/dev/null; STATUS=$((STATUS+$?))
+if [ $PUPMODE -ne 6 ] ; then
+ # busybox mount /proc before remounting / as rw (full install)
+ busybox mount -t proc none /proc 2>/dev/null; STATUS=$((STATUS+$?))
+fi
 
 FREERAM=`free | grep -o 'Mem: .*' | tr -s ' ' | cut -f 4 -d ' '` #w481 110405
 QTRFREERAM=`expr $FREERAM \/ 4`
