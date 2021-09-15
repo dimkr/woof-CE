@@ -9,6 +9,8 @@ if [ $PUPMODE -ne 6 ]; then
 fi
 
 TARGET="$1"
+FSOPTS="$2"
+[ -z "$FSOPTS" ] && FSOPTS="encrypt"
 
 if [ -z "$TARGET" ]; then
 	if [ -z "$DISPLAY" ]; then
@@ -40,9 +42,13 @@ $DEV
 		TARGET=`echo "$ENTRIES" | yad --title Installer --window-icon=/usr/share/pixmaps/puppy/puppy_install.svg --image="/usr/share/doc/puppylogo96.png" --text "Please select the device to install ${DISTRO_NAME} on:" --list --column=Name --column=Description --separator= --print-column=1`
 	done
 
-	yad --title Installer --window-icon=/usr/share/pixmaps/puppy/puppy_install.svg --image="/usr/share/doc/puppylogo96.png" --text "This will erase all data on ${TARGET}. Are you sure?" --button="gtk-yes:0" --button="gtk-no:1"
+	if [ "`yad --title Installer --window-icon=/usr/share/pixmaps/puppy/puppy_install.svg --image="/usr/share/doc/puppylogo96.png" --text "This will erase all data on ${TARGET}. Are you sure?" --form --field "Journaled file system:chk" --separator= --button="gtk-yes:0" --button="gtk-no:1" true`" = "TRUE" ]; then
+		FSOPTS="encrypt"
+	else
+		FSOPTS="^has_journal,encrypt"
+	fi
 
-	exec rxvt -e sh -c "${0} ${TARGET} && echo \"Done installing ${DISTRO_NAME} on ${TARGET}\" || echo \"Failed to install ${DISTRO_NAME} on ${TARGET}\"; read"
+	exec rxvt -e sh -c "${0} ${TARGET} ${FSOPTS} && echo \"Done installing ${DISTRO_NAME} on ${TARGET}\" || echo \"Failed to install ${DISTRO_NAME} on ${TARGET}\"; read"
 else
 	set -ex
 fi
@@ -59,7 +65,7 @@ if [ -L "/dev/disk/by-partlabel/${DISTRO_FILE_PREFIX}_esp" ]; then
 	blockdev --rereadpt /dev/${TARGET}
 	sleep 4
 	mkfs.fat -F 32 /dev/${TARGET}1
-	mkfs.ext4 -F -b 4096 -m 0 -O ^has_journal,encrypt /dev/${TARGET}2
+	mkfs.ext4 -F -b 4096 -m 0 -O "${FSOPTS}" /dev/${TARGET}2
 
 	mkdir -p /mnt/targetp1 /mnt/targetp2
 
