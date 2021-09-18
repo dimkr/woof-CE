@@ -24,8 +24,8 @@ if [ ! -f ${DOWNLOAD_DIR}"${FILE}" ] ; then
 	else
 		case "$URL" in
 		file://*)
-			PATH="${URL#file://}"
-			cp -f "${PATH}" ${DOWNLOAD_DIR}/ || exit 1
+			FPATH="${URL#file://}"
+			cp -f "${FPATH}" ${DOWNLOAD_DIR}/ || exit 1
 			;;
 
 		*)
