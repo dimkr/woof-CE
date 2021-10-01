@@ -1008,7 +1008,7 @@ if [ "$BUILD_SFS" = 'yes' ]; then
 	rm -f build/${PUPPYSFS} 2>/dev/null
 	mksquashfs rootfs-complete build/${PUPPYSFS} ${SFSCOMP} #100911 110713
 	###########
-	if [ "$USR_SYMLINKS" = "yes" -a "$DISTRO_KERNEL_PET" = 'Huge_Kernel' ]; then
+	if [ "$USR_SYMLINKS" = "yes" ]; then
 		KSFSCOMP="$SFSCOMP"
 
 		if [ -f build/${ZDRVSFS} ]; then
