@@ -353,6 +353,9 @@ if [ "$BUILD_CROS_IMAGE" != "yes" ]; then
     done
 fi
 
+mv -f build/fdrv-*.sfs build/${FDRVSFS}
+mv -f build/kernel-modules-*.sfs build/${ZDRVSFS}
+
 exit 0
 
 ### END ###
