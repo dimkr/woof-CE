@@ -52,7 +52,7 @@ jobs:
           - arch: arm
             compat-distro: debian
             compat-distro-version: bullseye-veyron-speedy
-            kernel: 5.4.x-veyron-speedy
+            kernel: 5.10.x-veyron-speedy
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
