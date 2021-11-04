@@ -181,10 +181,8 @@ for NAME in $PETBUILDS; do
         umount -l petbuild-rootfs-complete-${NAME}
         rmdir petbuild-rootfs-complete-${NAME}
 
-	if [ "$LAYER_TYPE" = 'overlay' ]; then
-		find ../petbuild-output/${NAME}-${HASH} -type c -delete
-		rm -rf petbuild-workdir
-	fi
+        clean_out_whiteouts ../petbuild-output/${NAME}-${HASH}
+        rm -rf petbuild-workdir
 
         if [ $ret -ne 0 ]; then
             echo "ERROR: failed to build ${NAME}"
