@@ -65,6 +65,8 @@ for NAME in $PETBUILDS; do
             rm -f sh petbuild-rootfs-complete/bin/sh
             ln -s bash petbuild-rootfs-complete/bin/sh
 
+            chroot petbuild-rootfs-complete update-ca-certificates
+
             # to speed up compilation, we build a static, native ccache executable
             if [ $CROSSBUILD -eq 1 -o ! -e devx/usr/bin/ccache ]; then
                 if [ ! -f ../petbuild-cache/ccache ]; then
