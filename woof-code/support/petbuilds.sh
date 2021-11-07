@@ -65,6 +65,7 @@ for NAME in $PETBUILDS; do
             rm -f sh petbuild-rootfs-complete/bin/sh
             ln -s bash petbuild-rootfs-complete/bin/sh
 
+            cp -f /etc/resolv.conf petbuild-rootfs-complete/etc/
             chroot petbuild-rootfs-complete update-ca-certificates
 
             # to speed up compilation, we build a static, native ccache executable
