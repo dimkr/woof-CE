@@ -237,7 +237,7 @@ To add an additional layout, select it and press OK.')"
 
 	if [ -f $XWAYLANDRC ]; then
 		sed -i "s%^XKB_DEFAULT_LAYOUT=.*%XKB_DEFAULT_LAYOUT=$NEW%" $XWAYLANDRC
-		XkbApplyLater
+		[ -n "$WAYLAND_DISPLAY" ] && XkbApplyLater
 	fi
 }
 
@@ -312,7 +312,7 @@ To keep the current model, press cancel...')'" 30 80 0 \'
 
 	if [ -f $XWAYLANDRC ]; then
 		sed -i "s%^XKB_DEFAULT_MODEL=.*%XKB_DEFAULT_MODEL=$CHOICE%" $XWAYLANDRC
-		XkbApplyLater
+		[ -n "$WAYLAND_DISPLAY" ] && XkbApplyLater
 	fi
 }
 
@@ -383,7 +383,7 @@ To abort, press cancel.')"
 
 	if [ -f $XWAYLANDRC ]; then
 		sed -i "s%^XKB_DEFAULT_OPTIONS=.*%XKB_DEFAULT_OPTIONS=$NEW%" $XWAYLANDRC
-		XkbApplyLater
+		[ -n "$WAYLAND_DISPLAY" ] && XkbApplyLater
 	fi
 }
 export -f XkbOption
@@ -538,7 +538,7 @@ Xdialog --left --stdout --title "$gtxt1" --menubox "' >$TMPDIALOG
 
 	if [ -f $XWAYLANDRC ]; then
 		sed -i "s%^XKB_DEFAULT_VARIANT=.*%XKB_DEFAULT_VARIANT=$NEW%" $XWAYLANDRC
-		XkbApplyLater
+		[ -n "$WAYLAND_DISPLAY" ] && XkbApplyLater
 	fi
 }
 
