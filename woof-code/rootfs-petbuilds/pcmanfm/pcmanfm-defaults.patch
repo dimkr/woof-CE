@@ -1,0 +1,28 @@
+diff -rupN pcmanfm-1.3.2-orig/src/app-config.c pcmanfm-1.3.2/src/app-config.c
+--- pcmanfm-1.3.2-orig/src/app-config.c	2021-12-29 08:03:17.232002738 +0800
++++ pcmanfm-1.3.2/src/app-config.c	2021-12-29 09:17:33.464108647 +0800
+@@ -490,13 +490,13 @@ static void fm_app_config_init(FmAppConf
+ 
+     cfg->desktop_section.desktop_fg.red = cfg->desktop_section.desktop_fg.green = cfg->desktop_section.desktop_fg.blue = 65535;
+     cfg->win_width = 640;
+-    cfg->win_height = 480;
++    cfg->win_height = 300;
+     cfg->splitter_pos = 150;
+     cfg->max_tab_chars = 32;
+     cfg->media_in_new_tab = FALSE;
+     cfg->desktop_folder_new_win = FALSE;
+ 
+-    cfg->side_pane_mode = FM_SP_PLACES;
++    cfg->side_pane_mode = FM_SP_PLACES | FM_SP_HIDE;
+ 
+     cfg->view_mode = FM_FV_ICON_VIEW;
+     cfg->show_hidden = FALSE;
+@@ -534,7 +534,7 @@ static void fm_app_config_init(FmAppConf
+     cfg->change_tab_on_drop = TRUE;
+     cfg->close_on_unmount = TRUE;
+     cfg->maximized = FALSE;
+-    cfg->pathbar_mode_buttons = FALSE;
++    cfg->pathbar_mode_buttons = TRUE;
+ }
+ 
+ 

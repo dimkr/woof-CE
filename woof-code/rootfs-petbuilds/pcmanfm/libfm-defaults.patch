@@ -1,0 +1,52 @@
+diff -rupN libfm-1.3.2-orig/src/base/fm-config.c libfm-1.3.2/src/base/fm-config.c
+--- libfm-1.3.2-orig/src/base/fm-config.c	2021-12-29 08:53:31.200074370 +0800
++++ libfm-1.3.2/src/base/fm-config.c	2021-12-29 08:58:46.712081868 +0800
+@@ -265,7 +265,7 @@ void fm_config_load_from_key_file(FmConf
+     fm_key_file_get_bool(kf, "config", "confirm_trash", &cfg->confirm_trash);
+     if(cfg->terminal)
+         g_free(cfg->terminal);
+-    cfg->terminal = g_key_file_get_string(kf, "config", "terminal", NULL);
++    cfg->terminal = g_key_file_get_string(kf, "config", "terminal", "defaultterminal");
+     if(cfg->archiver)
+         g_free(cfg->archiver);
+     cfg->archiver = g_key_file_get_string(kf, "config", "archiver", NULL);
+diff -rupN libfm-1.3.2-orig/src/base/fm-config.h libfm-1.3.2/src/base/fm-config.h
+--- libfm-1.3.2-orig/src/base/fm-config.h	2021-12-29 08:53:31.196074369 +0800
++++ libfm-1.3.2/src/base/fm-config.h	2021-12-29 09:11:59.484100709 +0800
+@@ -44,7 +44,7 @@ G_BEGIN_DECLS
+ typedef struct _FmConfig            FmConfig;
+ typedef struct _FmConfigClass       FmConfigClass;
+ 
+-#define     FM_CONFIG_DEFAULT_SINGLE_CLICK      FALSE
++#define     FM_CONFIG_DEFAULT_SINGLE_CLICK      TRUE
+ #define     FM_CONFIG_DEFAULT_USE_TRASH         TRUE
+ #define     FM_CONFIG_DEFAULT_CONFIRM_DEL       TRUE
+ #define     FM_CONFIG_DEFAULT_CONFIRM_TRASH     TRUE
+@@ -55,11 +55,11 @@ typedef struct _FmConfigClass       FmCo
+ #define     FM_CONFIG_DEFAULT_PANE_ICON_SIZE    16
+ #define     FM_CONFIG_DEFAULT_THUMBNAIL_SIZE    128
+ 
+-#define     FM_CONFIG_DEFAULT_SHOW_THUMBNAIL    TRUE
++#define     FM_CONFIG_DEFAULT_SHOW_THUMBNAIL    FALSE
+ #define     FM_CONFIG_DEFAULT_THUMBNAIL_LOCAL   TRUE
+ #define     FM_CONFIG_DEFAULT_THUMBNAIL_MAX     2048
+ 
+-#define     FM_CONFIG_DEFAULT_FORCE_S_NOTIFY    TRUE
++#define     FM_CONFIG_DEFAULT_FORCE_S_NOTIFY    FALSE
+ #define     FM_CONFIG_DEFAULT_BACKUP_HIDDEN     TRUE
+ #define     FM_CONFIG_DEFAULT_NO_EXPAND_EMPTY   FALSE
+ #define     FM_CONFIG_DEFAULT_SHOW_FULL_NAMES   FALSE
+@@ -72,11 +72,11 @@ typedef struct _FmConfigClass       FmCo
+ #define     FM_CONFIG_DEFAULT_SMART_DESKTOP_AUTODROP TRUE
+ 
+ #define     FM_CONFIG_DEFAULT_PLACES_HOME       TRUE
+-#define     FM_CONFIG_DEFAULT_PLACES_DESKTOP    TRUE
++#define     FM_CONFIG_DEFAULT_PLACES_DESKTOP    FALSE
+ #define     FM_CONFIG_DEFAULT_PLACES_ROOT       FALSE
+ #define     FM_CONFIG_DEFAULT_PLACES_COMPUTER   FALSE
+ #define     FM_CONFIG_DEFAULT_PLACES_TRASH      TRUE
+-#define     FM_CONFIG_DEFAULT_PLACES_APPLICATIONS TRUE
++#define     FM_CONFIG_DEFAULT_PLACES_APPLICATIONS FALSE
+ #define     FM_CONFIG_DEFAULT_PLACES_NETWORK    FALSE
+ #define     FM_CONFIG_DEFAULT_PLACES_UNMOUNTED  TRUE
+ 
