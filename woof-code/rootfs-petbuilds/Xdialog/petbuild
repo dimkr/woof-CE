@@ -1,10 +1,14 @@
 download() {
-    [ -f Xdialog-859e758.zip ] || wget -t 3 -T 60 -O Xdialog-859e758.zip https://github.com/puppylinux-woof-CE/Xdialog/archive/859e758e2fc0e1e4a1a0bc207a2915f5af191472.zip
+    if [ ! -f Xdialog-859e758.tar ]; then
+        fossil open --workdir Xdialog_2022-01-03_013714_14c5747051 http://chiselapp.com/user/jamesbond/repository/xdialog 14c5747051 
+        fossil tarball -R xdialog.fossil 14c5747051bd196c Xdialog-14c5747051bd196c.tar
+        rm -f xdialog.fossil
+    fi
 }
 
 build() {
-    unzip Xdialog-859e758.zip
-    cd Xdialog-859e758e2fc0e1e4a1a0bc207a2915f5af191472
+    tar -xf Xdialog-14c5747051bd196c.tar
+    cd Xdialog_2022-01-03_013714_14c5747051
     if [ $PETBUILD_GTK -eq 3 ]; then
         ./configure --prefix=/usr --mandir=/usr/share/man --with-gtk3
     else
