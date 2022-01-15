@@ -178,7 +178,7 @@ for NAME in $PETBUILDS; do
 
         cp -a ../petbuild-sources/${NAME}/* petbuild-rootfs-complete-${NAME}/tmp/
         cp -a ../rootfs-petbuilds/${NAME}/* petbuild-rootfs-complete-${NAME}/tmp/
-        CC="$WOOF_CC" CXX="$WOOF_CXX" CFLAGS="$WOOF_CFLAGS" CXXFLAGS="$WOOF_CXXFLAGS" LDFLAGS="$WOOF_LDFLAGS" MAKEFLAGS="$MAKEFLAGS" CCACHE_DIR=/root/.ccache CCACHE_NOHASHDIR=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" PYTHONDONTWRITEBYTECODE=1 PYTHONPYCACHEPREFIX=/root/.cache/__pycache__ PETBUILD_GTK=$PETBUILD_GTK $CHROOT_PFIX chroot petbuild-rootfs-complete-${NAME} bash -ec "cd /tmp && . ./petbuild && build"
+        CC="$WOOF_CC" CXX="$WOOF_CXX" CFLAGS="$WOOF_CFLAGS" CXXFLAGS="$WOOF_CXXFLAGS" LDFLAGS="$WOOF_LDFLAGS" MAKEFLAGS="$MAKEFLAGS" CCACHE_DIR=/root/.ccache CCACHE_NOHASHDIR=1 PKG_CONFIG_PATH="$PKG_CONFIG_PATH" PYTHONDONTWRITEBYTECODE=1 PYTHONPYCACHEPREFIX=/root/.cache/__pycache__ PETBUILD_GTK=$PETBUILD_GTK $CHROOT_PFIX chroot petbuild-rootfs-complete-${NAME} bash -ec "cd /tmp && . /etc/DISTRO_SPECS && . ./petbuild && build"
         ret=$?
         umount -l petbuild-rootfs-complete-${NAME}/root/.cache
         umount -l petbuild-rootfs-complete-${NAME}/root/.ccache
@@ -218,7 +218,6 @@ for NAME in $PETBUILDS; do
         rm -rf ../petbuild-output/${NAME}-${HASH}/usr/include
 
         find ../petbuild-output/${NAME}-${HASH} -name '.wh*' -delete
-        find ../petbuild-output/${NAME}-${HASH} -name '.git*' -delete
         find ../petbuild-output/${NAME}-${HASH} -name '*.a' -delete
         find ../petbuild-output/${NAME}-${HASH} -name '*.la' -delete
 
@@ -267,6 +266,8 @@ for NAME in $PETBUILDS; do
             *) cp -a $EXTRAFILE ../petbuild-output/${NAME}-${HASH}/
             esac
         done
+
+        find ../petbuild-output/${NAME}-${HASH} -name '.git*' -delete
     fi
 
     rm -f ../petbuild-output/${NAME}-latest
