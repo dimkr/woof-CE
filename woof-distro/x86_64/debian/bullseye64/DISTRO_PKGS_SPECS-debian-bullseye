@@ -89,7 +89,6 @@ yes|cyrus-sasl2|libsasl2-2|exe,dev,doc,nls||deps:yes
 yes|dash|dash|exe>dev,dev,doc,nls||deps:yes
 yes|dbus|dbus,dbus-x11,libdbus-1-3,libdbus-1-dev,libapparmor1|exe,dev,doc,nls||deps:yes
 yes|dbus-glib|libdbus-glib-1-2|exe,dev,doc,nls||deps:yes
-yes|dbus-user-session|dbus-user-session|exe>null,dev>null,doc>null,nls>null
 yes|d-conf|dconf-gsettings-backend,dconf-service,libdconf1|exe,dev,doc,nls||deps:yes #needed by gsettings-desktop-settings
 #yes|deadbeef|deadbeef,deadbeef-waveform-seekbar,deadbeef-vu-meter,deadbeef-spectrogram,deadbeef-rating,deadbeef-musical-spectrum,deadbeef-infobar|exe|
 yes|debconf|debconf|exe>null,dev>null,doc>null,nls>null
@@ -672,6 +671,12 @@ if [ -f DISTRO_SPECS ]; then
     . ./DISTRO_SPECS
 else
     . /etc/DISTRO_SPECS
+fi
+
+if [ "$DISTRO_BINARY_COMPAT" = "debian" ]; then
+    PKGS_SPECS_TABLE="$PKGS_SPECS_TABLE
+yes|dbus-user-session|dbus-user-session|exe>null,dev>null,doc>null,nls>null
+"
 fi
 
 case $DISTRO_TARGETARCH in
