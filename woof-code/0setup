@@ -159,21 +159,31 @@ case $DISTRO_BINARY_COMPAT in ubuntu|trisquel|debian|devuan) #130319 removed |ra
 esac
 
 if [ "$DISTRO_BINARY_COMPAT" = "debian" ]; then
-  wget --spider --tries 1 -T 3 -F --max-redirect 0 http://deb.debian.org/debian-security/dists/${DISTRO_COMPAT_VERSION}-security/
-  if [ $? -eq 0 ]; then
-   PKGLISTS_COMPAT_S="z|http://deb.debian.org/debian-security/dists/${DISTRO_COMPAT_VERSION}-security/main/binary-${DBIN_ARCH}/Packages.xz|Packages-debian-${DISTRO_COMPAT_VERSION}-security-main
+ wget --spider --tries 1 -T 3 -F --max-redirect 0 http://deb.debian.org/debian-security/dists/${DISTRO_COMPAT_VERSION}-security/main/binary-${DBIN_ARCH}/Packages.xz
+ if [ $? -eq 0 ]; then
+  PKGLISTS_COMPAT_S="z|http://deb.debian.org/debian-security/dists/${DISTRO_COMPAT_VERSION}-security/main/binary-${DBIN_ARCH}/Packages.xz|Packages-debian-${DISTRO_COMPAT_VERSION}-security-main
 z|http://deb.debian.org/debian-security/dists/${DISTRO_COMPAT_VERSION}-security/non-free/binary-${DBIN_ARCH}/Packages.xz|Packages-debian-${DISTRO_COMPAT_VERSION}-security-non-free
 z|http://deb.debian.org/debian-security/dists/${DISTRO_COMPAT_VERSION}-security/contrib/binary-${DBIN_ARCH}/Packages.xz|Packages-debian-${DISTRO_COMPAT_VERSION}-security-contrib
 "
-   download_pkg_dbs compat $PKGLISTS_COMPAT_S
-   PKGLISTS_COMPAT_UPDATES="$PKGLISTS_COMPAT_UPDATES $(echo "$PKGLISTS_COMPAT_S" | cut -f 3 -d "|" | tr '\n' ' ')"
+  download_pkg_dbs compat $PKGLISTS_COMPAT_S
+  PKGLISTS_COMPAT_UPDATES="$PKGLISTS_COMPAT_UPDATES $(echo "$PKGLISTS_COMPAT_S" | cut -f 3 -d "|" | tr '\n' ' ')"
 
-   if [ "$RUNNINGPUP" = "no" ]; then
-    cat << EOF >> $DCRFILE
+  if [ "$RUNNINGPUP" = "no" ]; then
+   cat << EOF >> $DCRFILE
 # appended by 0setup
 REPOS_DISTRO_COMPAT="$REPOS_DISTRO_COMPAT z|http://deb.debian.org/debian-security|Packages-debian-${DISTRO_COMPAT_VERSION}-*"
 EOF
-   fi
+  fi
+ fi
+elif [ "$DISTRO_BINARY_COMPAT" = "devuan" ]; then
+ wget --spider --tries 1 -T 3 -F --max-redirect 0 http://deb.devuan.org/merged/dists/${DISTRO_COMPAT_VERSION}-security/main/binary-${DBIN_ARCH}/Packages.xz
+ if [ $? -eq 0 ]; then
+  PKGLISTS_COMPAT_S="z|http://deb.devuan.org/merged/dists/${DISTRO_COMPAT_VERSION}-security/main/binary-${DBIN_ARCH}/Packages.xz|Packages-devuan-${DISTRO_COMPAT_VERSION}-security-main
+z|http://deb.devuan.org/merged/dists/${DISTRO_COMPAT_VERSION}-security/non-free/binary-${DBIN_ARCH}/Packages.xz|Packages-devuan-${DISTRO_COMPAT_VERSION}-security-non-free
+z|http://deb.devuan.org/merged/dists/${DISTRO_COMPAT_VERSION}-security/contrib/binary-${DBIN_ARCH}/Packages.xz|Packages-devuan-${DISTRO_COMPAT_VERSION}-security-contrib
+"
+  download_pkg_dbs compat $PKGLISTS_COMPAT_S
+  PKGLISTS_COMPAT_UPDATES="$PKGLISTS_COMPAT_UPDATES $(echo "$PKGLISTS_COMPAT_S" | cut -f 3 -d "|" | tr '\n' ' ')"
  fi
 fi
 
