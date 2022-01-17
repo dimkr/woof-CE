@@ -43,11 +43,11 @@ if [ -f usr/share/doc/release-skeleton.top.htm ] ; then
 	(
 		sed -e "$PATTERN2" -e "$nPATTERN" -e "$rPATTERN" usr/share/doc/release-skeleton.top.htm
 		if [ -e ../../support/release_extras/"${DISTRO_FILE_PREFIX}.htm" ];then
-			sed -e "s/DISTRO_VERSION/$DISTRO_VERSION/g" -e "$rPATTERN" \
+			sed -e "s/DISTRO_VERSION/$DISTRO_VERSION/g" -e "$rPATTERN" -e "$nPATTERN" \
 				../../support/release_extras/"${DISTRO_FILE_PREFIX}.htm"
 		fi
 		if [ -e ../../support/release_extras/"${DISTRO_FILE_PREFIX}-${DISTRO_COMPAT_VERSION}.htm" ];then
-			sed -e "s/DISTRO_VERSION/$DISTRO_VERSION/g" -e "$rPATTERN" \
+			sed -e "s/DISTRO_VERSION/$DISTRO_VERSION/g" -e "$rPATTERN" -e "$nPATTERN" \
 				../../support/release_extras/"${DISTRO_FILE_PREFIX}-${DISTRO_COMPAT_VERSION}.htm"
 		fi
 		sed -e "$PATTERN2" -e "$nPATTERN" -e "$rPATTERN" usr/share/doc/release-skeleton.bottom.htm
