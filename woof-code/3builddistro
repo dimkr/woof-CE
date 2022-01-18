@@ -581,6 +581,7 @@ else
 	NEWVARIABLES="#Puppy default filenames...
 #Note, the 'SFS' files below are what the 'init' script in initrd.gz searches for,
 #for the partition, path and actual files loaded, see PUPSFS and ZDRV in /etc/rc.d/PUPSTATE
+DISTRO_BDRVSFS='${BDRVSFS}'
 DISTRO_PUPPYSFS='${PUPPYSFS}'
 DISTRO_ZDRVSFS='${ZDRVSFS}'
 DISTRO_FDRVSFS='${FDRVSFS}'
@@ -964,8 +965,7 @@ fi
 if [ "$BUILD_SFS" = 'yes' ]; then
 	sh $MWD/support/files2delete.sh rootfs-complete
 
-	# frugalify puts bdrv below the main SFS
-	if [ "${DISTRO_BINARY_COMPAT}" = 'debian' -a "$FRUGALIFY" ]; then
+	if [ "${DISTRO_BINARY_COMPAT}" = 'debian' ]; then
 	        echo "Now building sandbox3/bdrv"
 	        $MWD/support/bdrv.sh || exit 1
 	fi
@@ -985,6 +985,7 @@ if [ "$BUILD_SFS" = 'yes' ]; then
 				adrv) TYPE_SYS_SFS="${ADRVSFS}";;
 				fdrv) TYPE_SYS_SFS="${FDRVSFS}";;
 				ydrv) TYPE_SYS_SFS="${YDRVSFS}";;
+				bdrv) TYPE_SYS_SFS="${BDRVSFS}";;
 			esac
 			echo -e "\nNow building the $SYS_SFS f.s., $TYPE_SYS_SFS ..."
 			rm -f build/${TYPE_SYS_SFS} 2>/dev/null
