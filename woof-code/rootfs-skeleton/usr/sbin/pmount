@@ -463,6 +463,10 @@ do
   #====================
   #   partitions
   #====================
+  HOMELINK=
+  if [ -L /mnt/home ] ; then
+    HOMELINK="`readlink /mnt/home`"
+  fi
   while IFS="|" read -r ONEDEV ONEFS ONESIZE ONELABEL IS_MOUNTED
   do
 	[ -z "$ONEDEV" -o "$ONEDEV" = "none" ] && continue
@@ -482,15 +486,13 @@ do
 
 	#in some cases prevent unmounting...
 	INVISBUT=""
-	[ "$ONEMNTPT" = "/" ] && INVISBUT='<visible>disabled</visible>'
-	case $ONEMNTPT in /initrd/*)
+	if [ "$ONEMNTPT" = "/" ]; then
 		INVISBUT='<visible>disabled</visible>'
+	elif [ "$HOMELINK" = "$ONEMNTPT" ]; then
 		#if 'home' partition, substitute /mnt/home...
-		if [ -L /mnt/home ] ; then
-			HOMELINK="`readlink /mnt/home`"
-			[ "$HOMELINK" = "$ONEMNTPT" ] && ONEMNTPT="/mnt/home"
-		fi ;;
-	esac
+		INVISBUT='<visible>disabled</visible>'
+		ONEMNTPT="/mnt/home"
+	fi
 
 	#should not open a layer inside aufs, ex: session saved entire partition, desktop drive icon is /initrd/pup_rw...
 	case $ONEMNTPT in /initrd/pup_*) ONEMNTPT="/" ;; esac #open rox at top of aufs layers.
