@@ -761,9 +761,15 @@ remount_overlay() {
   mkdir /mnt/tmpfs/pup_work
   OPTS="lowerdir=,upperdir=/mnt/tmpfs/pup_rw,workdir=/mnt/tmpfs/pup_work"
  fi
- OPTS=`echo "$OPTS" | sed -E "$@"`
- echo "mount -t overlay -o ${OPTS} unionfs /pup_new" #debug
- mount -t overlay -o ${OPTS} unionfs /pup_new
+ NEWOPTS=`echo "$OPTS" | sed -E "$@"`
+ echo "mount -t overlay -o ${NEWOPTS} unionfs /pup_new" #debug
+ mount -t overlay -o ${NEWOPTS} unionfs /pup_new
+ STATUS=$?
+ if [ $STATUS -eq 0 ]; then
+  echo "mount -t overlay -o ${OPTS} unionfs /pup_new" #debug
+  mount -t overlay -o ${OPTS} unionfs /pup_new
+ fi
+ return $STATUS
 }
 
 #=============================================================
@@ -1283,7 +1289,10 @@ if [ "$UNIONFS" = 'overlay' -a -n "$SAVE_MP" -a -f /pup_new/etc/rc.d/BOOTCONFIG 
   mkdir $SFS_MP
   mount -t squashfs -o ro,loop,noatime "${SFS}" $SFS_MP || continue
   remount_overlay "s~lowerdir=([^,]+)~lowerdir=${SFS_MP}:\1~"
-  [ $? -eq 0 ] || return 5
+  if [ $? -eq 0 ]; then
+   umount -l $SFS_MP
+   rmdir $SFS_MP
+  fi
  done
 fi
 
