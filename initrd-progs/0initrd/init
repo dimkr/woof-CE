@@ -1281,16 +1281,22 @@ if [ "$UNIONFS" = 'overlay' -a -n "$SAVE_MP" -a -f /pup_new/etc/rc.d/BOOTCONFIG 
  EXTRASFSLIST=""
  . /pup_new/etc/rc.d/BOOTCONFIG
  for F in $EXTRASFSLIST; do
-  SFS="${SAVE_MP}/${PSUBDIR}/${F}"
+  # look for the SFS under PSUBDIR and under the root
+  SFS="${SAVE_MP}${PSUBDIR}/${F}"
+  [ -n "$PSUBDIR" -a ! -e "$SFS" ] && SFS="${SAVE_MP}/${F}"
   [ ! -e "$SFS" ] && continue
   LOOP=`losetup -f`
   ID=${LOOP#/dev/loop}
   SFS_MP="/pup_ro${ID}"
   mkdir $SFS_MP
-  mount -t squashfs -o ro,loop,noatime "${SFS}" $SFS_MP || continue
+  mount -t squashfs -o ro,loop,noatime "${SFS}" $SFS_MP
+  if [ $? -ne 0 ]; then
+   rmdir $SFS_MP
+   continue
+  fi
   remount_overlay "s~lowerdir=([^,]+)~lowerdir=${SFS_MP}:\1~"
-  if [ $? -eq 0 ]; then
-   umount -l $SFS_MP
+  if [ $? -ne 0 ]; then
+   umount $SFS_MP
    rmdir $SFS_MP
   fi
  done
