@@ -306,6 +306,7 @@ ensure_save_mounted() {
 find_drv_file() {
 # "$1" - specified filename - ex: /pup/mydrv-1.2.3.sfs
 # "$2" - default filename - ex: adrv_tahr_6.0.5.sfs
+# "$3" - look under root too - ex. 1
  ONE_FN=""
  [ "${1}" ] || [ "${2}" ] || return
  if [ "${1}" ];then
@@ -315,6 +316,7 @@ find_drv_file() {
   esac
  else
   ONE_TRY_FN="${PSUBDIR}/${2}"
+  [ "$3" -a !-e "$ONE_TRY_FN" ] && ONE_TRY_FN="/$2"
  fi
  if [ -L "${ONE_MP}${ONE_TRY_FN}" ];then
    C_MP="$(readlink -f "$ONE_MP")"
@@ -329,6 +331,7 @@ find_onepupdrv() {
 # "$2" - specified filename - ex: /pup/mydrv-1.2.3.sfs
 # "$3" - default filename - ex: adrv_tahr_6.0.5.sfs
 # "$4" - prefix for "drv" mountpoint - ex: a
+# "$5" - look under root too - ex. 1
  ONE_FN=""
  [ "${2}" ] || [ "${3}" ] || return
  [ "${4}" ] || return
@@ -340,7 +343,7 @@ find_onepupdrv() {
  [ "$ONE_PART" ] || return
  ensure_mounted "$ONE_PART" "/mnt/${4}drv"
  [ "$ONE_MP" ] || return
- find_drv_file "${2}" "${3}"
+ find_drv_file "${2}" "${3}" "${5}"
  [ "$ONE_FN" = "" -a "${2}" ] && echo "$ONE_PART, $ONE_TRY_FN file not found."
 }
 
@@ -674,7 +677,7 @@ $TRY_PARTS_LAST"
     fi
    fi
    if [ "$LOOK_PUP" ];then
-    find_drv_file "$P_BP_FN" "$P_DEF_FN"
+    find_drv_file "$P_BP_FN" "$P_DEF_FN" ""
     if [ "$ONE_FN" ];then
      PDRV="$ONE_PART,$ONE_FS,$ONE_FN"
      P_MP="$ONE_MP"
@@ -901,7 +904,7 @@ P_PART=""; LOOK_PUP=""; LOOK_SAVE=""
 if [ "$P_BP_ID" ];then #specified as parameter
  decode_id "$P_BP_ID"
  [ "$ONE_PART" ] && { P_PART="$ONE_PART"; P_BP_ID=""; }
- find_onepupdrv "$P_PART" "$P_BP_FN" "$P_DEF_FN" "p"
+ find_onepupdrv "$P_PART" "$P_BP_FN" "$P_DEF_FN" "p" ""
  [ "$ONE_FN" ] && { PDRV="$ONE_PART,$ONE_FS,$ONE_FN"; P_MP="$ONE_MP"; }
  [ "$PDEBUG" ] && echo "2: ONE_PART=$ONE_PART ONE_FN=$ONE_FN ONE_MP=$ONE_MP"
 elif [ "$PDRV" = "" ];then #not specified anywhere
@@ -989,19 +992,19 @@ PUP_LAYER="$SFS_MP"
 [ "$SAVE_BP_ID" ] && log_part_id "$SAVE_BP_ID"
 
 #have basic system, now try to add optional stuff
-find_onepupdrv "$F_PART" "$F_BP_FN" "$F_DEF_FN" "f"
+find_onepupdrv "$F_PART" "$F_BP_FN" "$F_DEF_FN" "f" ""
 [ "$ONE_FN" ] && FDRV="$ONE_PART,$ONE_FS,$ONE_FN"
 [ "$FDRV" ] && { LOADMSG="fdrv"; setup_onepupdrv "$FDRV" "f"; }
 
-find_onepupdrv "$Z_PART" "$Z_BP_FN" "$Z_DEF_FN" "z"
+find_onepupdrv "$Z_PART" "$Z_BP_FN" "$Z_DEF_FN" "z" ""
 [ "$ONE_FN" ] && ZDRV="$ONE_PART,$ONE_FS,$ONE_FN"
 [ "$ZDRV" ] && { LOADMSG="zdrv"; setup_onepupdrv "$ZDRV" "z"; }
 
-find_onepupdrv "$Y_PART" "$Y_BP_FN" "$Y_DEF_FN" "y"
+find_onepupdrv "$Y_PART" "$Y_BP_FN" "$Y_DEF_FN" "y" ""
 [ "$ONE_FN" ] && YDRV="$ONE_PART,$ONE_FS,$ONE_FN"
 [ "$YDRV" ] && { LOADMSG="ydrv"; setup_onepupdrv "$YDRV" "y" "p"; }
 
-find_onepupdrv "$A_PART" "$A_BP_FN" "$A_DEF_FN" "a"
+find_onepupdrv "$A_PART" "$A_BP_FN" "$A_DEF_FN" "a" ""
 [ "$ONE_FN" ] && ADRV="$ONE_PART,$ONE_FS,$ONE_FN"
 [ "$ADRV" ] && { LOADMSG="adrv"; setup_onepupdrv "$ADRV" "a" "p"; }
 
@@ -1282,7 +1285,7 @@ if [ "$UNIONFS" = 'overlay' -a -f /pup_new/etc/rc.d/BOOTCONFIG ]; then
  . /pup_new/etc/rc.d/BOOTCONFIG
  for ONE_SFS in $EXTRASFSLIST; do
   LOOP=`losetup -f`
-  find_onepupdrv "" "" "$ONE_SFS" "p"
+  find_onepupdrv "" "" "$ONE_SFS" "p" "1"
   [ "$ONE_FN" ] && { LOADMSG="extra"; setup_onepupdrv "$ONE_PART,$ONE_FS,$ONE_FN" "ro${LOOP#/dev/loop}" "p"; }
  done
 fi
