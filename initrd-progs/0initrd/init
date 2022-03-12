@@ -1277,28 +1277,13 @@ case $PUPMODE in
  ;;
 esac
 
-if [ "$UNIONFS" = 'overlay' -a -n "$SAVE_MP" -a -f /pup_new/etc/rc.d/BOOTCONFIG ]; then
+if [ "$UNIONFS" = 'overlay' -a -f /pup_new/etc/rc.d/BOOTCONFIG ]; then
  EXTRASFSLIST=""
  . /pup_new/etc/rc.d/BOOTCONFIG
- for F in $EXTRASFSLIST; do
-  # look for the SFS under PSUBDIR and under the root
-  SFS="${SAVE_MP}${PSUBDIR}/${F}"
-  [ -n "$PSUBDIR" -a ! -e "$SFS" ] && SFS="${SAVE_MP}/${F}"
-  [ ! -e "$SFS" ] && continue
+ for ONE_SFS in $EXTRASFSLIST; do
   LOOP=`losetup -f`
-  ID=${LOOP#/dev/loop}
-  SFS_MP="/pup_ro${ID}"
-  mkdir $SFS_MP
-  mount -t squashfs -o ro,loop,noatime "${SFS}" $SFS_MP
-  if [ $? -ne 0 ]; then
-   rmdir $SFS_MP
-   continue
-  fi
-  remount_overlay "s~lowerdir=([^,]+)~lowerdir=${SFS_MP}:\1~"
-  if [ $? -ne 0 ]; then
-   umount $SFS_MP
-   rmdir $SFS_MP
-  fi
+  find_onepupdrv "" "" "$ONE_SFS" "p"
+  [ "$ONE_FN" ] && { LOADMSG="extra"; setup_onepupdrv "$ONE_PART,$ONE_FS,$ONE_FN" "ro${LOOP#/dev/loop}" "p"; }
  done
 fi
 
