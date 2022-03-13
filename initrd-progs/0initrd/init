@@ -316,7 +316,7 @@ find_drv_file() {
   esac
  else
   ONE_TRY_FN="${PSUBDIR}/${2}"
-  [ "$3" -a !-e "$ONE_TRY_FN" ] && ONE_TRY_FN="/$2"
+  [ "$3" -a ! -e "$ONE_TRY_FN" ] && ONE_TRY_FN="/$2"
  fi
  if [ -L "${ONE_MP}${ONE_TRY_FN}" ];then
    C_MP="$(readlink -f "$ONE_MP")"
