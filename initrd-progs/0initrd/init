@@ -438,14 +438,22 @@ setup_onepupdrv() {
    remount_overlay -e "s~lowerdir=([^,]+)~lowerdir=${SFS_MP}:\1~" -e "s~lowerdir=,~lowerdir=${SFS_MP},~"
    [ $? -eq 0 ] || return 5
   fi
- elif [ "$ONE_PREP" ];then
-  echo "mount -o remount,add:1:$ONE_LAYER /pup_new" #debug
-  mount -o remount,add:1:$ONE_LAYER /pup_new
-  [ $? -eq 0 ] || return 5
  else
-  echo "mount -o remount,append:$ONE_LAYER /pup_new" #debug
-  mount -o remount,append:$ONE_LAYER /pup_new
-  [ $? -eq 0 ] || return 5
+  mountpoint -q /pup_new
+  if [ $? -ne 0 ];then
+   echo "mount -t aufs -o udba=reval,diropq=w,br=/mnt/tmpfs/pup_rw=rw,xino=/mnt/tmpfs/.aufs.xino unionfs /pup_new" #debug
+   mount -t aufs -o udba=reval,diropq=w,br=/mnt/tmpfs/pup_rw=rw,xino=/mnt/tmpfs/.aufs.xino unionfs /pup_new
+   [ $? -eq 0 ] || fatal_error "${L_ERROR_FAILED_AUFS_STACK}"
+  fi
+  if [ "$ONE_PREP" ];then
+   echo "mount -o remount,add:1:$ONE_LAYER /pup_new" #debug
+   mount -o remount,add:1:$ONE_LAYER /pup_new
+   [ $? -eq 0 ] || return 5
+  else
+   echo "mount -o remount,append:$ONE_LAYER /pup_new" #debug
+   mount -o remount,append:$ONE_LAYER /pup_new
+   [ $? -eq 0 ] || return 5
+  fi
  fi
  NEWUNIONRECORD="${NEWUNIONRECORD}${ONE_BASENAME} "
  return 0
@@ -961,10 +969,6 @@ RAMSIZE=$(free | grep -o 'Mem: .*' | tr -s ' ' | cut -f 2 -d ' ') #total physica
 
 mount -t tmpfs tmpfs /mnt/tmpfs
 [ -d "/mnt/tmpfs/pup_rw" ] || mkdir /mnt/tmpfs/pup_rw
-if [ "$UNIONFS" != 'overlay' ]; then
- mount -t aufs -o udba=reval,diropq=w,br=/mnt/tmpfs/pup_rw=rw,xino=/mnt/tmpfs/.aufs.xino unionfs /pup_new
- [ $? -eq 0 ] || fatal_error "${L_ERROR_FAILED_AUFS_STACK}"
-fi
 
 NEWUNIONRECORD=""
 COPY2RAM=""
