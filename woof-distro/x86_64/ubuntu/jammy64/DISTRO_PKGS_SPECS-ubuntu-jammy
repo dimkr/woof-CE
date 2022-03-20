@@ -201,7 +201,7 @@ no|gpptp||exe,dev>null,doc,nls
 no|gptfdisk||exe,doc,dev,nls
 yes|graphite2|libgraphite2-3,libgraphite2-dev|exe,dev,doc,nls||deps:yes #needed by harfbuzz.
 yes|grep|grep|exe,dev>null,doc,nls||deps:yes
-yes|groff|groff|exe>dev,dev,doc,nls||deps:yes
+yes|groff|groff,groff-base|exe,dev,doc,nls||deps:yes
 no|grsync||exe,dev,doc,nls
 no|grub2_efi||exe
 no|grub4dos||exe,dev>null,doc,nls
