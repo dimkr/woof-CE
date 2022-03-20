@@ -167,8 +167,7 @@ no|gdmap|gdmap|exe,dev>null,doc,nls
 no|geany|geany,geany-common|exe,dev,doc,nls #this is gtk3 version, use gtk2 pet instead
 no|getflash||exe
 no|get_libreoffice||exe
-yes|gettext_devxonly|gettext-base,gettext|exe>dev,dev,doc,nls||deps:yes
-yes|gettext|gettext-base,gettext|exe,dev>null,doc,nls||deps:yes
+yes|gettext|gettext,gettext-base|exe,dev,doc,nls||deps:yes
 no|gexec|gexec|exe,dev>null,doc,nls
 no|gftp|gftp-gtk,gftp-common|exe,dev>null,doc,nls
 no|ghostscript|ghostscript,ghostscript-x,libgs9,libgs9-common,libgs-dev|exe,dev,doc,nls
@@ -595,7 +594,7 @@ yes|serf|libserf-1-1|exe>dev,dev,doc,nls||deps:yes #needed by svn.
 no|setserial|setserial|exe,dev>null,doc,nls
 yes|sgml-base|sgml-base|exe,dev,doc,nls||deps:yes
 yes|sgml-data|sgml-data|exe>dev,dev,doc,nls||deps:yes
-yes|shared-mime-info|shared-mime-info|exe,dev,doc,nls||deps:yes
+yes|shared-mime-info|shared-mime-info|exe,dev>exe,doc,nls||deps:yes
 no|simple-mtpfs||exe,dev,doc,nls #pupmtp
 yes|sqlite|libsqlite3-0|exe,dev,doc,nls||deps:yes
 yes|squashfs-tools|squashfs-tools|exe,dev,doc,nls||deps:yes
