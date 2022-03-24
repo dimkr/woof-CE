@@ -54,7 +54,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - kernel-kit-config: 5.15.x-x86_64
+          - kernel-kit-config: 5.15.x-jammy64
             image: ubuntu:jammy
     steps:
       - uses: actions/checkout@v2
