@@ -1,0 +1,213 @@
+name: jammy64
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  kernel:
+    runs-on: ubuntu-20.04
+    container:
+      image: ${{ matrix.image }}
+    strategy:
+      matrix:
+        include:
+          - kernel-kit-config: 5.15.x-jammy64
+            deps: gcc
+            image: ubuntu:jammy
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get cached output
+        id: get_cached_output
+        uses: actions/cache@v2
+        with:
+          path: kernel-kit/small-output
+          key: ${{ github.workflow }}-kernel-kit-output-${{ steps.get_cache_key_timestamp.outputs.timestamp }}-${{ github.sha }}
+          restore-keys: |
+            ${{ github.workflow }}-kernel-kit-output-${{ steps.get_cache_key_timestamp.outputs.timestamp }}-
+      - name: Install dependencies
+        if: steps.get_cached_output.outputs.cache-hit != 'true'
+        run: |
+          apt-get update -qq
+          apt-get install -y --no-install-recommends curl wget ca-certificates git file squashfs-tools xz-utils diffutils patch make flex bison python3 bc bzip2 kmod rsync libelf-dev libssl-dev dwarves cpio gcc ${{ matrix.deps }}
+          curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o /usr/local/bin/vercmp -
+      - name: Build kernel
+        if: steps.get_cached_output.outputs.cache-hit != 'true'
+        run: |
+          cd kernel-kit
+          cp -f ${{ matrix.kernel-kit-config }}-build.conf build.conf
+          CREATE_KBUILD_SFS=yes ./build.sh
+          mkdir small-output
+          mv `ls output/kernel_sources-*.sfs* output/kbuild-*.sfs* output/*.tar* 2>/dev/null` small-output
+      - name: Upload kernel
+        uses: actions/upload-artifact@v2
+        with:
+          name: kernel-kit-output-${{ matrix.kernel-kit-config }}
+          path: kernel-kit/small-output
+          retention-days: 14
+  usrmerge:
+    needs: kernel
+    runs-on: ubuntu-20.04
+    container:
+      image: ${{ matrix.image }}
+    strategy:
+      matrix:
+        include:
+          - kernel-kit-config: 5.15.x-x86_64
+            image: ubuntu:jammy
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get cached output
+        id: get_cached_output
+        uses: actions/cache@v2
+        with:
+          path: kernel-kit/output
+          key: ${{ github.workflow }}-usrmerge-output-${{ steps.get_cache_key_timestamp.outputs.timestamp }}-${{ github.sha }}
+          restore-keys: |
+            ${{ github.workflow }}-usrmerge-output-${{ steps.get_cache_key_timestamp.outputs.timestamp }}-
+      - name: Install dependencies
+        if: steps.get_cached_output.outputs.cache-hit != 'true'
+        run: |
+          apt-get update -qq
+          apt-get install -y --no-install-recommends squashfs-tools bzip2
+      - name: Get build output
+        if: steps.get_cached_output.outputs.cache-hit != 'true'
+        uses: actions/download-artifact@v2
+        with:
+          name: kernel-kit-output-${{ matrix.kernel-kit-config }}
+          path: kernel-kit/output
+      - name: Repackage kernel
+        if: steps.get_cached_output.outputs.cache-hit != 'true'
+        run: |
+          cd kernel-kit
+          ./usrmerge.sh
+      - name: Upload kernel
+        uses: actions/upload-artifact@v2
+        with:
+          name: kernel-kit-output-usrmerge-${{ matrix.kernel-kit-config }}
+          path: kernel-kit/output
+          retention-days: 14
+  build:
+    needs: usrmerge
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Create cache directories
+      run: |
+        mkdir -p local-repositories petbuild-sources
+        ln -s `pwd`/local-repositories ../local-repositories
+    - name: Get cache key timestamp
+      id: get_cache_key_timestamp
+      run: |
+        echo "::set-output name=timestamp::$(/bin/date -u "+%Y%U")"
+    - name: Get cached local-repositories
+      uses: actions/cache@v2
+      with:
+        path: local-repositories
+        key: ${{ github.workflow }}-local-repositories-${{ steps.get_cache_key_timestamp.outputs.timestamp }}-${{ github.sha }}
+        restore-keys: |
+          ${{ github.workflow }}-local-repositories-${{ steps.get_cache_key_timestamp.outputs.timestamp }}-
+    - name: Prepare build environment
+      run: |
+        [ -f local-repositories/vercmp ] || (curl https://raw.githubusercontent.com/puppylinux-woof-CE/initrd_progs/master/pkg/w_apps_static/w_apps/vercmp.c | gcc -x c -o ../local-repositories/vercmp -)
+        sudo install -m 755 local-repositories/vercmp /usr/local/bin/vercmp
+        sudo install -D -m 644 woof-code/rootfs-skeleton/usr/local/petget/categories.dat /usr/local/petget/categories.dat
+        echo "dash dash/sh boolean false" | sudo debconf-set-selections
+        sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+        sudo ln -s bash /bin/ash
+    - name: merge2out
+      run: yes "" | sudo -E ./merge2out woof-distro/x86_64/ubuntu/jammy64
+    - name: Set version
+      run: sudo sed -i s/^DISTRO_VERSION=.*/DISTRO_VERSION=22.04.${{ github.run_number }}/ ../woof-out_*/DISTRO_SPECS
+    - name: 0setup
+      run: |
+        cd ../woof-out_*
+        sudo -E ./0setup
+    - name: 1download
+      run: |
+        cd ../woof-out_*
+        sudo -E ./1download
+    - name: 2createpackages
+      run: |
+        cd ../woof-out_*
+        echo | sudo -E ./2createpackages
+    - name: Get cached kernel-kit output
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        repo: puppylinux-woof-CE/woof-CE
+        branch: testing
+        workflow: kernel-kit.yml
+        workflow_conclusion: success
+        name: kernel-kit-output-usrmerge-5.15.x-jammy64
+        path: output
+    - name: Move cached kernel-kit output
+      run: sudo mv output ../woof-out_*/kernel-kit/
+    - name: Get cached petbuild-sources
+      uses: actions/cache@v2
+      with:
+        path: petbuild-sources
+        key: ${{ github.workflow }}-petbuild-sources-${{ steps.get_cache_key_timestamp.outputs.timestamp }}-${{ github.sha }}
+        restore-keys: |
+          ${{ github.workflow }}-petbuild-sources-${{ steps.get_cache_key_timestamp.outputs.timestamp }}-
+    - name: Install 3builddistro dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y --no-install-recommends patchelf dc debootstrap
+    - name: Install cdrtools
+      run: |
+        [ -f local-repositories/mkisofs ] || (curl -L https://sourceforge.net/projects/cdrtools/files/alpha/cdrtools-3.02a09.tar.bz2/download | tar -xjf- && cd cdrtools-3.02 && make -j`nproc` && mv mkisofs/OBJ/x86_64-linux-cc/mkisofs ../local-repositories/mkisofs)
+        sudo install -m 755 local-repositories/mkisofs /usr/local/bin/mkisofs
+    - name: 3builddistro
+      run: |
+        sudo mv petbuild-sources ../woof-out_*/
+        cd ../woof-out_*
+        sudo -E HOME=/root XDG_CONFIG_HOME=/root/.config ./3builddistro release
+        sudo mv -f woof-output-vanillaupup-22.04.${{ github.run_number }}/vanillaupup-22.04.${{ github.run_number }}.iso $GITHUB_WORKSPACE/
+        sudo mv -f kernel-kit/output/kernel_sources-*.sfs petbuild-sources/
+        cd petbuild-sources
+        sudo tar -f $GITHUB_WORKSPACE/vanillaupup-22.04-sources.tar *
+        sudo rm -f kernel_sources-*.sfs
+        cd ..
+        cd woof-output-vanillaupup-22.04.${{ github.run_number }}
+        sudo tar -f $GITHUB_WORKSPACE/vanillaupup-22.04.${{ github.run_number }}-extra.tar -c docx_vanillaupup_22.04.${{ github.run_number }}.sfs nlsx_vanillaupup_22.04.${{ github.run_number }}.sfs
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: vanillaupup-22.04.${{ github.run_number }}
+        release_name: vanillaupup-22.04.${{ github.run_number }}
+        draft: false
+        prerelease: false
+    - name: Upload ISO
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: vanillaupup-22.04.${{ github.run_number }}.iso
+        asset_name: vanillaupup-22.04.${{ github.run_number }}.iso
+        asset_content_type: application/octet-stream
+    - name: Upload extras
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: vanillaupup-22.04.${{ github.run_number }}-extra.tar
+        asset_name: vanillaupup-22.04.${{ github.run_number }}-extra.tar
+        asset_content_type: application/octet-stream
+    - name: Upload source code
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: vanillaupup-22.04.${{ github.run_number }}-sources.tar
+        asset_name: vanillaupup-22.04.${{ github.run_number }}-sources.tar
+        asset_content_type: application/octet-stream
+    - name: Move cached directories
+      run: sudo mv ../woof-out_*/petbuild-sources .
