@@ -48,6 +48,9 @@
 #exec &>/tmp/sfsl.log ; set -x
 
 . /etc/rc.d/PUPSTATE
+if [ "$PUNIONFS" = "overlay" ] ; then
+	exec sfs_load.overlay "$@"
+fi
 
 for i in $@ ; do
 	if [ "$i" = "stop" ] ; then #simple thing to do, do it as fast as possible
@@ -1231,102 +1234,100 @@ append_sfs() {
 	[ "$EXTRASFS" = "$EXTRASFSSAFE" ] || log "'$EXTRASFS' has special charactors or blanks in its path name. '$EXTRASFSSAFE' is used for safety."
 	#debug "EXTRASFS=$EXTRASFS
 	#EXTRASFSSAFE=$EXTRASFSSAFE"
-
-	if [ "$PUNIONFS" != "overlay" ]; then
-		# where to mount
-		NEW=''
-		MOUNTED_PUP_RO=$(df -a | grep -o '/initrd/pup_ro.*')
-		# pup_ro1 and pup_ro2 are reserved
-		for i in $(seq 3 99) # find free pup_roX
-		do
-			if ! [ "$(echo "$MOUNTED_PUP_RO" | grep "pup_ro${i}$")" ] ; then
-				NEW=${i}
-				break
-			fi
+ 
+	# where to mount
+	NEW=''
+	MOUNTED_PUP_RO=$(df -a | grep -o '/initrd/pup_ro.*')
+	# pup_ro1 and pup_ro2 are reserved
+	for i in $(seq 3 99) # find free pup_roX
+	do
+		if ! [ "$(echo "$MOUNTED_PUP_RO" | grep "pup_ro${i}$")" ] ; then
+			NEW=${i}
+			break
+		fi
+	done
+	[ "$NEW" ] || return 1
+	MNTPNT=/initrd/pup_ro$NEW
+	mkdir -p "$MNTPNT"
+	# loop device number is prefered to be the same number
+	#v1.9.1: but can be already assosiated
+	#v1.9.4: can be already mounted
+	#v1.9.4: not same number for some kernel
+	LOOPDEV=""
+	STATUS=-1
+	LOOPDEVS=$(losetup -a | grep -w "$EXTRASFS" | cut -sd ':' -f1)
+	if [ "$LOOPDEVS" ]; then
+		for D in $LOOPDEVS; do
+			busybox umount "$D"
 		done
-		[ "$NEW" ] || return 1
-		MNTPNT=/initrd/pup_ro$NEW
-		mkdir -p "$MNTPNT"
-		# loop device number is prefered to be the same number
-		#v1.9.1: but can be already assosiated
-		#v1.9.4: can be already mounted
-		#v1.9.4: not same number for some kernel
-		LOOPDEV=""
+		LOOPDEV=$(losetup -a | grep -w "$EXTRASFS" | head -n 1|cut -sd ':' -f1)
+	fi
+	[ "$LOOPDEV" ] && STATUS=0
+	if [ -z "$LOOPDEV" ]; then
+		LOOPDEV="/dev/loop$NEW"
+		[ -b "$LOOPDEV" ] || mknod -m664 $LOOPDEV b 7 $NEW
+		LOOPDEV=$(losetup -f)
 		STATUS=-1
-		LOOPDEVS=$(losetup -a | grep -w "$EXTRASFS" | cut -sd ':' -f1)
-		if [ "$LOOPDEVS" ]; then
-			for D in $LOOPDEVS; do
-				busybox umount "$D"
-			done
-			LOOPDEV=$(losetup -a | grep -w "$EXTRASFS" | head -n 1|cut -sd ':' -f1)
+	fi
+	if [ $STATUS -eq 0 ]; then
+		mount -r -t squashfs -o noatime "$LOOPDEV" "$MNTPNT" # v1.3.9
+		STATUS=$?
+	else
+		mount -r -t squashfs -o loop,noatime "$EXTRASFSSAFE" "$MNTPNT"
+		STATUS=$?
+		[ $STATUS -eq 0 ] ||  LOOPDEV=""
+	fi
+	[ "$LOOPDEV" ] || STATUS=-1
+	# v1.9: permission check
+	# v1.9.9: unmount on error
+	PERMINFO=""
+	if [ $STATUS -eq 0 ]; then
+		PERM=$(ls -dl "$MNTPNT"| cut -f1 -d' ')
+		echo $PERM| grep -qw 'drwxr.xr.x' || STATUS=888
+		if [ $STATUS -ne 0 ]; then
+			debug "PERMISSION: $PERM"
+			PERMINFO=$(gettext "$(printf "%s has wrong permissions." "$EXTRASFS")")"\n'$PERM'"
+			busybox unmount "$MNTPNT"
+			free_loopdev "$LOOPDEV"
 		fi
-		[ "$LOOPDEV" ] && STATUS=0
-		if [ -z "$LOOPDEV" ]; then
-			LOOPDEV="/dev/loop$NEW"
-			[ -b "$LOOPDEV" ] || mknod -m664 $LOOPDEV b 7 $NEW
-			LOOPDEV=$(losetup -f)
-			STATUS=-1
-		fi
-		if [ $STATUS -eq 0 ]; then
-			mount -r -t squashfs -o noatime "$LOOPDEV" "$MNTPNT" # v1.3.9
-			STATUS=$?
-		else
-			mount -r -t squashfs -o loop,noatime "$EXTRASFSSAFE" "$MNTPNT"
-			STATUS=$?
-			[ $STATUS -eq 0 ] ||  LOOPDEV=""
-		fi
-		[ "$LOOPDEV" ] || STATUS=-1
-		# v1.9: permission check
-		# v1.9.9: unmount on error
-		PERMINFO=""
-		if [ $STATUS -eq 0 ]; then
-			PERM=$(ls -dl "$MNTPNT"| cut -f1 -d' ')
-			echo $PERM| grep -qw 'drwxr.xr.x' || STATUS=888
-			if [ $STATUS -ne 0 ]; then
-				debug "PERMISSION: $PERM"
-				PERMINFO=$(gettext "$(printf "%s has wrong permissions." "$EXTRASFS")")"\n'$PERM'"
+	fi
+	
+	if [ $STATUS -eq 0 ]; then
+	
+		if [ -e $MNTPNT/etc/DISTRO_SPECS ] && [ -e $MNTPNT/etc/rc.d/rc.sysinit ] && [ -e $MNTPNT/etc/hostname ]; then
+			debug "WARNING: Attempting to load Puppy SFS"
+			/usr/lib/gtkdialog/box_yesno "$TITLE" "Puppy SFS detected. This may cause trouble if loaded." "Continue to load?"
+			if [ $? -ne 0 ]; then
 				busybox unmount "$MNTPNT"
 				free_loopdev "$LOOPDEV"
+				[ "$XPID" != "" ] && kill $XPID
+				exit
 			fi
 		fi
 		
-		if [ $STATUS -eq 0 ]; then
-	
-			if [ -e $MNTPNT/etc/DISTRO_SPECS ] && [ -e $MNTPNT/etc/rc.d/rc.sysinit ] && [ -e $MNTPNT/etc/hostname ]; then
-				debug "WARNING: Attempting to load Puppy SFS"
-				/usr/lib/gtkdialog/box_yesno "$TITLE" "Puppy SFS detected. This may cause trouble if loaded." "Continue to load?"
-				if [ $? -ne 0 ]; then
-					busybox unmount "$MNTPNT"
-					free_loopdev "$LOOPDEV"
-					[ "$XPID" != "" ] && kill $XPID
-					exit
-				fi
-			fi
-	
-		fi
-
-		if [ $STATUS -eq 0 ]; then
-			echo "$LOOPDEV: 0 $EXTRASFS" >> "$LOOPLIST"
-		else
-			[ "$LOOPDEV"  != "" ] &&
-			fatal "$(eval_gettext "Failed to mount '\$EXTRASFS' on '\$MNTPNT'.") $PERMINFO\n$MOVEDLOG"
-		fi
-		has_afterwork
-		debug "'$EXTRASFS'($LOOPDEV) is mounted on '$MNTPNT'."
-		# v1.9: wipe out masking files in save layers # 1.9.1: do once
-		# v1.9.8: fix was skipped PUPMODE=5
-		[ "$WIPEWHITEONLOAD"  = "true" ] && [ -z "$SKIP_HAS_AFTERWORK" ] && cleanwhite "$MNTPNT" #v2.0.12
-		# remount aufs
-		busybox mount -t aufs -o remount,append:$MNTPNT=rr /
-		STATUS=$?
-		if [ $STATUS -ne 0 ];then
-			umount "$MNTPNT"
-			[ "$LOOPDEV"  != "" ] && free_loopdev "$LOOPDEV" 	#v1.9.4
-			fatal "$(printf "$(gettext "Failed to append '%s' to unionfs.")" "$MNTPNT")\n$MOVEDLOG"
-		fi
-		sync
-		busybox mount -t aufs -o remount,udba=reval unionfs /
 	fi
+	
+	if [ $STATUS -eq 0 ]; then
+		echo "$LOOPDEV: 0 $EXTRASFS" >> "$LOOPLIST"
+	else
+		[ "$LOOPDEV"  != "" ] && 
+		fatal "$(eval_gettext "Failed to mount '\$EXTRASFS' on '\$MNTPNT'.") $PERMINFO\n$MOVEDLOG"
+	fi
+	has_afterwork
+	debug "'$EXTRASFS'($LOOPDEV) is mounted on '$MNTPNT'."
+	# v1.9: wipe out masking files in save layers # 1.9.1: do once
+	# v1.9.8: fix was skipped PUPMODE=5
+	[ "$WIPEWHITEONLOAD"  = "true" ] && [ -z "$SKIP_HAS_AFTERWORK" ] && cleanwhite "$MNTPNT" #v2.0.12
+	# remount aufs
+	busybox mount -t aufs -o remount,append:$MNTPNT=rr /
+	STATUS=$?
+	if [ $STATUS -ne 0 ];then
+		umount "$MNTPNT"
+		[ "$LOOPDEV"  != "" ] && free_loopdev "$LOOPDEV" 	#v1.9.4
+		fatal "$(printf "$(gettext "Failed to append '%s' to unionfs.")" "$MNTPNT")\n$MOVEDLOG"
+	fi
+	sync
+	busybox mount -t aufs -o remount,udba=reval unionfs /
 	# add to BOOTCONFIG
 	#v1.9.1, #v2.0: do not register zdrv #v2.0.11: ditto adrv and ydrv
 	#v2.1.8: avoid dup. in EXTRASFSLIST
@@ -1461,7 +1462,6 @@ unload() {
 	REGISTERED=""
 	remove_item EXTRASFSLIST "$FILENAME" && REGISTERED="y" || log "'$FILENAME' seems not registered."
 	save_bootconfig
-	[ "$PUNIONFS" = "overlay" ] && return 0
 	# remove from unionfs
 	LOSETUPS=$(losetup -a | sort -r)
 	LOOP=$(echo "$LOSETUPS"| grep -w "$FILENAME" | head -n 1)
@@ -1831,7 +1831,6 @@ fi
 
 # startup script called with a parameter 'start/stop'
 if [ "$STARTSCRIPT" ]; then
-	[ "$PUNIONFS" = "overlay" ] && exit 0
 	[ "$SFSMODE" ] || exit 0
 	[ "$STARTSCRIPT" != "start" ] && echo "usage: $0 start/stop" && exit
 	#v2.0.9: initramfs may not hadle any extra SFS
@@ -2034,7 +2033,7 @@ ALINE=$(echo $LASTUNIONRECORD | grep -o -w "$PATTERN")
 [ "$ALINE" ] || ALINE=$(echo "$ALREADY_SFS_LIST" | grep -w "$PATTERN"| tail -n 1)
 #debug "Found:$ALINE"
 
-if [ "$ALINE" -a "$PUNIONFS" != "overlay" ]; then
+if [ "$ALINE" ]; then
 	#v2.0: fix zdrv, adrv #2.0.8 ydrv
 	case "$FILENAME" in
 		$SFSBASE|$ZDRBASE|$ADRBASE|$YDRBASE|$BDRBASE|$FDRBASE|kbuild-*.sfs) fatal $(printf "$(gettext "'%s' is the system file and cannot be removed.")" "$FILENAME");;
@@ -2354,10 +2353,6 @@ if [ "$SFSMODE" != "" ]; then
 	append_sfs || fatal "$_FAILED"
 	[ "$UNMOUNTME" ] && umount "$UNMOUNTME" && UNMOUNTME="" && DESTDIR=""
 	save_bootconfig
-	if [ "$PUNIONFS" = "overlay" ]; then
-		finish
-		exit
-	fi
 	afterwork
 	# final report
 	[ "$MOVEDLOG" != "" ] && MOVEDLOG="\\n$MOVEDLOG"
