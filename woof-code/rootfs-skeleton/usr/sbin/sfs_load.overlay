@@ -1,0 +1,119 @@
+#!/bin/sh
+
+. /etc/rc.d/BOOTCONFIG
+. /etc/rc.d/PUPSTATE
+
+[ "$PUNIONFS" != "overlay" ] && exit 1
+
+export TEXTDOMAIN=sfs_load
+export OUTPUT_CHARSET=UTF-8
+
+queue() {
+	. /etc/rc.d/BOOTCONFIG
+	cat << EOF > /etc/rc.d/BOOTCONFIG.tmp
+EXTRASFSLIST='`echo "$EXTRASFSLIST $1" | tr ' ' '\n' | sort | uniq | tr '\n' ' ' | sed -e 's/^ //' -e 's/ $//'`'
+PREVUNIONRECORD='$PREVUNIONRECORD'
+LASTUNIONRECORD='$LASTUNIONRECORD'
+EOF
+	mv -f /etc/rc.d/BOOTCONFIG.tmp /etc/rc.d/BOOTCONFIG
+}
+
+unqueue() {
+	. /etc/rc.d/BOOTCONFIG
+	cat << EOF > /etc/rc.d/BOOTCONFIG.tmp
+EXTRASFSLIST='`echo "$EXTRASFSLIST $1" | tr ' ' '\n' | sort | uniq | fgrep -v $1 | tr '\n' ' ' | sed -e 's/^ //' -e 's/ $//'`'
+PREVUNIONRECORD='$PREVUNIONRECORD'
+LASTUNIONRECORD='$LASTUNIONRECORD'
+EOF
+	mv -f /etc/rc.d/BOOTCONFIG.tmp /etc/rc.d/BOOTCONFIG
+}
+
+if [ $# -ne 0 ]; then
+	for SFS in "$@"; do
+		BASE="${SFS##*/}"
+
+		if [ $PUPMODE -ne 5 ]; then
+			QUEUED=0
+			for QBASE in $EXTRASFSLIST; do
+				[ "$BASE" != "$QBASE" ] && continue
+				QUEUED=1
+				break
+			done
+
+			if [ $QUEUED -eq 0 ]; then
+				yad --title sfs_load --window-icon=dialog-question --image=dialog-question --text "$(gettext "Do you want to queue") ${SFS}?" --form --button="gtk-yes:0" --button="gtk-no:1"
+				if [ $? -eq 0 ]; then
+					DST="/initrd${PUP_HOME}${PSUBDIR}/${BASE}"
+					if [ ! -e "$DST" -a ! -e "/initrd${PUP_HOME}/${BASE}" ]; then
+						cp -f "$SFS" "$DST" || continue
+					fi
+					SFS="$DST"
+					queue "$BASE"
+				fi
+			else
+				yad --title sfs_load --window-icon=dialog-question --image=dialog-question --text "$(gettext "Do you want to unqueue") ${SFS}?" --form --button="gtk-yes:0" --button="gtk-no:1"
+				[ $? -eq 0 ] && unqueue "$BASE"
+			fi
+		fi
+
+		MNT="/mnt/`echo "$BASE" | tr '/ ' '+_'`"
+		mkdir -p "$MNT"
+		mountpoint -q "$MNT"
+		if [ $? -ne 0 ]; then
+			mount -r -t squashfs -o loop,noatime "$SFS" "$MNT" || continue
+		fi
+
+		defaultfilemanager "$MNT" &
+	done
+
+	exit 0
+fi
+
+export -f queue unqueue
+
+LOADED=`losetup -a | sed 's~.*/~~g' | grep '\.sfs$'`
+
+if [ -z "$PUP_HOME" ]; then
+	SFS_DIRS="/initrd/mnt/pdrv"
+else
+	SFS_DIRS="/initrd${PUP_HOME}"
+	[ -n "$PSUBDIR" ] && SFS_DIRS="$SFS_DIRS /initrd${PUP_HOME}${PSUBDIR}"
+fi
+
+BUTTONS=""
+for SFS in `find $SFS_DIRS -maxdepth 1 -name '*.sfs' -printf '%f\n' | sort | uniq`; do
+	DEF=false
+	for BASE in $EXTRASFSLIST; do
+		[ "$BASE" != "$SFS" ] && continue
+		DEF=true
+		break
+	done
+
+	AUTO=0
+	if [ "$DEF" = "false" ]; then
+		for BASE in $LOADED; do
+			[ "$BASE" != "$SFS" ] && continue
+			AUTO=1
+			break
+		done
+	fi
+
+	if [ $AUTO -eq 1 ]; then
+		BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>true</default><sensitive>false</sensitive></togglebutton>"
+	elif [ $PUPMODE -eq 5 ]; then
+		BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>false</default><sensitive>false</sensitive></togglebutton>"
+	else
+		BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>$DEF</default><action>if true queue \"$SFS\"</action><action>if false unqueue \"$SFS\"</action></togglebutton>"
+	fi
+done
+
+export DIALOG='<window title="SFS-Load" default_width="400">
+	<vbox space-expand="true" space-fill="true">
+		'`/usr/lib/gtkdialog/xml_info fixed package_sfs.svg 20 "$(gettext "Which SFS do you want to load?")"`'
+		<vbox scrollable="true" height="400">
+		'$BUTTONS'
+		</vbox>
+	</vbox>
+</window>'
+
+exec gtkdialog -p DIALOG
