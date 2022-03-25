@@ -97,7 +97,9 @@ do
 	[ "$DN" = "." ] && continue
 
 	[ "`stat -c '%t,%T' "$N" 2>/dev/null`" != '0,0' ] && continue
-	[ -c "$BASE/$N" -a "`stat -c '%t,%T' "$BASE/$N"`" = '0,0' ] && continue
+	if [ -c "$BASE/$N" ]; then
+		[ "`stat -c '%t,%T' "$BASE/$N"`" = '0,0' ] && continue
+	fi
 
 	rm -rf "$BASE/$N"
  
@@ -175,7 +177,9 @@ do
 		rm -rf "$BASE/$N"	# SFR: in case if folder has been replaced with a symlink (cp won't overwrite a dir with a symlink)
 		cp -af "$N" "$BASE/$N" 2>>/tmp/snapmergepuppy-error
 	else
-		if [ ! -e "$BASE/$N" ] || [ ${NCTIME%%.*} -gt `stat -c %Z "$BASE/$N"` ] ; then
+		if [ ! -e "$BASE/$N" ] ; then
+			cp -af "$N" "$BASE/$N" 2>>/tmp/snapmergepuppy-error
+		elif [ ${NCTIME%%.*} -gt `stat -c %Z "$BASE/$N"` ] ; then
 			cp -af "$N" "$BASE/$N" 2>>/tmp/snapmergepuppy-error
 		fi
 	fi

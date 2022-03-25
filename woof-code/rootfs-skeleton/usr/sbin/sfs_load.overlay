@@ -73,8 +73,12 @@ export -f queue unqueue
 
 LOADED=`losetup -a | sed 's~.*/~~g' | grep '\.sfs$'`
 
-SFS_DIRS="/initrd${PUP_HOME}"
-[ -n "$PSUBDIR" ] && SFS_DIRS="$SFS_DIRS /initrd${PUP_HOME}${PSUBDIR}"
+if [ -z "$PUP_HOME" ]; then
+	SFS_DIRS="/initrd/mnt/pdrv"
+else
+	SFS_DIRS="/initrd${PUP_HOME}"
+	[ -n "$PSUBDIR" ] && SFS_DIRS="$SFS_DIRS /initrd${PUP_HOME}${PSUBDIR}"
+fi
 
 BUTTONS=""
 for SFS in `find $SFS_DIRS -maxdepth 1 -name '*.sfs' -printf '%f\n' | sort | uniq`; do
@@ -85,22 +89,24 @@ for SFS in `find $SFS_DIRS -maxdepth 1 -name '*.sfs' -printf '%f\n' | sort | uni
 		break
 	done
 
+	AUTO=0
 	if [ "$DEF" = "false" ]; then
-		AUTO=0
 		for BASE in $LOADED; do
 			[ "$BASE" != "$SFS" ] && continue
 			AUTO=1
 			break
 		done
-		# if the user didn't ask to load this SFS but it's still loaded, it's
-		# probably auto-loaded and we should hide it
-		[ $AUTO -eq 1 ] && continue
 	fi
 
-	BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>$DEF</default><action>if true queue \"$SFS\"</action><action>if false unqueue \"$SFS\"</action> </togglebutton>"
+	if [ $AUTO -eq 1 ]; then
+		BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>true</default><sensitive>false</sensitive></togglebutton>"
+	elif [ $PUPMODE -eq 5 ]; then
+		BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>false</default><sensitive>false</sensitive></togglebutton>"
+	else
+		BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>$DEF</default><action>if true queue \"$SFS\"</action><action>if false unqueue \"$SFS\"</action></togglebutton>"
+	fi
 done
 
-TITLE=xx
 export DIALOG='<window title="SFS-Load" default_width="400">
 	<vbox space-expand="true" space-fill="true">
 		'`/usr/lib/gtkdialog/xml_info fixed package_sfs.svg 20 "$(gettext "Which SFS do you want to load?")"`'
