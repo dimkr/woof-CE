@@ -119,8 +119,12 @@ jobs:
         sudo ln -s bash /bin/ash
     - name: merge2out
       run: yes "" | sudo -E ./merge2out woof-distro/x86_64/ubuntu/jammy64
+    - name: Set name
+      run: sudo sed -i 's/^DISTRO_NAME=.*/DISTRO_NAME="Vanilla Upup"/' ../woof-out_*/DISTRO_SPECS
     - name: Set version
       run: sudo sed -i s/^DISTRO_VERSION=.*/DISTRO_VERSION=22.04.${{ github.run_number }}/ ../woof-out_*/DISTRO_SPECS
+    - name: Set file name prefix
+      run: sudo sed -i s/^DISTRO_FILE_PREFIX=.*/DISTRO_FILE_PREFIX=vanillaupup/ ../woof-out_*/DISTRO_SPECS
     - name: 0setup
       run: |
         cd ../woof-out_*
