@@ -134,12 +134,8 @@ jobs:
         cd ../woof-out_*
         echo | sudo -E ./2createpackages
     - name: Get cached kernel-kit output
-      uses: dawidd6/action-download-artifact@v2
+      uses: actions/download-artifact@v2
       with:
-        repo: puppylinux-woof-CE/woof-CE
-        branch: testing
-        workflow: kernel-kit.yml
-        workflow_conclusion: success
         name: kernel-kit-output-usrmerge-5.15.x-jammy64
         path: output
     - name: Move cached kernel-kit output
