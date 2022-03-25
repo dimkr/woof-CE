@@ -167,7 +167,7 @@ jobs:
         sudo mv -f woof-output-vanillaupup-22.04.${{ github.run_number }}/vanillaupup-22.04.${{ github.run_number }}.iso $GITHUB_WORKSPACE/
         sudo mv -f kernel-kit/output/kernel_sources-*.sfs petbuild-sources/
         cd petbuild-sources
-        sudo tar -f $GITHUB_WORKSPACE/vanillaupup-22.04-sources.tar -c *
+        sudo tar -f $GITHUB_WORKSPACE/vanillaupup-22.04.${{ github.run_number }}-sources.tar -c *
         sudo rm -f kernel_sources-*.sfs
         cd ..
         cd woof-output-vanillaupup-22.04.${{ github.run_number }}
