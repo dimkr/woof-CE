@@ -18,6 +18,10 @@ jobs:
             image: ubuntu:jammy
     steps:
       - uses: actions/checkout@v2
+      - name: Get cache key timestamp
+        id: get_cache_key_timestamp
+        run: |
+          echo "::set-output name=timestamp::$(/bin/date -u "+%Y%U")"
       - name: Get cached output
         id: get_cached_output
         uses: actions/cache@v2
