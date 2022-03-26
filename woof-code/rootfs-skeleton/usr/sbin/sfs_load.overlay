@@ -2,6 +2,7 @@
 
 . /etc/rc.d/BOOTCONFIG
 . /etc/rc.d/PUPSTATE
+. /etc/DISTRO_SPECS
 
 [ "$PUNIONFS" != "overlay" ] && exit 1
 
@@ -71,8 +72,6 @@ fi
 
 export -f queue unqueue
 
-LOADED=`losetup -a | sed 's~.*/~~g' | grep '\.sfs$'`
-
 if [ -z "$PUP_HOME" ]; then
 	SFS_DIRS="/initrd/mnt/pdrv"
 else
@@ -82,6 +81,10 @@ fi
 
 BUTTONS=""
 for SFS in `find $SFS_DIRS -maxdepth 1 -name '*.sfs' -printf '%f\n' | sort | uniq`; do
+	case "$SFS" in
+	$DISTRO_BDRVSFS|$DISTRO_PUPPYSFS|$DISTRO_ZDRVSFS|$DISTRO_FDRVSFS|$DISTRO_ADRVSFS|$DISTRO_YDRVSFS|kbuild-*.sfs) continue ;;
+	esac
+
 	DEF=false
 	for BASE in $EXTRASFSLIST; do
 		[ "$BASE" != "$SFS" ] && continue
@@ -89,22 +92,7 @@ for SFS in `find $SFS_DIRS -maxdepth 1 -name '*.sfs' -printf '%f\n' | sort | uni
 		break
 	done
 
-	AUTO=0
-	if [ "$DEF" = "false" ]; then
-		for BASE in $LOADED; do
-			[ "$BASE" != "$SFS" ] && continue
-			AUTO=1
-			break
-		done
-	fi
-
-	if [ $AUTO -eq 1 ]; then
-		BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>true</default><sensitive>false</sensitive></togglebutton>"
-	elif [ $PUPMODE -eq 5 ]; then
-		BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>false</default><sensitive>false</sensitive></togglebutton>"
-	else
-		BUTTONS="$BUTTONS <togglebutton><label>$SFS</label><default>$DEF</default><action>if true queue \"$SFS\"</action><action>if false unqueue \"$SFS\"</action></togglebutton>"
-	fi
+	BUTTONS="$BUTTONS<togglebutton><label>$SFS</label><default>$DEF</default><action>if true queue \"$SFS\"</action><action>if false unqueue \"$SFS\"</action></togglebutton>"
 done
 
 export DIALOG='<window title="SFS-Load" default_width="400">
