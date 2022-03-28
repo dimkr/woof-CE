@@ -1261,7 +1261,7 @@ case $PUPMODE in
     rm -rf ${SAVE_LAYER}/tmp
     #adjust stack
     if [ "$UNIONFS" = 'overlay' ]; then
-     remount_overlay -e "s~upperdir=([^,]+)~upperdir=${SAVE_LAYER}~" -e "s~workdir=([^,]+)~workdir=${WORKDIR}~"
+     remount_overlay -e "s~upperdir=[^,]+~upperdir=${SAVE_LAYER}~" -e "s~workdir=[^,]+~workdir=${WORKDIR}~"
     else
      echo "mount -o remount,prepend:${SAVE_LAYER}=rw,mod:/mnt/tmpfs/pup_rw=ro,del:/mnt/tmpfs/pup_rw /pup_new" #debug
      mount -o remount,prepend:${SAVE_LAYER}=rw,mod:/mnt/tmpfs/pup_rw=ro,del:/mnt/tmpfs/pup_rw /pup_new
@@ -1289,7 +1289,7 @@ case $PUPMODE in
      tar xf "$ARCHIVE_FN" -m -C $PM66_DIR/upper 2>/dev/null
      STATUS=$?
      if [ $STATUS -eq 0 ];then
-      remount_overlay -e "s~upperdir=([^,]+)~upperdir=${PM66_DIR}/upper~" -e "s~workdir=([^,]+)~workdir=${PM66_DIR}/work~"
+      remount_overlay -e "s~upperdir=[^,]+~upperdir=${PM66_DIR}/upper~" -e "s~workdir=[^,]+~workdir=${PM66_DIR}/work~"
       STATUS=$?
      fi
     else
