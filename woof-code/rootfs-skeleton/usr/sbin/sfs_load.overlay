@@ -85,9 +85,13 @@ else
 fi
 
 BUTTONS=""
+KBUILDSFS="kbuild-`uname -r`.sfs"
 for SFS in `find $SFS_DIRS -maxdepth 1 -name '*.sfs' -printf '%f\n' | sort | uniq`; do
 	case "$SFS" in
-	$DISTRO_BDRVSFS|$DISTRO_PUPPYSFS|$DISTRO_ZDRVSFS|$DISTRO_FDRVSFS|$DISTRO_ADRVSFS|$DISTRO_YDRVSFS|kbuild-*.sfs) continue ;;
+	$DISTRO_BDRVSFS|$DISTRO_PUPPYSFS|$DISTRO_ZDRVSFS|$DISTRO_FDRVSFS|$DISTRO_ADRVSFS|$DISTRO_YDRVSFS|$KBUILDSFS)
+		BUTTONS="<togglebutton><label>$SFS</label><default>true</default><sensitive>false</sensitive></togglebutton>$BUTTONS"
+		continue
+		;;
 	esac
 
 	DEF=false
