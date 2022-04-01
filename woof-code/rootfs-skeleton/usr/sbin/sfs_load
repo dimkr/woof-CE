@@ -49,7 +49,7 @@
 
 . /etc/rc.d/PUPSTATE
 if [ "$PUNIONFS" = "overlay" ] ; then
-	exit
+	exec sfs_load.overlay "$@"
 fi
 
 for i in $@ ; do
