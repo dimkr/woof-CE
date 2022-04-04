@@ -53,6 +53,10 @@ jobs:
             compat-distro: ubuntu
             compat-distro-version: bionic64
             kernel: 4.19.x-x86_64
+          - arch: x86
+            compat-distro: ubuntu
+            compat-distro-version: xenial
+            kernel: 4.19.x-x86
           - arch: x86_64
             compat-distro: debian
             compat-distro-version: sid64

@@ -14,10 +14,12 @@ else
 fi
 
 PKG_DOCS_PET_REPOS="
-z|https://raw.githubusercontent.com/puppylinux-woof-CE/woof-CE/${WCE_BRANCH}/woof-distro/x86/ubuntu/${DISTRO_DB_SUBNAME}/Packages-puppy-${DISTRO_DB_SUBNAME}-official|z
-z|https://raw.githubusercontent.com/puppylinux-woof-CE/woof-CE/${WCE_BRANCH}/woof-distro/x86/Packages-puppy-common32-official|z
-z|https://raw.githubusercontent.com/puppylinux-woof-CE/woof-CE/${WCE_BRANCH}/woof-distro/x86/ubuntu/Packages-puppy-tahr-official|z
+z|http://distro.ibiblio.org/puppylinux/Packages-puppy-${DISTRO_DB_SUBNAME}-official|z
+z|https://raw.githubusercontent.com/puppylinux-woof-CE/woof-CE/testing/woof-distro/x86/Packages-puppy-common32-official|z
+z|http://distro.ibiblio.org/puppylinux/Packages-puppy-tahr-official|z
 z|https://raw.githubusercontent.com/puppylinux-woof-CE/woof-CE/testing/woof-distro/Packages-puppy-noarch-official|z
+z|http://distro.ibiblio.org/puppylinux/Packages-puppy-wary5-official|z
+z|http://distro.ibiblio.org/puppylinux/Packages-puppy-precise-official|z
 "
 
 #---------
@@ -54,6 +56,8 @@ Packages-puppy-${DISTRO_DB_SUBNAME}-official
 Packages-puppy-noarch-official
 Packages-puppy-tahr-official
 Packages-puppy-common32-official
+Packages-puppy-wary5-official
+Packages-puppy-precise-official
 "
 
 
