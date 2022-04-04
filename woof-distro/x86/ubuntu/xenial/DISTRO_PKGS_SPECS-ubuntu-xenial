@@ -251,7 +251,7 @@ yes|gnet||exe,dev,doc,nls
 yes|gnome-doc-utils|gnome-doc-utils|exe>dev,dev,doc,nls|+python-libxml2
 yes|gnome-keyring|libgnome-keyring0,libgnome-keyring-dev|exe,dev,doc,nls
 no|gnome_menus|libgnome-menu2,libgnome-menu-dev|exe,dev,doc,nls| #must use older version for correct menu layout.
-yes|gnome-menus||exe,dev,doc,nls| #use my pet, version 2.14.3, needed by xdg_puppy.
+no|gnome-menus||exe,dev,doc,nls| #use my pet, version 2.14.3, needed by xdg_puppy.
 no|gnome-mplayer||exe,dev,doc,nls|pet:precise| #needs libgmlib1. needs gtk3.
 yes|gnome-vfs|libgnomevfs2-0,libgnomevfs2-dev,libgnomevfs2-common|exe,dev,doc,nls
 no|gnumeric|gnumeric,gnumeric-common|exe,dev>null,doc,nls
