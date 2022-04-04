@@ -7,6 +7,11 @@ if [ -f usr/lib/${ARCHDIR}/libgtk-3-0/gtk-query-immodules-3.0 ] ; then
 			usr/bin/gtk-query-immodules-3.0
 fi
 
+#xenial
+if [ -f usr/bin/gtk-update-icon-cache-3.0 -a ! -e usr/bin/gtk-update-icon-cache ] ; then
+	ln -sv gtk-update-icon-cache-3.0 usr/bin/gtk-update-icon-cache
+fi
+
 # raleigh-reloaded and possibly other themes need the arrow symbolic icons
 if [ -d usr/share/icons/Adwaita ]; then
 	cd usr/share/icons/Adwaita
