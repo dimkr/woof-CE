@@ -623,7 +623,7 @@ no|net_setup||exe
 no|net_setup_classic||exe
 yes|net-tools|net-tools|exe,dev,doc,nls
 yes|nettle|libnettle6,nettle-dev|exe,dev,doc,nls| #needed by libarchive.
-yes|netmon_wce||exe,dev,doc,nls
+no|netmon_wce||exe,dev,doc,nls
 yes|network_roxapp||exe
 yes|normalize|normalize-audio|exe,dev,doc,nls
 yes|notecase||exe,dev,doc,nls
@@ -822,7 +822,7 @@ yes|uget||exe
 yes|unclutter|unclutter|exe,dev>null,doc,nls
 yes|unrar||exe,dev,doc,nls
 yes|unzip|unzip|exe,dev>null,doc,nls
-yes|urxvt||exe,dev,doc,nls
+no|urxvt||exe,dev,doc,nls
 yes|UrxvtControl||exe,dev,doc,nls|
 yes|usb-modeswitch||exe
 yes|usb-modeswitch-data||exe
