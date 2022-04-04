@@ -703,7 +703,7 @@ yes|pixman|libpixman-1-0,libpixman-1-dev|exe,dev,doc,nls
 yes|pkgconfig|pkg-config|exe>dev,dev,doc,nls
 yes|planner|planner,planner-data|exe,dev,doc,nls|
 yes|pmcputemp||exe,dev,doc,nls
-yes|pmirror||exe
+no|pmirror||exe
 yes|pmirrorget||exe
 yes|pnethood||exe| #using network_roxapp and YASSM instead. leave it in, some users want it.
 yes|pnscan|pnscan|exe,dev,doc,nls| #needed by peasyport & yassm
@@ -715,8 +715,8 @@ yes|pplog||exe
 yes|ppp|ppp|exe,dev>null,doc,nls
 yes|pptp|pptp-linux|exe,dev,doc,nls
 yes|procps|procps,libprocps4,libprocps4-dev|exe,dev,doc,nls
-yes|programchooser||exe
-yes|pschedule||exe
+no|programchooser||exe
+no|pschedule||exe
 yes|psmisc|psmisc|exe,dev>null,doc,nls
 no|psync||exe,dev,doc,nls
 yes|pulseaudio|libpulse-mainloop-glib0,libpulse0|exe,dev,doc,nls| #needed by mplayer, gnome-mplayer and gmtk
@@ -893,7 +893,7 @@ no|xfwm4|xfwm4|exe,dev>null,doc,nls|+libxfce4mcs,+libxfce4util,+libxfcegui4,+exo
 no|xine-lib|libxine1,libxine1-bin,libxine1-misc-plugins,libxine1-x,libxine1-console,libxine1-ffmpeg,libxine-dev|exe,dev,doc,nls
 no|xine-lib||exe,dev,doc,nls
 no|xinvaders||exe
-yes|xkbconfigmanager||exe
+no|xkbconfigmanager||exe
 no|xlock_gui||exe
 no|xlockmore||exe
 yes|xml-core|xml-core|exe>dev,dev,doc,nls
