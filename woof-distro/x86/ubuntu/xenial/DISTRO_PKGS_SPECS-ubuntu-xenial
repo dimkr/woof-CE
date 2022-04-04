@@ -124,18 +124,18 @@ yes|d-conf|dconf-gsettings-backend,dconf-service,libdconf1,libdconf-dbus-1-0,lib
 yes|ddcprobe||exe,dev>null,doc,nls
 yes|deadbeef||exe,dev,doc,nls
 yes|debianutils|debianutils|exe,dev,doc,nls
-yes|desk_icon_theme_blue_moon||exe
+no|desk_icon_theme_blue_moon||exe
 no|desk_icon_theme_jq8flat||exe
-yes|desk_icon_theme_ardis||exe
-yes|desk_icon_theme_flattr||exe
-yes|desk_icon_theme_irokami||exe
-yes|desk_icon_theme_moblin_stark||exe
-yes|desk_icon_theme_Moka||exe
+no|desk_icon_theme_ardis||exe
+no|desk_icon_theme_flattr||exe
+no|desk_icon_theme_irokami||exe
+no|desk_icon_theme_moblin_stark||exe
+no|desk_icon_theme_Moka||exe
 no|desk_icon_theme_oranchelo||exe
 no|desk_icon_theme_Sarai||exe
-yes|desk_icon_theme_neon||exe
+no|desk_icon_theme_neon||exe
 no|desk_icon_theme_original||exe
-yes|desk_icon_theme_jq8raised||exe
+no|desk_icon_theme_jq8raised||exe
 no|desk_icon_theme_smooth_color||exe
 no|desk_icon_theme_stardust||exe
 yes|desktop-file-utils|desktop-file-utils|exe,dev,doc,nls
@@ -304,7 +304,7 @@ no|gtk_theme_stark-blueish||exe
 no|gtksourceview||exe,dev,doc,nls| #my pet with genie.lang added... no, now in template.
 yes|gtksourceview|libgtksourceview2.0-0,libgtksourceview2.0-common,libgtksourceview2.0-dev|exe,dev,doc,nls
 yes|gtkspell|libgtkspell0,libgtkspell-dev|exe,dev,doc,nls
-yes|guess_fs||exe
+no|guess_fs||exe
 yes|gutenprint|ijsgutenprint,printer-driver-gutenprint,libgutenprint2,libgutenprint-dev,libgutenprintui2-1,libgutenprintui2-dev,printer-driver-gutenprint|exe,dev,doc,nls
 no|gutenprint||exe,dev,doc>exe,nls>exe
 yes|gview||exe
@@ -469,7 +469,7 @@ yes|libloudmouth|libloudmouth1-0,libloudmouth1-dev|exe,dev,doc,nls
 yes|libltdl|libltdl7,libltdl-dev|exe,dev,doc,nls| #note, this is really part of libtool pkg, but libs needed at runtime.
 yes|libmad|libmad0,libmad0-dev|exe,dev,doc,nls
 yes|libmcrypt|libmcrypt4,libmcrypt-dev|exe,dev,doc,nls
-yes|libmirclient|libmirclient9,libmirclient-dev,libmircommon5,libmircommon-dev,libmirprotobuf3,libprotobuf-lite9v5,libwayland-egl1-mesa|exe,dev,doc,nls
+yes|libmirclient|libmirclient9,libmirclient-dev,libmircommon5,libmircommon-dev,libmirprotobuf3,libprotobuf-lite9v5,libprotobuf-dev,libwayland-egl1-mesa|exe,dev,doc,nls
 yes|libmircommon7|libmircommon7,libmircore1,libmircore-dev|exe,dev,doc,nls
 yes|libmng|libmng2,libmng-dev|exe,dev,doc,nls
 yes|libmnl|libmnl0,libmnl-dev|exe,dev,doc,nls
@@ -721,7 +721,7 @@ no|programchooser||exe
 no|pschedule||exe
 yes|psmisc|psmisc|exe,dev>null,doc,nls
 no|psync||exe,dev,doc,nls
-yes|pulseaudio|libpulse-mainloop-glib0,libpulse0|exe,dev,doc,nls| #needed by mplayer, gnome-mplayer and gmtk
+yes|pulseaudio|pulseaudio,libpulse-mainloop-glib0,libpulse0,libpulse-dev,libsnapd-glib1,libwebrtc-audio-processing-0,pulseaudio-utils,pulseaudio-module-x11|exe,dev,doc,nls| #needed by mplayer, gnome-mplayer and gmtk
 yes|PupClockset||exe|
 yes|Pup-SysInfo||exe|
 yes|puppyinputdetect||exe
@@ -748,7 +748,7 @@ no|radeon_firmware||exe,dev,doc,nls
 yes|raptor2|libraptor2-0,libraptor2-dev|exe,dev,doc,nls| #needed by redland.
 yes|readline|libreadline6,libreadline6-dev,readline-common|exe,dev,doc,nls
 yes|redland|librdf0,librasqal3|exe,dev,doc,nls| #needed by abiword. left out -dev libs.
-yes|retrovol||exe|
+no|retrovol||exe|
 yes|rman|rman|exe>dev,dev,doc,nls
 no|rox-filer||exe
 yes|rp_pppoe_cli||exe
@@ -832,7 +832,7 @@ yes|usb-modeswitch||exe
 yes|usb-modeswitch-data||exe
 yes|usbutils|usbutils|exe,dev,doc,nls
 yes|util-linux|util-linux,mount,uuid-runtime,bsdutils,libuuid1,libblkid1,libfdisk1,libmount1,libsmartcols1,libfdisk-dev,libmount-dev,libsmartcols-dev,uuid-dev,libblkid-dev,libmount-dev|exe,dev,doc,nls| #ADDED 20150717-08 20150730 20150808
-yes|uextract||exe,dev,doc,nls|
+no|uextract||exe,dev,doc,nls|
 yes|vala|valac,libvala-0.30-0|exe>dev,dev,doc>dev,nls
 no|valide||exe>dev,dev,doc>dev,nls
 yes|vamps|vamps|exe,dev,doc,nls
