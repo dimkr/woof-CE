@@ -6,6 +6,10 @@
 #130525 old pc celeron 2ghz cpu, 256mb ram, CPUSPEED=1999, 1st bootup rox failed to start. try experiment.
 
 export XDG_SESSION_TYPE=x11
+if [ -n "$WAYLAND_DISPLAY" ]; then
+	export GDK_BACKEND=x11
+	unset SDL_VIDEODRIVER
+fi
 
 [ -f /etc/desktop_app ] && read -r desktop < /etc/desktop_app
 [ "$desktop" = "" ] && desktop=rox
@@ -62,6 +66,11 @@ elif [ -e /usr/bin/pulseaudio ]; then
     run-as-spot sh -c "pulseaudio --kill > /dev/null 2>&1; pulseaudio --start --log-target=syslog"
     export PULSE_SERVER=unix:/tmp/runtime-spot/pulse/native
     export PULSE_COOKIE=/home/spot/.config/pulse/cookie
+fi
+
+if [ -n "$WAYLAND_DISPLAY" ]; then
+	. /etc/rc.d/wl_func
+	apply_pthemerc
 fi
 
 CURRENTWM="`cat /etc/windowmanager`"
