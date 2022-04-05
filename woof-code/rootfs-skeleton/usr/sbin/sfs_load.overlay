@@ -104,6 +104,8 @@ for SFS in `find $SFS_DIRS -maxdepth 1 -name '*.sfs' -printf '%f\n' | sort | uni
 	BUTTONS="$BUTTONS<togglebutton><label>$SFS</label><default>$DEF</default><action>if true queue \"$SFS\"</action><action>if false unqueue \"$SFS\"</action></togglebutton>"
 done
 
+[ -z "$BUTTONS" ] && BUTTONS="<text><label>$(gettext 'Could not find any SFS to queue.')</label></text>"
+
 export DIALOG='<window title="SFS-Load" default_width="400">
 	<vbox space-expand="true" space-fill="true">
 		'`/usr/lib/gtkdialog/xml_info fixed package_sfs.svg 20 "$(gettext "Which SFS do you want to load?")"`'
