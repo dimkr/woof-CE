@@ -871,8 +871,8 @@ no|xdg_puppy||exe|
 no|Xdialog||exe,dev,doc,nls
 no|xdriinfo||exe,dev,doc,nls| #needed by sys-info. no more.
 no|xemeraldia||exe
-yes|xf86-input-keyboard||exe,dev,doc,nls
-yes|xf86-input-mouse||exe,dev,doc,nls
+no|xf86-input-keyboard||exe,dev,doc,nls
+no|xf86-input-mouse||exe,dev,doc,nls
 no|xfce4-battery-plugin|xfce4-battery-plugin|exe,dev,doc,nls
 no|xfce4-clipman-plugin|xfce4-clipman-plugin|exe,dev,doc,nls
 no|xfce4-cpugraph-plugin|xfce4-cpugraph-plugin|exe,dev,doc,nls
