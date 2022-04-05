@@ -46,9 +46,9 @@ yes|alsa-lib|libasound2,libasound2-data,libasound2-dev,libasound2-plugins|exe,de
 yes|alsa-base|alsa-base|exe,dev,doc,nls
 yes|alsa-driver|linux-sound-base|exe,dev,doc,nls|
 yes|alsa-utils|alsa-utils|exe,dev,doc,nls
-yes|alsaequal||exe| #needed by pequalizer.
+no|alsaequal||exe| #needed by pequalizer.
 yes|apparmor|libapparmor1|exe,dev,doc,nls| #ADDED 20151029
-yes|apulse||exe,dev,doc,nls
+no|apulse||exe,dev,doc,nls
 yes|arp-scan|arp-scan|exe,dev,doc,nls| #needed by peasyscan-noarch
 yes|aspell|libaspell15,libaspell-dev|exe,dev,doc,nls| #needed by abiword.
 no|aspell-en|aspell-en|exe,dev,doc,nls|
@@ -87,7 +87,7 @@ yes|bzip2|bzip2,libbz2-1.0,libbz2-dev|exe,dev,doc,nls
 yes|ca-certificates|ca-certificates|exe,dev,doc,nls
 yes|cairo|libcairo2,libcairo2-dev,libcairo-gobject2,libcairo-gobject2,libcairo-script-interpreter2|exe,dev,doc,nls
 yes|cairomm|libcairomm-1.0-1v5,libcairomm-1.0-dev|exe,dev,doc,nls| ###PROBLEM TODO### this pkg supposed to go entirely into upup/cairomm_DEV but not right. see also glibmm, gtkmm, pangomm ###TODO###
-yes|caps_eq||exe,dev,doc,nls| #needed by zigberts pequalizer, refer t=31206&start=1290
+no|caps_eq||exe,dev,doc,nls| #needed by zigberts pequalizer, refer t=31206&start=1290
 yes|ccache|ccache|exe>dev,dev,doc>dev|
 yes|cddetect||exe,dev>null,doc,nls
 yes|cdparanoia|cdparanoia,libcdparanoia0,libcdparanoia-dev|exe,dev,doc,nls
@@ -681,7 +681,7 @@ yes|peasyprint||exe,dev,doc,nls
 no|peasyscale||exe| #rcrsn51, jpg image resizer.
 no|peasyscan_tahrpup||exe,dev,doc,nls
 no|peasyscan_pdf_plugin||exe,dev,doc,nls
-yes|pequalizer||exe| #audio equalizer, used by pmusic. note, deps are alsaequal, caps_eq.
+no|pequalizer||exe| #audio equalizer, used by pmusic. note, deps are alsaequal, caps_eq.
 yes|perl|perl,perl-base,perl-modules-5.22|exe>dev,dev,doc,nls
 yes|perl_tiny|perl,perl-base,perl-modules-5.22|exe,dev>null,doc>null,nls>null
 yes|perl-compress-zlib|libcompress-raw-zlib-perl|exe>dev,dev,doc,nls
