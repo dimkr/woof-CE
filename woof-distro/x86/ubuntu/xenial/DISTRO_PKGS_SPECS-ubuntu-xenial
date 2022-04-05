@@ -39,7 +39,7 @@ no|abiword-plugin-grammar|abiword-plugin-grammar|exe,dev,doc,nls
 no|abiword-plugin-mathview|abiword-plugin-mathview|exe,dev,doc,nls
 yes|acl|acl,libacl1,libacl1-dev|exe,dev,doc,nls
 yes|acpi|acpi|exe,dev,doc,nls
-yes|acpid-busibox||exe
+no|acpid-busibox||exe
 yes|advancecomp|advancecomp|exe>dev,dev,doc,nls
 yes|align||exe
 yes|alsa-lib|libasound2,libasound2-data,libasound2-dev,libasound2-plugins|exe,dev,doc,nls
@@ -560,7 +560,7 @@ no|linux_module_hsfmodem||exe,dev,doc,nls| #needs firmware_linux_module_hsfmodem
 no|linux_module_wl||exe,dev,doc,nls
 yes|lirc|liblircclient0,liblircclient-dev|exe,dev,doc,nls
 yes|ListDD||exe,dev,doc,nls|
-yes|llvm|libllvm4.0|exe,dev,doc,nls| #needed by libgl1-mesa-dri, but huge 7MB deb. i left out dev components. 120605 removed. 120902 back.
+yes|llvm|libllvm6.0|exe,dev,doc,nls| #needed by libgl1-mesa-dri, but huge 7MB deb. i left out dev components. 120605 removed. 120902 back.
 no|llvm|libclang1-3.8,liblldb-3.8,libllvm3.8,lldb-3.8,llvm-3.8-runtime,llvm-3.8|exe,dev,doc,nls
 yes|lsb-base|lsb-base|exe,dev,doc,nls
 yes|lvm2|dmsetup,liblvm2-dev|exe,dev,doc,nls|
@@ -582,7 +582,7 @@ no|metamail|metamail|exe,dev>null,doc,nls
 yes|metamail||exe
 yes|mhash|libmhash2,libmhash-dev|exe,dev,doc,nls
 yes|mhwaveedit||exe|
-yes|mingetty||exe,dev,doc,nls
+no|mingetty||exe,dev,doc,nls
 yes|minidlna||exe,dev,doc,nls
 yes|miniupnpc|libminiupnpc10,libminiupnpc-dev|exe,dev,doc,nls| #needed by transmission.
 yes|minixcal||exe,dev,doc,nls
@@ -671,7 +671,7 @@ yes|pciutils|pciutils,libpci3,libpci-dev|exe,dev,doc,nls
 yes|pcmciautils|pcmciautils|exe,dev,doc,nls
 yes|pcre|libpcre16-3,libpcre3,libpcre32-3,libpcre3-dev,libpcrecpp0v5|exe,dev,doc,nls| #MERGED 20150717-08
 no|pctorrent||exe
-yes|pdiag||exe| #diagnostic tool created by rerwin.
+no|pdiag||exe| #diagnostic tool created by rerwin.
 yes|pdvdrsab||exe
 yes|peasydisc||exe
 yes|peasyglue||exe,dev,doc,nls|
@@ -775,8 +775,7 @@ yes|setvol||exe
 no|sfs_load||exe
 yes|sgml-base|sgml-base|exe>dev,dev,doc,nls
 yes|sgml-data|sgml-data|exe>dev,dev,doc,nls
-yes|shared-mime-info|shared-mime-info|exe,dev,doc,nls
-no|shared-mime-info||exe,dev>exe|
+yes|shared-mime-info||exe,dev>exe|
 no|shred||exe|
 yes|simplegtkradio||exe,dev,doc,nls
 yes|simplescreenrecorder||exe,dev,doc,nls
