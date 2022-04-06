@@ -816,8 +816,8 @@ no|transmission|transmission-common,transmission-gtk|exe,dev,doc,nls| #needs gtk
 yes|tree|tree|exe,dev,doc,nls
 no|tslib|libts-0.0-0,libts-bin,libts-dev|exe,dev,doc,nls
 yes|ucf|ucf|exe,dev,doc,nls|
-yes|udev|udev,libudev1,libudev-dev|exe>null,dev>null,doc>null,nls>null #fake install
-yes|eudev||exe,dev,doc,nls| #note, requires kmod and a kernel with devtmpfs enabled.
+yes|udev|udev,libudev1,libudev-dev,libsemanage1,libsemanage-common,libustr-1.0-1|exe,dev,doc,nls|
+no|eudev||exe,dev,doc,nls| #note, requires kmod and a kernel with devtmpfs enabled.
 yes|uget||exe
 yes|unclutter|unclutter|exe,dev>null,doc,nls
 yes|unrar||exe,dev,doc,nls
