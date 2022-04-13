@@ -1,0 +1,27 @@
+From d3468537b9748756350c9ab89d2b639cebeeccbc Mon Sep 17 00:00:00 2001
+From: Dima Krasner <dima@dimakrasner.com>
+Date: Mon, 4 Apr 2022 15:24:34 +0800
+Subject: [PATCH] make xrandr report 1366x768 instead of 1360x768
+
+Signed-off-by: Dima Krasner <dima@dimakrasner.com>
+---
+ lib/libxcvt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lib/libxcvt.c b/lib/libxcvt.c
+index 8865813..51a61e7 100644
+--- a/lib/libxcvt.c
++++ b/lib/libxcvt.c
+@@ -292,7 +292,8 @@ libxcvt_gen_mode_info(int hdisplay, int vdisplay, float vrefresh, bool reduced,
+         mode_info->mode_flags |= LIBXCVT_MODE_FLAG_INTERLACE;
+ 
+     /* FWXGA hack adapted from hw/xfree86/modes/xf86EdidModes.c, because you can't say 1366 */
+-    if (mode_info->hdisplay == 1366 && mode_info->vdisplay == 768) {
++    if (mode_info->hdisplay == 1360 && mode_info->vdisplay == 768) {
++         mode_info->hdisplay = 1366;
+          mode_info->hsync_start--;
+          mode_info->hsync_end--;
+     }
+-- 
+2.30.2
+

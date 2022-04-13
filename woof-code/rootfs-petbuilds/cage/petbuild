@@ -25,6 +25,7 @@ build() {
 
     tar -xJf libxcvt-0.1.1.tar.xz
     cd libxcvt-0.1.1
+    patch -p1 < ../1366.patch
     patch -p1 < ../static-libxcvt.patch
     meson --buildtype=release --prefix=/usr --default-library=static build
     ninja -C build install
