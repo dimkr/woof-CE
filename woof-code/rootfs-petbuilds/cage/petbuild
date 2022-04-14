@@ -49,6 +49,9 @@ build() {
     ninja -C build install
     cd ..
 
+    # force linking with our libwayland
+    rm -f /usr/lib/libwayland-* /usr/lib/*/libwayland-*
+
     tar -xJf wayland-1.20.0.tar.xz
     cd wayland-1.20.0
     meson --buildtype=release --prefix=/usr --default-library=static -Dtests=false -Ddocumentation=false build
