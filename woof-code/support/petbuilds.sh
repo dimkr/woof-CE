@@ -55,6 +55,19 @@ PKGS=
 
 # busybox must be first, so other petbuilds can use coreutils commands
 for NAME in $PETBUILDS; do
+    # peabee hack to reuse old petbuild output if BUILD_DEVX=no
+    if [ "$BUILD_DEVX" != "yes" ]; then
+        case "$NAME" in
+        pmaterial_icons|puppy_flat_icons|puppy_standard_icons) ;;
+        *)
+            echo "WARNING - petbuilds require BUILD_DEVX=yes"
+            [ -n "$GITHUB_ACTIONS" ] && exit 1
+            ;;
+        esac
+        PKGS="$PKGS $NAME"
+        continue
+    fi
+
     HASH=`cat ../DISTRO_PKGS_SPECS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION} ../DISTRO_COMPAT_REPOS ../DISTRO_COMPAT_REPOS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION} ../DISTRO_PET_REPOS ../rootfs-petbuilds/${NAME}/petbuild 2>/dev/null | md5sum | awk '{print $1}'`
     if [ ! -d "../petbuild-output/${NAME}-${HASH}" ]; then
         if [ $HAVE_ROOTFS -eq 0 ]; then
