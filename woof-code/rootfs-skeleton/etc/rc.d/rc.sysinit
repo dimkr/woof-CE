@@ -195,6 +195,18 @@ busybox mount -t devpts -o dev,suid,gid=2,mode=620 none /dev/pts ;STATUS=$((STAT
 mkdir /sys 2>/dev/null
 busybox mount -t sysfs none /sys ;STATUS=$((STATUS+$?))
 
+# docker and podman need this
+busybox mount -t cgroup2 -o nsdelegate,memory_recursiveprot cgroup2 /sys/fs/cgroup ;STATUS=$((STATUS+$?))
+
+# docker and podman mount a layered file system and it must not overlap with the one at /
+if [ $PUPMODE -eq 6 ] ; then
+	mkdir /var/lib/containers 2>/dev/null
+	busybox mount -o bind /initrd/upper/save/var/lib/containers /var/lib/containers ;STATUS=$((STATUS+$?))
+elif [ $PUPMODE -ne 2 ] ; then
+	mkdir /var/lib/containers 2>/dev/null
+	busybox mount -o bind /initrd/pup_rw/var/lib/containers /var/lib/containers ;STATUS=$((STATUS+$?))
+fi
+
 ##v2.20 some apps need shm (shared memory) (ex: xfdiff)... 100319 do this always...
 mkdir -p /dev/shm #120503 if kernel mounts a f.s. on /dev, removes my skeleton /dev
 busybox mount -t tmpfs -o size=${QTRFREERAM}k shmfs /dev/shm ;STATUS=$((STATUS+$?))
