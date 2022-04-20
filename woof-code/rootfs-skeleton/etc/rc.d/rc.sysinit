@@ -197,14 +197,23 @@ busybox mount -t sysfs none /sys ;STATUS=$((STATUS+$?))
 
 # docker and podman need this
 busybox mount -t cgroup2 -o nsdelegate,memory_recursiveprot cgroup2 /sys/fs/cgroup ;STATUS=$((STATUS+$?))
+chmod 1777 /var/tmp
 
 # docker and podman mount a layered file system and it must not overlap with the one at /
 if [ $PUPMODE -eq 6 ] ; then
 	mkdir /var/lib/containers 2>/dev/null
 	busybox mount -o bind /initrd/upper/save/var/lib/containers /var/lib/containers ;STATUS=$((STATUS+$?))
+	install -d -o spot -g spot /home/spot/.local 2>/dev/null
+	install -d -o spot -g spot /home/spot/.local/share 2>/dev/null
+	install -d -o spot -g spot /home/spot/.local/share/containers 2>/dev/null
+	busybox mount -o bind /initrd/upper/save/home/spot/.local/share/containers /home/spot/.local/share/containers ;STATUS=$((STATUS+$?))
 elif [ $PUPMODE -ne 2 ] ; then
 	mkdir /var/lib/containers 2>/dev/null
 	busybox mount -o bind /initrd/pup_rw/var/lib/containers /var/lib/containers ;STATUS=$((STATUS+$?))
+	install -d -o spot -g spot /home/spot/.local 2>/dev/null
+	install -d -o spot -g spot /home/spot/.local/share 2>/dev/null
+	install -d -o spot -g spot /home/spot/.local/share/containers 2>/dev/null
+	busybox mount -o bind /initrd/pup_rw/home/spot/.local/share/containers /home/spot/.local/share/containers ;STATUS=$((STATUS+$?))
 fi
 
 ##v2.20 some apps need shm (shared memory) (ex: xfdiff)... 100319 do this always...
