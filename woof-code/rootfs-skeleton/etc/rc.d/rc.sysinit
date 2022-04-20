@@ -593,6 +593,10 @@ while read F1 F2 F3 F4 F5 F6 F7 F8 ETC ; do
 	# c! /dev/cuse 0600 - - - 10:203
 	mknod -m $F3 $F2 ${F1:0:1} ${F7%:*} ${F7#*:} 2>/dev/null #mknod -m 0600 /dev/cuse c 10 203
 done
+
+# set device node permissions and ownership defined in /usr/lib/tmpfiles.d/static-nodes-permissions.conf
+systemd-tmpfiles --create 2>/dev/null
+
 # Add any system/locally defined additional device nodes:
 cp --preserve=all --recursive --update /lib/udev/devices/* /dev 2> /dev/null
 cp --preserve=all --recursive --update /etc/udev/devices/* /dev 2> /dev/null
