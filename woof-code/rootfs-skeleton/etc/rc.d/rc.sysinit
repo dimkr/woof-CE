@@ -195,6 +195,9 @@ busybox mount -t devpts -o dev,suid,gid=2,mode=620 none /dev/pts ;STATUS=$((STAT
 mkdir /sys 2>/dev/null
 busybox mount -t sysfs none /sys ;STATUS=$((STATUS+$?))
 
+# simulate what systemd does, docker and podman need this
+mount --make-rshared / ;STATUS=$((STATUS+$?))
+
 # docker and podman need this
 busybox mount -t cgroup2 -o nsdelegate,memory_recursiveprot cgroup2 /sys/fs/cgroup ;STATUS=$((STATUS+$?))
 chmod 1777 /var/tmp
