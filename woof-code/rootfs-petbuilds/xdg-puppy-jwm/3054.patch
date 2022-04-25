@@ -7,7 +7,7 @@ diff -rupN xdg_puppy-0.7.6-9-orig/jwm-xdgmenu/jwm-xdgmenu.c xdg_puppy-0.7.6-9/jw
    }
 +  else if ((len > 4) && (exec[len - 2] == '@') && (exec[len - 1] == '@'))
 +  {
-+    exec = g_strndup(exec, g_strstr(exec, "@@") - exec);
++    exec = g_strndup(exec, strstr(exec, "@@") - exec);
 +  }
  
    name = gmenu_tree_entry_get_name(entry);
