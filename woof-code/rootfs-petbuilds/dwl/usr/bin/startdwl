@@ -3,6 +3,11 @@
 export TEXTDOMAIN=xwin
 export OUTPUT_CHARSET=UTF-8
 
+export WLR_RENDERER_ALLOW_SOFTWARE=1
+
+export PULSE_SERVER=unix:/tmp/runtime-spot/pulse/native
+export PULSE_COOKIE=/home/spot/.config/pulse/cookie
+
 while :
 do
 	unset XKB_DEFAULT_LAYOUT
@@ -35,9 +40,9 @@ do
 	[ -n "$LIBINPUT_DEFAULT_LEFT_HANDED" ] && export LIBINPUT_DEFAULT_LEFT_HANDED
 
 	if [ /var/local/xwin_disable_xerrs_log_flag ]; then
-		WLR_RENDERER_ALLOW_SOFTWARE=1 dbus-launch dwl -s ~/.dwlinitrc > /dev/null 2>&1
+		dbus-launch dwl -s ~/.dwlinitrc > /dev/null 2>&1
 	else
-		WLR_RENDERER_ALLOW_SOFTWARE=1 dbus-launch dwl -s ~/.dwlinitrc > /tmp/xerrs.log 2>&1
+		dbus-launch dwl -s ~/.dwlinitrc > /tmp/xerrs.log 2>&1
 	fi
 
 	echo '--------'
