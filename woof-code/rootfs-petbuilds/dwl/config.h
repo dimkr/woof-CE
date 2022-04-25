@@ -70,12 +70,14 @@ static const int natural_scrolling = 0;
 /* commands */
 static const char *termcmd[] = { "defaultterminal", NULL };
 static const char *menucmd[] = { "bemenu-run", NULL };
+static const char *runcmd[] = { "defaultrun", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
 	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_t,          spawn,          {.v = termcmd} },
+	{ MODKEY,                    XKB_KEY_F2,         spawn,          {.v = runcmd} },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
