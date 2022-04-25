@@ -139,6 +139,7 @@
 <IconPath>/usr/share/pixmaps/puppy</IconPath>
 <IconPath>/usr/share/icons/hicolor/scalable/apps</IconPath>
 <IconPath>/usr/local/lib/X11/mini-icons</IconPath>
+<IconPath>/home/spot/.local/share/flatpak/exports/share/icons/hicolor/scalable/apps</IconPath>
 <!-- </Icons> -->
 
 <StartupCommand>xdg_autostart.sh</StartupCommand>
