@@ -1,14 +1,14 @@
-From b9ce464a5f8cd4d0f30499d2c3e8f8677d99fb16 Mon Sep 17 00:00:00 2001
+From 9b4d2f3781f7392f7954b434e21d6948c3d67940 Mon Sep 17 00:00:00 2001
 From: Dima Krasner <dima@dimakrasner.com>
-Date: Mon, 25 Apr 2022 23:55:40 +0800
+Date: Tue, 26 Apr 2022 01:23:15 +0800
 Subject: [PATCH] float and center all new windows
 
 ---
- dwl.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ dwl.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/dwl.c b/dwl.c
-index ac621203..15330197 100644
+index ac621203..4768c454 100644
 --- a/dwl.c
 +++ b/dwl.c
 @@ -208,6 +208,7 @@ static void applybounds(Client *c, struct wlr_box *bbox);
@@ -19,7 +19,15 @@ index ac621203..15330197 100644
  static void applyrules(Client *c);
  static void arrange(Monitor *m);
  static void arrangelayer(Monitor *m, struct wl_list *list,
-@@ -450,6 +451,26 @@ applyexclusive(struct wlr_box *usable_area,
+@@ -291,6 +292,7 @@ static void updatemons(struct wl_listener *listener, void *data);
+ static void updatetitle(struct wl_listener *listener, void *data);
+ static void urgent(struct wl_listener *listener, void *data);
+ static void view(const Arg *arg);
++static void nextstacked(const Arg *arg);
+ static void virtualkeyboard(struct wl_listener *listener, void *data);
+ static struct wlr_scene_node *xytonode(double x, double y, struct wlr_surface **psurface,
+ 		Client **pc, LayerSurface **pl, double *nx, double *ny);
+@@ -450,6 +452,26 @@ applyexclusive(struct wlr_box *usable_area,
  	}
  }
  
@@ -46,7 +54,7 @@ index ac621203..15330197 100644
  void
  applyrules(Client *c)
  {
-@@ -476,6 +497,8 @@ applyrules(Client *c)
+@@ -476,6 +498,8 @@ applyrules(Client *c)
  					mon = m;
  		}
  	}
@@ -55,3 +63,25 @@ index ac621203..15330197 100644
  	wlr_scene_node_reparent(c->scene, layers[c->isfloating ? LyrFloat : LyrTile]);
  	setmon(c, mon, newtags);
  }
+@@ -2324,6 +2348,21 @@ view(const Arg *arg)
+ 	printstatus();
+ }
+ 
++void
++nextstacked(const Arg *arg)
++{
++	Client *c, *first;
++	wl_list_for_each(c, &fstack, flink) {
++		if (VISIBLEON(c, selmon) && !first) first = c;
++		else if (VISIBLEON(c, selmon) && first) {
++			focusclient(c, 1);
++			arrange(selmon);
++			break;
++		}
++	}
++	printstatus();
++}
++
+ void
+ virtualkeyboard(struct wl_listener *listener, void *data)
+ {
