@@ -73,6 +73,7 @@ static const char *menucmd[] = { "bemenu-run", NULL };
 static const char *runcmd[] = { "defaultrun", NULL };
 static const char *brightnessupcmd[] = { "brightnessctl", "set", "+10%", NULL };
 static const char *brightnessdowncmd[] = { "brightnessctl", "set", "10%-", NULL };
+static const char *lockcmd[] = { "puplock", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
@@ -81,7 +82,9 @@ static const Key keys[] = {
 	{ MODKEY|WLR_MODIFIER_CTRL,  XKB_KEY_t,          spawn,          {.v = termcmd} },
 	{ MODKEY,                    XKB_KEY_F2,         spawn,          {.v = runcmd} },
 	{ MODKEY,                    XKB_KEY_F4,         killclient,     {0} },
-	{ WLR_MODIFIER_SUPER,        XKB_KEY_Up,         maximize,       {0} },
+	{ WLR_MODIFIER_LOGO,         XKB_KEY_Up,         maximize,       {0} },
+	{ WLR_MODIFIER_LOGO,         XKB_KEY_r,          spawn,          {.v = runcmd} },
+	{ WLR_MODIFIER_LOGO,         XKB_KEY_l,          spawn,          {.v = lockcmd} },
 	{ 0,                         XKB_KEY_XF86MonBrightnessUp,          spawn,          {.v = brightnessupcmd} },
 	{ 0,                         XKB_KEY_XF86MonBrightnessDown,        spawn,          {.v = brightnessdowncmd} },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
@@ -89,7 +92,6 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05} },
-	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05} },
 	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
 	{ MODKEY,                    XKB_KEY_Tab,        nextstacked,    {0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_C,          killclient,     {0} },
