@@ -71,6 +71,8 @@ static const int natural_scrolling = 0;
 static const char *termcmd[] = { "defaultterminal", NULL };
 static const char *menucmd[] = { "bemenu-run", NULL };
 static const char *runcmd[] = { "defaultrun", NULL };
+static const char *brightnessupcmd[] = { "brightnessctl", "set", "+10%", NULL };
+static const char *brightnessdowncmd[] = { "brightnessctl", "set", "10%-", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
@@ -80,6 +82,8 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_F2,         spawn,          {.v = runcmd} },
 	{ MODKEY,                    XKB_KEY_F4,         killclient,     {0} },
 	{ WLR_MODIFIER_SUPER,        XKB_KEY_Up,         maximize,       {0} },
+	{ 0,                         XKB_KEY_XF86MonBrightnessUp,          spawn,          {.v = brightnessupcmd} },
+	{ 0,                         XKB_KEY_XF86MonBrightnessDown,        spawn,          {.v = brightnessdowncmd} },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
