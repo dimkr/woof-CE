@@ -2,8 +2,6 @@ name: release
 
 on:
   workflow_dispatch:
-    branches:
-      - testing
     inputs:
       name:
         description: 'Human-readable name'
