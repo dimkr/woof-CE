@@ -929,7 +929,7 @@ fi
 #have pup...sfs, now try to load it
 RAMSIZE=$(free | grep -o 'Mem: .*' | tr -s ' ' | cut -f 2 -d ' ') #total physical ram (less shared video). 110405
 
-mount -t tmpfs tmpfs /mnt/tmpfs
+mount -t tmpfs -o size=80% tmpfs /mnt/tmpfs
 [ -d "/mnt/tmpfs/pup_rw" ] || mkdir /mnt/tmpfs/pup_rw
 mount -t aufs -o udba=reval,diropq=w,br=/mnt/tmpfs/pup_rw=rw,xino=/mnt/tmpfs/.aufs.xino unionfs /pup_new 
 [ $? -eq 0 ] || fatal_error "${L_ERROR_FAILED_AUFS_STACK}"
