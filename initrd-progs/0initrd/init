@@ -1240,6 +1240,8 @@ case $PUPMODE in
     rm -rf ${SAVE_LAYER}/tmp #in case last boot was pupmode=12
     #adjust stack
     if [ "$UNIONFS" = 'overlay' ]; then
+     #pup_rw is bigger because files are copied, not moved to pup_ro1
+     mount -o remount,size=75% /mnt/tmpfs
      remount_overlay "s~lowerdir=([^,]+)~lowerdir=${SAVE_LAYER}:\1~"
     else
      echo "mount -o remount,add:1:${SAVE_LAYER}=ro+wh /pup_new" #debug
