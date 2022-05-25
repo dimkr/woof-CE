@@ -9,4 +9,5 @@ build() {
     ./configure --prefix=/usr --sysconfdir=/etc --enable-ncurses --enable-headless
     make install
     rm -rf /usr/include /usr/lib/pkgconfig /usr/lib/weechat/plugins/*.a /usr/lib/weechat/plugins/*.la
+    sed -e 's/^Categories=Network;Chat;/Categories=Chat;/' -i /usr/share/applications/weechat.desktop
 }
