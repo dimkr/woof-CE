@@ -9,6 +9,8 @@ build() {
     ./configure --prefix=/usr --sysconfdir=/etc --enable-ncurses --enable-headless
     make install
     weechat-headless -r "/server add libera irc.libera.chat/6697 -autoconnect -ssl;/set irc.server.libera.autojoin #puppylinux;/quit"
+    [ -e /home ] || install -d -m 755 /home
+    [ -e /home/spot ] || install -d -m 700 -o spot -g spot /home/spot
     run-as-spot weechat-headless -r "/server add libera irc.libera.chat/6697 -autoconnect -ssl;/set irc.server.libera.autojoin #puppylinux;/quit"
     rm -rf /usr/bin/weechat-headless /usr/include /usr/lib/pkgconfig /usr/lib/weechat/plugins/*.a /usr/lib/weechat/plugins/*.la
     sed -e 's/^Categories=Network;Chat;/Categories=Chat;/' -i /usr/share/applications/weechat.desktop
