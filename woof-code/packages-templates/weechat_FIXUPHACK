@@ -1,0 +1,23 @@
+cat << EOF > usr/bin/weechat-shell
+#!/bin/ash
+exec weechat -r "/server add libera irc.libera.chat/6697 -ssl -temp;/set irc.server.libera.autojoin #puppylinux;/connect libera"
+EOF
+chmod 755 usr/bin/weechat-shell
+
+mkdir -p usr/share/applications
+cat << EOF > usr/share/applications/weechat-shell.desktop
+[Desktop Entry]
+Name=#puppylinux Chat
+Comment=Puppy Linux Support Chat
+Exec=weechat-shell
+Icon=/usr/share/pixmaps/puppy/chat.svg
+Terminal=true
+Type=Application
+Categories=X-Internet-chat
+EOF
+chmod 644 usr/share/applications/weechat-shell.desktop
+
+cat << EOF > pinstall.sh
+echo '#!/bin/ash
+exec weechat-shell' > usr/local/bin/defaultchat
+EOF

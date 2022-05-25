@@ -650,6 +650,7 @@ yes|vte|libvte-2.91-0,libvte-2.91-common,libvte-2.91-dev|exe,dev,doc,nls||deps:y
 yes|wayland|libwayland-client0,libwayland-cursor0,libwayland-server0|exe,dev,doc,nls||deps:yes
 yes|wayland-dev|libwayland-dev,wayland-protocols,libwayland-bin|exe>dev,dev,doc,nls||deps:yes
 no|wcpufreq||exe,dev| #using this instead of cpu-scaling-ondemand.
+yes|weechat|weechat,weechat-curses|exe,dev,doc,nls||deps:yes
 yes|wget|wget|exe,dev>null,doc,nls||deps:yes
 yes|wireless-tools|wireless-tools,libiw30,libiw-dev|exe,dev,doc,nls||deps:yes
 yes|wireplumber|wireplumber|exe,dev,doc,nls||deps:yes
