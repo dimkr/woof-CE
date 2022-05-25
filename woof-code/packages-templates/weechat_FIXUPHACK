@@ -1,6 +1,6 @@
 cat << EOF > usr/bin/weechat-shell
 #!/bin/sh
-exec weechat -r "/server add libera irc.libera.chat/6697 -ssl -temp;/set irc.server.libera.autojoin #puppylinux;/connect libera"
+exec weechat -r "/server add liberatemp irc.libera.chat/6697 -ssl -temp;/set irc.server.liberatemp.autojoin #puppylinux;/connect liberatemp"
 EOF
 chmod 755 usr/bin/weechat-shell
 
