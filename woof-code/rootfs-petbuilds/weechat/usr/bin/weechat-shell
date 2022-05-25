@@ -1,2 +1,2 @@
 #!/bin/ash
-exec defaultterminal -e weechat-auto
+exec defaultterminal -e weechat
