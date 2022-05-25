@@ -252,7 +252,6 @@ no|inotify-tools|inotify-tools,libinotifytools0|exe,dev,doc,nls
 yes|installwatch|checkinstall|exe>dev,dev,doc,nls||deps:yes
 yes|intltool|intltool|exe>dev,dev,doc,nls||deps:yes #previously only in devx, but need in main f.s. to run momanager without devx.
 yes|iptables|iptables,libip4tc2,libip6tc2,libxtables12,libnftnl11|exe,dev>exe,doc,nls||deps:yes
-yes|irssi|irssi|exe,dev,doc,nls||deps:yes
 no|iso-codes|iso-codes|exe,dev,doc,nls #needed by gstreamer. very big. GSTREAMER1.0 GSTREAMER0.10
 no|isomaster|isomaster|exe,dev,doc,nls
 yes|iw|iw|exe,dev,doc,nls||deps:yes
@@ -536,7 +535,7 @@ no|peasyport||exe| #rcrsn51, alternative to superscan.
 no|peasyprint||exe,dev
 no|peasyscale||exe #rcrsn51, jpg image resizer.
 no|peasyscan_pdf_plugin||exe,dev
-yes|perl|perl,perl-base,perl-modules-5.34,libperl5.34|exe,dev,doc,nls||deps:yes
+yes|perl|perl,perl-base,perl-modules-5.34|exe,dev,doc,nls||deps:yes
 no|perl_tiny|perl,perl-base,perl-modules-5.34|exe,dev>null,doc,nls||deps:yes
 no|perl-compress-zlib|libcompress-raw-zlib-perl|exe>dev,dev||deps:yes
 no|perl-digest-sha1|libdigest-sha-perl|exe,dev||deps:yes
@@ -651,6 +650,7 @@ yes|vte|libvte-2.91-0,libvte-2.91-common,libvte-2.91-dev|exe,dev,doc,nls||deps:y
 yes|wayland|libwayland-client0,libwayland-cursor0,libwayland-server0|exe,dev,doc,nls||deps:yes
 yes|wayland-dev|libwayland-dev,wayland-protocols,libwayland-bin|exe>dev,dev,doc,nls||deps:yes
 no|wcpufreq||exe,dev| #using this instead of cpu-scaling-ondemand.
+yes|weechat|weechat,weechat-curses|exe,dev,doc,nls||deps:yes
 yes|wget|wget|exe,dev>null,doc,nls||deps:yes
 yes|wireless-tools|wireless-tools,libiw30,libiw-dev|exe,dev,doc,nls||deps:yes
 yes|wireplumber|wireplumber|exe,dev,doc,nls||deps:yes
