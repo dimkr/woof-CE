@@ -1,0 +1,7 @@
+#!/bin/ash
+
+if [ -e ~/.config/weechat ]; then
+	exec weechat "$@"
+else
+	exec weechat -r "/server add libera irc.libera.chat/6697 -autoconnect -ssl;/set irc.server.libera.autojoin #puppylinux" "$@"
+fi
