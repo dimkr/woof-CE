@@ -536,7 +536,7 @@ no|peasyport||exe| #rcrsn51, alternative to superscan.
 no|peasyprint||exe,dev
 no|peasyscale||exe #rcrsn51, jpg image resizer.
 no|peasyscan_pdf_plugin||exe,dev
-yes|perl|perl,perl-base,perl-modules-5.34|exe,dev,doc,nls||deps:yes
+yes|perl|perl,perl-base,perl-modules-5.34,libperl5.34|exe,dev,doc,nls||deps:yes
 no|perl_tiny|perl,perl-base,perl-modules-5.34|exe,dev>null,doc,nls||deps:yes
 no|perl-compress-zlib|libcompress-raw-zlib-perl|exe>dev,dev||deps:yes
 no|perl-digest-sha1|libdigest-sha-perl|exe,dev||deps:yes
