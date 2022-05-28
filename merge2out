@@ -290,8 +290,8 @@ fi
 
 (
 	# make sure target has these...
-	cp -afv woof-arch/${TARGETARCH}/build/support/debdb2pupdb ${WOOF_OUT}/rootfs-skeleton/usr/local/petget/ 2>&1
-	cp -afv woof-arch/${TARGETARCH}/build/support/find_cat ${WOOF_OUT}/rootfs-skeleton/usr/local/petget/ 2>&1 
+	cp -afv woof-arch/${TARGETARCH}/build/support/debdb2pupdb ${WOOF_OUT}/rootfs-packages/ppm/usr/local/petget/ 2>&1
+	cp -afv woof-arch/${TARGETARCH}/build/support/find_cat ${WOOF_OUT}/rootfs-packages/ppm/usr/local/petget/ 2>&1 
 	cp -afv woof-arch/${TARGETARCH}/target/rootfs-skeleton/usr/sbin/pngoverlay-cairo ${WOOF_OUT}/support/ 2>&1
 
 	for CONFFILE in passwd shadow group; do

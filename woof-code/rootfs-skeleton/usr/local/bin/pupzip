@@ -56,13 +56,15 @@ case "$EXTENSION" in
 	# -----------
 	*.rpm|*.7z|*.arj|*.deb|*.rar|*.tar|*.tar.bz|*.tar.bz2|*.tar.gz|*.tar.lzma|*.tar.xz|*.tar.zst*|*.tbz|*.tbz2|*.tgz|*.tlz|*.txz|*.zip)
 		#ask if this is a slackware or arch binary pkg...
-		case "$EXTENSION" in *.tgz|*.txz|*.pkg.tar.?z|*.pkg.tar.zstd)
-			request_msg "$(gettext 'Is this a Slackware or Arch package, that you want to install?')
+		if command -v petget >/dev/null 2>&1; then
+			case "$EXTENSION" in *.tgz|*.txz|*.pkg.tar.?z|*.pkg.tar.zstd)
+				request_msg "$(gettext 'Is this a Slackware or Arch package, that you want to install?')
 $(gettext 'If you answer Yes, the Package Manager application will run...')
 $(printf "$(gettext 'If you answer No, the %s application will run...')" "$XARCHIVE")"
-			[ $? -eq 100 ] && exec petget "$1"
-			;;
-		esac
+				[ $? -eq 100 ] && exec petget "$1"
+				;;
+			esac
+		fi
 		check_xarchive
 		exec $XARCHIVE "$1"
 		;;

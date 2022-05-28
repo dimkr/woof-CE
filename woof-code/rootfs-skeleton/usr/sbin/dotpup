@@ -88,11 +88,13 @@ if ! [ "$MYOPT" = "1" ] ; then
 	"$(gettext 'Install (and uninstall) packages from online repositories. Puppy packages are known as .PET packages.')" \
 	'/usr/local/petget/pkg_chooser.sh &' package_pet.svg
 	)
+	[ ! -e /usr/local/petget/pkg_chooser.sh ] && PPMBUTTON=
 	SFSGETBUTTON=$(install_button \
 	"$(gettext 'Choose an SFS file from the official repo')" \
 	"$(gettext 'SFS files are application combo-packs, very easy to install and uninstall.')" \
 	'sfsget &' package_sfs.svg
 	)
+	[ ! -e /usr/sbin/sfsget ] && SFSGETBUTTON=
 	SFSBUTTON=$(install_button \
 	"$(gettext 'Load and unload SFS packages')" \
 	"$(gettext 'Load and unload SFS packages with SFS-load')" \

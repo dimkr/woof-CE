@@ -111,7 +111,7 @@ $(echo "$XREPOS" | grep -v "|${DBFILE}$")"
 			continue
 		}
 		#-
-		${MWD}/rootfs-skeleton/usr/local/petget/verifypkg.sh ${FILE_PATH}
+		${MWD}/rootfs-packages/ppm/usr/local/petget/verifypkg.sh ${FILE_PATH}
 		[ $? -eq 0 ] && SUCCESS='yes'
 		#-
 		if [ "$SUCCESS" = "no" ] ; then

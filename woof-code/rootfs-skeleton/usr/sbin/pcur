@@ -116,7 +116,7 @@ CURITEMS='
   <action>func_switch "$CHOOSECUR"</action>
 </tree>'
   
-if [ "$CURLIST" = "" -a "$FIRSTITEM" = "" ]; then
+if [ "$CURLIST" = "" -a "$FIRSTITEM" = "" -a -e /usr/sbin/download_file ]; then
 	TXT="$(gettext "<b>No themes found.</b> Click the install button to get a nice collection of cursor themes.")"
 	CURITEMS='
 	<frame>
