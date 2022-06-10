@@ -53,8 +53,7 @@ done
 export GDK_BACKEND=x11
 unset SDL_VIDEODRIVER
 
-eval `dbus-launch --exit-with-x11 --sh-syntax`
-run-as-spot dbus-launch --exit-with-x11 > /tmp/.spot-session-bus
+run-as-spot dbus-launch > /tmp/.spot-session-bus
 
 if [ -e /usr/bin/wireplumber ]; then
     rm -f /tmp/runtime-spot/pipewire-0
