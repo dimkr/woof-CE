@@ -48,6 +48,7 @@ EOF
 cp -af usr/share/jwm/themes/"${PTHEME_JWM_COLOR}-jwmrc" root/.jwm/jwmrc-theme
 echo "jwm colors: ${PTHEME_JWM_COLOR}"
 
+[ -e usr/bin/startdwl ] && PTHEME_JWM_TRAY="none"
 cp -f usr/share/jwm/tray_templates/"$PTHEME_JWM_TRAY"/jwmrc-tray* root/.jwm/
 #hybrid
 rm -f root/.jwm/jwmrc-tray*_hybrid

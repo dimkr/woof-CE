@@ -235,6 +235,7 @@ EOF
 		UPDATE_JWM=true
 		SWITCH_THEME=true
 	fi
+	[ -n "$WAYLAND_DISPLAY" ] && PTHEME_JWM_TRAY="none"
 	if [ "$PTHEME_JWM_TRAY" ] && [ -d /usr/share/jwm/tray_templates/"$PTHEME_JWM_TRAY" ]; then
 		cp -f /usr/share/jwm/tray_templates/"$PTHEME_JWM_TRAY"/jwmrc-tray* $HOME/.jwm/
 		[ -s /usr/share/jwm/tray_templates/"$PTHEME_JWM_TRAY"/install ] && /usr/share/jwm/tray_templates/"$PTHEME_JWM_TRAY"/install
