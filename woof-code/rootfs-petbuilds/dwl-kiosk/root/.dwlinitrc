@@ -18,9 +18,6 @@ for F in $WAYLAND_DISPLAY $WAYLAND_DISPLAY.lock; do
 	mount --bind $XDG_RUNTIME_DIR/$F $SPOT_RUNTIME_DIR/$F
 done
 
-DISPLAY=:0
-XAUTHORITY=~/.Xauthority
-
 auth=`mktemp`
 echo "add $DISPLAY . `mcookie`" | xauth -q -f "$XAUTHORITY"
 if [ "`id -u`" -eq 0 ]; then
@@ -33,9 +30,6 @@ if [ -f ~/.Xresources ]; then
 	dpi=`grep ^Xft\.dpi: ~/.Xresources | awk '{print $2}'`
 	[ -n "$dpi" ] && args="$args -dpi $dpi"
 fi
-
-export DISPLAY
-export XAUTHORITY
 
 Xwayland $DISPLAY -auth $XAUTHORITY $args &
 
