@@ -43,12 +43,14 @@ apply_pthemerc() {
 	gsettings set org.gnome.desktop.interface gtk-theme "$PTHEME_GTK"
 	gsettings set org.gnome.desktop.interface icon-theme "$PTHEME_ICONS_GTK"
 	gsettings set org.gnome.desktop.interface cursor-theme "$PTHEME_MOUSE"
+	gsettings set org.gnome.desktop.interface cursor-size 24
 	gsettings set org.gnome.desktop.interface enable-animations false
 
 	run-as-spot gsettings set org.gnome.desktop.interface font-name "Sans 10"
 	run-as-spot gsettings set org.gnome.desktop.interface gtk-theme "$PTHEME_GTK"
 	run-as-spot gsettings set org.gnome.desktop.interface icon-theme "$PTHEME_ICONS_GTK"
 	run-as-spot gsettings set org.gnome.desktop.interface cursor-theme "$PTHEME_MOUSE"
+	gsettings set org.gnome.desktop.interface cursor-size 24
 	run-as-spot gsettings set org.gnome.desktop.interface enable-animations false
 
 	if [ -e /usr/bin/yambar ]; then

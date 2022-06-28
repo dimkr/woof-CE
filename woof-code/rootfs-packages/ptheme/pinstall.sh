@@ -161,12 +161,16 @@ if [ -d "usr/share/icons/$USE_ICON_THEME" ];then
 gtk-menu-images = 1
 gtk-button-images = 1				
 gtk-enable-animations = 0
+gtk-cursor-theme-name = default
+gtk-cursor-theme-size = 24
 EOF
 	fi
 	if [ -f root/.config/gtk-4.0/settings.ini ]; then
 		echo -e "gtk-icon-theme-name = $USE_ICON_THEME" >> root/.config/gtk-4.0/settings.ini
 		cat >> root/.config/gtk-4.0/settings.ini <<EOF
 gtk-enable-animations = 0
+gtk-cursor-theme-name = default
+gtk-cursor-theme-size = 24
 EOF
 	fi
 	# then ROX
