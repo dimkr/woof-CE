@@ -64,6 +64,7 @@ do
 
 	. /tmp/.spot-session-bus
 	kill $DBUS_SESSION_BUS_PID 2>/dev/null
+	rm -f /tmp/.spot-session-bus
 
 	echo '--------'
 	echo ''$(gettext 'Exited from dwl. Type "startdwl" to restart dwl.')''
