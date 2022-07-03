@@ -167,7 +167,7 @@ no|gdmap|gdmap|exe,dev>null,doc,nls
 no|geany|geany,geany-common|exe,dev,doc,nls #this is gtk3 version, use gtk2 pet instead
 no|getflash||exe
 no|get_libreoffice||exe
-yes|gettext-full|gettext,gettext-base|exe,dev,doc,nls||deps:yes
+yes|gettext-full|gettext,gettext-base|exe,dev>exe,doc,nls||deps:yes
 no|gexec|gexec|exe,dev>null,doc,nls
 no|gftp|gftp-gtk,gftp-common|exe,dev>null,doc,nls
 no|ghostscript|ghostscript,ghostscript-x,libgs9,libgs9-common,libgs-dev|exe,dev,doc,nls
@@ -206,7 +206,7 @@ yes|groff|groff,groff-base|exe,dev,doc,nls||deps:yes
 no|grsync||exe,dev,doc,nls
 no|grub2_efi||exe
 no|grub4dos||exe,dev>null,doc,nls
-no|gsettings-desktop-schemas|gsettings-desktop-schemas|exe,dev #needs d-conf.
+yes|gsettings-desktop-schemas|gsettings-desktop-schemas|exe,dev,doc,nls||deps:yes #needs d-conf.
 no|gsm|libgsm1,libgsm1-dev|exe,dev,doc,nls
 no|gstreamer1|libgstreamer1.0-0,libgstreamer-plugins-base1.0-0|exe,dev,doc,nls
 yes|gtk+|libgtk2.0-0,libgtk2.0-dev|exe,dev,doc,nls||deps:yes

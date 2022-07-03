@@ -1,10 +1,10 @@
 download() {
-    [ -f dwl-583f471cfe61f9f92d238ad2d2d9a9db29e40aa5.zip ] || wget -t 3 -T 60 -O dwl-583f471cfe61f9f92d238ad2d2d9a9db29e40aa5.zip https://github.com/djpohly/dwl/archive/583f471cfe61f9f92d238ad2d2d9a9db29e40aa5.zip
+    [ -f dwl-7cc6c640e2412935bf195ec55dafeb5852c71dd1.zip ] || wget -t 3 -T 60 -O dwl-7cc6c640e2412935bf195ec55dafeb5852c71dd1.zip https://github.com/djpohly/dwl/archive/7cc6c640e2412935bf195ec55dafeb5852c71dd1.zip
 }
 
 build() {
-    unzip dwl-583f471cfe61f9f92d238ad2d2d9a9db29e40aa5.zip
-    cd dwl-583f471cfe61f9f92d238ad2d2d9a9db29e40aa5
+    unzip dwl-7cc6c640e2412935bf195ec55dafeb5852c71dd1.zip
+    cd dwl-7cc6c640e2412935bf195ec55dafeb5852c71dd1
     patch -p1 < ../dwl-kiosk.patch
     sed -e s/^#XWAYLAND/XWAYLAND/ -e s/^#XLIBS/XLIBS/ -i config.mk
     cp -f ../config.h .
