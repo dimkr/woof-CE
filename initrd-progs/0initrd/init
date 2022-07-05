@@ -431,7 +431,9 @@ setup_onepupdrv() {
  if ! [ "$ONE_LAYER" ] ; then
    return 4 #sfs mount failed
  fi
- if [ -f $SFS_MP/etc/rc.d/PUPSTATE ]; then
+ if [ -n "$punionfs" ]; then
+  UNIONFS="$punionfs"
+ elif [ -f $SFS_MP/etc/rc.d/PUPSTATE ]; then
   . $SFS_MP/etc/rc.d/PUPSTATE
   [ -n "$PUNIONFS" ] && UNIONFS="$PUNIONFS"
  fi
