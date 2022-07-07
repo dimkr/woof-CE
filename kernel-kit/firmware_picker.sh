@@ -135,6 +135,23 @@ do
 		fi		
 	done
 done
+
+# some drivers use format strings and choose firmware to load at runtime without
+# specifying firmware= in modinfo, so we have to guess
+find "$module_dir" -type f -name "*.ko" | while read M; do strings -a $M; done |
+grep -E -- '-%.*\.[a-zA-Z0-9]+$' # intel/ibt-%u-%u.sfi, -%4.4x-%4.4x
+sed 's/%[0-9]*\.*[0-9]*[a-z]/\*/g' | # intel/ibt-*-*.sfi, -*-*
+sort |
+uniq |
+grep -E '[a-zA-Z0-9-]*/.+\..+' | # intel/ibt-*-*.sfi
+while read PAT; do
+	find "$SRC_FW_DIR" -path "$SRC_FW_DIR/$PAT" | while read F;do
+		[ -e /lib/firmware/${F#$SRC_FW_DIR/} ] && continue
+		cp -r $SRC_FW_DIR/${F#$SRC_FW_DIR/} $FIRMWARE_RESULT_DIR/${F#$SRC_FW_DIR/}
+		fw_msg $fw $fw_tmp_list # log to zdrv
+	done
+done
+
 # extra firmware from other sources
 if [ "$EXTRA_FW" = 'yes' ];then
 	./firmware_extra.sh
