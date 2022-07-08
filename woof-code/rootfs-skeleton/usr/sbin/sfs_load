@@ -58,7 +58,7 @@ if [ -L /bin -o -L /sbin -o -L /lib -o -L /lib64 -o -L /lib32 -o -L /libx32 ]; t
    mkdir -p /mnt/"$MNTFLD"
    DEVLOOP="$(losetup -f)"
    losetup "$DEVLOOP" "$1"
-   mount -r -t squashfs -o loop,ro "$DEVLOOP" /mnt/$MNTFLD
+   mount -r -o loop,ro "$DEVLOOP" /mnt/$MNTFLD
   
    FLD_INVALID=""
   
@@ -1305,10 +1305,10 @@ append_sfs() {
 		STATUS=-1
 	fi
 	if [ $STATUS -eq 0 ]; then
-		mount -r -t squashfs -o noatime "$LOOPDEV" "$MNTPNT" # v1.3.9
+		mount -r -o noatime "$LOOPDEV" "$MNTPNT" # v1.3.9
 		STATUS=$?
 	else
-		mount -r -t squashfs -o loop,noatime "$EXTRASFSSAFE" "$MNTPNT"
+		mount -r -o loop,noatime "$EXTRASFSSAFE" "$MNTPNT"
 		STATUS=$?
 		[ $STATUS -eq 0 ] ||  LOOPDEV=""
 	fi
@@ -2425,10 +2425,10 @@ if [ "$MNTPNT" = "" ]; then
 	mkdir -p "$MNTPNT"
 	STATUS=0
 	if [ "$LOOPDEV" != "" ]; then
-		mount -r -t squashfs "$LOOPDEV" "$MNTPNT" # v1.3.9
+		mount -r "$LOOPDEV" "$MNTPNT" # v1.3.9
 		STATUS=$?
 	else
-		mount -r -t squashfs -o loop "$EXTRASFS" "$MNTPNT" # v1.3.9
+		mount -r -o loop "$EXTRASFS" "$MNTPNT" # v1.3.9
 		STATUS=$?
 	fi
 	if [ $STATUS -ne 0 ]; then

@@ -416,7 +416,7 @@ setup_onepupdrv() {
  SFS_MP="/pup_${ONE_SFX}"
  [ "$ONE_SFX" = "p" ] && SFS_MP="/pup_ro2"
  [ -d "$SFS_MP" ] || mkdir $SFS_MP
- mount -r -t squashfs -o noatime $ONE_LOOP $SFS_MP > /dev/console 2>&1
+ mount -r -o noatime $ONE_LOOP $SFS_MP > /dev/console 2>&1
  STATUS=$? ; check_status $STATUS
  [ $STATUS -eq 0 ] && ONE_LAYER="$SFS_MP=rr"
  # ======= end of load_sfs_file()

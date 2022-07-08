@@ -1081,7 +1081,7 @@ $(gettext 'your PC for all installations of Puppy and other operating systems)')
 			FREEDEV=$(losetup -f)
 			losetup ${FREEDEV} "${SRCPATH}/${SFS}" #100913
 			mkdir -p ${DESTMNTPT}/srcmntpt
-			mount -r -t squashfs ${FREEDEV} ${DESTMNTPT}/srcmntpt
+			mount -r ${FREEDEV} ${DESTMNTPT}/srcmntpt
 			cp -a --remove-destination ${DESTMNTPT}/srcmntpt/* ${DESTMNTPT}/ || {
 				[ "$SFS" = "$DISTRO_PUPPYSFS" ] && fatal
 			}

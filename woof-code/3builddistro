@@ -980,7 +980,11 @@ if [ "$BUILD_SFS" = 'yes' ]; then
 	#build the rootfs-complete sfs...
 	echo -e "\nNow building the main f.s., ${PUPPYSFS}..."
 	rm -f build/${PUPPYSFS} 2>/dev/null
-	mksquashfs rootfs-complete build/${PUPPYSFS} ${SFSCOMP} #100911 110713
+	if [ "$SFSFS" = "erofs" ]; then
+		mkfs.erofs -z lz4hc build/${PUPPYSFS} rootfs-complete
+	else
+		mksquashfs rootfs-complete build/${PUPPYSFS} ${SFSCOMP} #100911 110713
+	fi
 	###########
 	if [ -d bdrv -o -d adrv -o -d fdrv -o -d ydrv ];then
 		#build the {a,f,y}drive sfs...
@@ -997,7 +1001,11 @@ if [ "$BUILD_SFS" = 'yes' ]; then
 			rm -f build/${TYPE_SYS_SFS} 2>/dev/null
 			[ -d ${SYS_SFS}/root ] && busybox chmod 700 ${SYS_SFS}/root
 			[ -d ${SYS_SFS}/home/spot ] && busybox chmod 700 ${SYS_SFS}/home/spot
-			mksquashfs $SYS_SFS build/${TYPE_SYS_SFS} ${SFSCOMP} #170330
+			if [ "$SFSFS" = "erofs" ]; then
+				mkfs.erofs -z lz4hc build/${TYPE_SYS_SFS} $SYS_SFS
+			else
+				mksquashfs $SYS_SFS build/${TYPE_SYS_SFS} ${SFSCOMP} #170330
+			fi
 			[ -n "$GITHUB_ACTIONS" ] && rm -rf $SYS_SFS
 		done
 	fi

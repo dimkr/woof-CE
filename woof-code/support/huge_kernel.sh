@@ -59,7 +59,7 @@ if [ -d '../kernel-kit/output' ];then
 			FREEDEV=$(losetup -f)
 			losetup ${FREEDEV} ${FDRIVE}
 			mkdir -p /mnt/fdrv
-			mount -r -t squashfs ${FREEDEV} /mnt/fdrv
+			mount -r ${FREEDEV} /mnt/fdrv
 			mkdir -p fdrv #we're in sandbox3
 			echo "copying files..."
 			cp -a -u --remove-destination /mnt/fdrv/* fdrv/
