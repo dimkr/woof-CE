@@ -59,7 +59,11 @@ fi
 . /etc/rc.d/wl_func
 apply_pthemerc
 
-[ "$GDK_BACKEND" != "x11" ] && xdg_autostart.sh
+if [ "$GDK_BACKEND" = "x11" ]; then
+	/sbin/pup_event_frontend_d &
+else
+	xdg_autostart.sh
+fi
 /usr/sbin/delayedrun &
 
 [ "$GDK_BACKEND" != "x11" ] && yambar -c $XDG_RUNTIME_DIR/yambar-config.yml >/dev/null 2>&1 &
@@ -76,4 +80,6 @@ if [ "$GDK_BACKEND" = "x11" ]; then
 	CURRENTWM="`cat /etc/windowmanager 2>/dev/null`"
 	[ -z "$CURRENTWM" -o -z "`command -v $CURRENTWM`" ] && CURRENTWM="jwm"
 	$CURRENTWM &
+else
+	exec dwl-send /tmp/dwl.socket
 fi
