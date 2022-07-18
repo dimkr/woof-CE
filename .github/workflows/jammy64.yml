@@ -107,7 +107,9 @@ jobs:
         sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
         sudo ln -s bash /bin/ash
     - name: merge2out
-      run: yes "" | sudo -E ./merge2out woof-distro/x86_64/ubuntu/jammy64
+      run: |
+        yes "" | sudo -E ./merge2out woof-distro/x86_64/ubuntu/jammy64
+        sudo chown -R root:root ../woof-out_*
     - name: Set name
       run: sudo sed -i 's/^DISTRO_NAME=.*/DISTRO_NAME="Vanilla Upup"/' ../woof-out_*/DISTRO_SPECS
     - name: Set version
