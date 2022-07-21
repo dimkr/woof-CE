@@ -26,6 +26,7 @@ static const Layout layouts[] = {
 	{ "[]=",      tile },
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
+	{ "@|@",      snail },
 };
 
 /* monitors */
@@ -35,7 +36,7 @@ static const MonitorRule monrules[] = {
 	{ "eDP-1",    0.5,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL },
 	*/
 	/* defaults */
-	{ NULL,       0.55, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL },
+	{ NULL,       0.64, 1,      1,    &layouts[3], WL_OUTPUT_TRANSFORM_NORMAL },
 };
 
 /* keyboard */
@@ -103,7 +104,7 @@ static const char *termcmd[] = { "footclient", NULL };
 static const char *defaulttermcmd[] = { "defaultterminal", NULL };
 static const char *runcmd[] = { "defaultrun", NULL };
 static const char *lockcmd[] = { "puplock", NULL };
-static const char *menucmd[] = { "bemenu-run", NULL };
+static const char *menucmd[] = { "tofi-exec", NULL };
 static const char *brightnessupcmd[] = { "brightnessctl", "set", "+10%", NULL };
 static const char *brightnessdowncmd[] = { "brightnessctl", "set", "10%-", NULL };
 static const char *volumeupcmd[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+1%", NULL };
@@ -128,6 +129,7 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                    XKB_KEY_s,          setlayout,      {.v = &layouts[3]} },
 	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
 	{ MODKEY,                    XKB_KEY_e,         togglefullscreen, {0} },
