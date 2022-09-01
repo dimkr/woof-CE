@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-20.04
     container:
       image: ${{ matrix.image }}
+    continue-on-error: true
     strategy:
       matrix:
         include:
