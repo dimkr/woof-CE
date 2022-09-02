@@ -1,3 +1,9 @@
 #!/bin/ash
 
-exec Xwayland "$@" -auth ~/.Xauthority
+EXEC=`command -v Xwayland`
+if [ -z "$EXEC" ]; then
+    yad --center --title="Xwayland" --text="Legacy X11 application support requires Xwayland." --image=dialog-error --button=gtk-ok:0 --window-icon=dialog-error
+    exit 1
+fi
+
+exec "$EXEC" "$@" -auth ~/.Xauthority
