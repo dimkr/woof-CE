@@ -6,6 +6,11 @@
 kver=$1
 kseries=$(echo $kver | cut -f1-2 -d '.')
 
+if [ "$kseries" = "5.10" ] ; then
+	vercmp $kver ge 5.10.140 && patch -N -p1 < ../patches/aufs_sources/k5.10.140.patch
+	exit 0
+fi
+
 if [ "$kseries" = "3.4" ] ; then
 	if vercmp $kver ge 3.4.112 ; then
 		# In patch patch-3.4.112, fs/file_table.c was severely altered

@@ -1,0 +1,11 @@
+diff -rupN aufs5-standalone-orig/aufs5-base.patch aufs5-standalone/aufs5-base.patch
+--- aufs5-standalone-orig/aufs5-base.patch	2022-09-02 05:32:14.370102264 +0000
++++ aufs5-standalone/aufs5-base.patch	2022-09-02 05:32:49.065457749 +0000
+@@ -166,7 +166,6 @@ index 56eba723477e..e60d8ad85400 100644
+  }
+  
+  void emergency_thaw_all(void);
+-+extern int __sync_filesystem(struct super_block *, int);
+  extern int sync_filesystem(struct super_block *);
+  extern const struct file_operations def_blk_fops;
+  extern const struct file_operations def_chr_fops;
