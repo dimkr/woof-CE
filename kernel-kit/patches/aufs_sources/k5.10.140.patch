@@ -1,7 +1,27 @@
-diff -rupN aufs5-standalone-orig/aufs5-base.patch aufs5-standalone/aufs5-base.patch
---- aufs5-standalone-orig/aufs5-base.patch	2022-09-02 05:32:14.370102264 +0000
-+++ aufs5-standalone/aufs5-base.patch	2022-09-02 05:32:49.065457749 +0000
-@@ -166,7 +166,6 @@ index 56eba723477e..e60d8ad85400 100644
+diff -rupN '--exclude=.git' aufs5-standalone-orig/aufs5-base.patch aufs5-standalone/aufs5-base.patch
+--- aufs5-standalone-orig/aufs5-base.patch	2022-09-02 05:50:06.529947673 +0000
++++ aufs5-standalone/aufs5-base.patch	2022-09-02 05:47:03.476599178 +0000
+@@ -134,19 +134,6 @@ index 866d5c2367b2..55b535626208 100644
+  {
+  	int ret;
+  
+-diff --git a/fs/sync.c b/fs/sync.c
+-index 1373a610dc78..b7b5a0a0df6f 100644
+---- a/fs/sync.c
+-+++ b/fs/sync.c
+-@@ -28,7 +28,7 @@
+-  * wait == 1 case since in that case write_inode() functions do
+-  * sync_dirty_buffer() and thus effectively write one block at a time.
+-  */
+--static int __sync_filesystem(struct super_block *sb, int wait)
+-+int __sync_filesystem(struct super_block *sb, int wait)
+- {
+- 	if (wait)
+- 		sync_inodes_sb(sb);
+ diff --git a/include/linux/fs.h b/include/linux/fs.h
+ index 42d246a94228..2cc1a02e444c 100644
+ --- a/include/linux/fs.h
+@@ -179,7 +166,6 @@ index 42d246a94228..2cc1a02e444c 100644
   }
   
   void emergency_thaw_all(void);
@@ -9,3 +29,43 @@ diff -rupN aufs5-standalone-orig/aufs5-base.patch aufs5-standalone/aufs5-base.pa
   extern int sync_filesystem(struct super_block *);
   extern const struct file_operations def_blk_fops;
   extern const struct file_operations def_chr_fops;
+diff -rupN '--exclude=.git' aufs5-standalone-orig/aufs5-standalone.patch aufs5-standalone/aufs5-standalone.patch
+--- aufs5-standalone-orig/aufs5-standalone.patch	2022-09-02 05:50:06.529947673 +0000
++++ aufs5-standalone/aufs5-standalone.patch	2022-09-02 05:47:34.804265327 +0000
+@@ -149,18 +149,6 @@ index 55b535626208..c13ac0fbac31 100644
+  
+  /**
+   * splice_direct_to_actor - splices data directly between two non-pipes
+-diff --git a/fs/sync.c b/fs/sync.c
+-index b7b5a0a0df6f..fa5c7fba7f1b 100644
+---- a/fs/sync.c
+-+++ b/fs/sync.c
+-@@ -39,6 +39,7 @@ int __sync_filesystem(struct super_block *sb, int wait)
+- 		sb->s_op->sync_fs(sb, wait);
+- 	return __sync_blockdev(sb->s_bdev, wait);
+- }
+-+EXPORT_SYMBOL_GPL(__sync_filesystem);
+- 
+- /*
+-  * Write out and wait upon all dirty data associated with this
+ diff --git a/fs/xattr.c b/fs/xattr.c
+ index cd7a563e8bcd..7d989d57b0f0 100644
+ --- a/fs/xattr.c
+diff -rupN '--exclude=.git' aufs5-standalone-orig/fs/aufs/vfsub.c aufs5-standalone/fs/aufs/vfsub.c
+--- aufs5-standalone-orig/fs/aufs/vfsub.c	2022-09-02 05:50:06.537947874 +0000
++++ aufs5-standalone/fs/aufs/vfsub.c	2022-09-02 05:49:30.789146574 +0000
+@@ -42,7 +42,13 @@ int vfsub_sync_filesystem(struct super_b
+ 
+ 	lockdep_off();
+ 	down_read(&h_sb->s_umount);
+-	err = __sync_filesystem(h_sb, wait);
++	if (wait)
++		sync_inodes_sb(sb);
++	else
++		writeback_inodes_sb(sb, WB_REASON_SYNC);
++	if (sb->s_op->sync_fs)
++		sb->s_op->sync_fs(sb, wait);
++	err = __sync_blockdev(sb->s_bdev, wait);
+ 	up_read(&h_sb->s_umount);
+ 	lockdep_on();
+ 
