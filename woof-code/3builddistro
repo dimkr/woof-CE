@@ -64,7 +64,7 @@ mkdir -p sandbox3
 #now build rootfs-complete, the main filesystem...
 echo
 echo "Now building sandbox3/rootfs-complete, with the complete filesystem..."
-echo '#!/bin/sh' > sandbox3/pinstall.sh
+echo '#!/bin/sh -x' > sandbox3/pinstall.sh
 rm -rf sandbox3/rootfs-complete
 rm -rf sandbox3/devx
 rm -rf sandbox3/docx ${DOCXSFS}
