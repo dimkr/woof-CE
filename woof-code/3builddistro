@@ -909,7 +909,7 @@ if grep -q '^spot:' rootfs-complete/etc/passwd ; then
 fi
 (
 	cd rootfs-complete
-	echo "$EXTRA_COMMANDS" | while read i ; do eval $i ; done
+	echo "$EXTRA_COMMANDS" | (set -x; while read i ; do eval $i ; done; set +x)
 )
 
 rm -rf rootfs-complete/tmp/* #121123 some above chroot operations may have left something behind in here.
