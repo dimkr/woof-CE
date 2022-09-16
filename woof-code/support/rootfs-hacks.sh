@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 echo
 echo "Executing ${0}.."
