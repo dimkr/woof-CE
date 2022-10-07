@@ -35,7 +35,7 @@ yes|aalib|libaa1|exe,dev>null,doc,nls| #ascii library, needed by mplayer, gphoto
 yes|abiword||exe,dev>null,doc,nls|
 yes|acl|acl,libacl1,libacl1-dev|exe,dev,doc,nls
 yes|acpi|acpi|exe,dev,doc,nls
-yes|acpid-busibox||exe
+no|acpid-busibox||exe
 yes|adduser|adduser|exe>null,dev>null,doc>null,nls>null
 yes|advancecomp|advancecomp|exe>dev,dev,doc,nls
 yes|alsa-base|alsa-base|exe,dev,doc,nls
@@ -45,7 +45,6 @@ yes|alsa-lib|libasound2,libasound2-data,alsa-topology-conf,alsa-ucm-conf,libasou
 yes|libasound2-plugins-pulseonly|libasound2-plugins|exe,dev,doc,nls
 yes|alsa-utils|alsa-utils|exe,dev,doc,nls
 no|alsa_zzBTfix||exe,dev,doc,nls| #alsa recompiled with --disable-thread-safety for bluez-alsa
-no|alsaequal||exe| #needed by pequalizer.
 yes|apparmor|libapparmor1|exe,dev,doc,nls| #ADDED 20151029
 no|apulse||exe,dev,doc,nls
 yes|aria2|aria2,libc-ares2,libaria2,libaria2-0,libaria-dev,libc-ares-dev,libssh2-1,libssh2-1-dev|exe,dev,doc,nls
@@ -86,7 +85,7 @@ yes|bzip2|bzip2,libbz2-1.0,libbz2-dev|exe,dev,doc,nls
 yes|ca-certificates|ca-certificates|exe,dev,doc,nls
 yes|cairo|libcairo2,libcairo2-dev,libcairo-gobject2,libcairo-gobject2,libcairo-script-interpreter2|exe,dev,doc,nls
 yes|cairomm|libcairomm-1.0-1v5,libcairomm-1.0-dev|exe,dev,doc,nls| ###PROBLEM TODO### this pkg supposed to go entirely into upup/cairomm_DEV but not right. see also glibmm, gtkmm, pangomm ###TODO###
-yes|caps||exe,dev,doc,nls|
+no|caps||exe,dev,doc,nls|
 yes|ccache|ccache|exe>dev,dev,doc>dev|
 yes|cdparanoia|cdparanoia,libcdparanoia0,libcdparanoia-dev|exe,dev,doc,nls
 yes|cdrkit|genisoimage,wodim,icedax|exe,dev,doc,nls
@@ -180,8 +179,8 @@ yes|flac|flac,libflac8,libflac-dev|exe,dev,doc,nls
 yes|flex|flex|exe>dev,dev,doc,nls
 no|flsynclient||exe
 no|fonts-arphic-ukai|fonts-arphic-ukai|exe,dev,doc,nls
-yes|fonts-emojione|fonts-emojione|exe,dev,doc,nls
-yes|fonts-liberation|fonts-liberation|exe,dev,doc,nls
+yes|fonts-liberation2|fonts-liberation2|exe,dev,doc,nls||deps:yes
+yes|fonts-noto-color-emoji|fonts-noto-color-emoji|exe,dev,doc,nls||deps:yes
 yes|foomatic-db-engine|foomatic-db-engine|exe,dev,doc,nls
 yes|foomatic-filters|foomatic-filters|exe,dev,doc,nls
 yes|fpm2||exe,dev,doc,nls
@@ -448,7 +447,7 @@ yes|liblz4|liblz4-1|exe,dev,doc
 yes|libmad|libmad0,libmad0-dev|exe,dev,doc,nls
 yes|libmbed|libmbedx509-0,libmbedcrypto3|exe,dev,doc,nls
 yes|libmcrypt|libmcrypt4,libmcrypt-dev|exe,dev,doc,nls
-yes|libmirclient|libcapnp-*,libcapnp-dev,libmirclient9,libmirclient-dev,libmircommon7,libmircommon-dev,libmircore1,libmircore-dev,libmirprotobuf3,libprotobuf-lite17,libwayland-egl1,libwayland-egl1-mesa|exe,dev,doc,nls
+yes|libmirclient|libcapnp-*,libcapnp-dev,libmirclient9,libmirclient-dev,libmircommon7,libmircommon-dev,libmircore1,libmircore-dev,libmirprotobuf3,libprotobuf-lite17,libwayland-egl1-mesa|exe,dev,doc,nls
 yes|libmng|libmng2,libmng-dev|exe,dev,doc,nls
 yes|libmnl|libmnl0,libmnl-dev|exe,dev,doc,nls
 yes|libmpcdec|libmpcdec6,libmpcdec-dev|exe,dev,doc,nls
@@ -543,7 +542,7 @@ yes|libzstd|libzstd1,libzstd-dev|exe,dev,doc,nls
 yes|linux-header|linux-libc-dev|exe>dev,dev,doc,nls
 yes|lirc|liblircclient0,liblircclient-dev|exe,dev,doc,nls
 yes|ListDD||exe,dev,doc,nls|
-yes|llvm-cut|libllvm10|exe,dev,doc,nls
+yes|llvm-cut|libllvm12|exe,dev,doc,nls
 yes|lm-sensors|lm-sensors|exe,dev,doc,nls
 yes|lockstate||exe,dev,doc,nls
 yes|lsb-base|lsb-base|exe,dev,doc,nls
@@ -593,6 +592,7 @@ yes|nettle|libnettle7,nettle-dev|exe,dev,doc,nls| #needed by libarchive.
 no|network_roxapp||exe
 yes|normalize|normalize-audio|exe,dev,doc,nls
 yes|notecase||exe,dev,doc,nls
+yes|notification-daemon|notification-daemon|exe>null,dev>null,doc>null,nls>null
 yes|nrg2iso|nrg2iso|exe| #used by pburn.
 yes|nscd|unscd|exe
 yes|nspr|libnspr4,libnspr4-dev|exe,dev,doc,nls| #using seamonkey pkg with these built-in. 120913 enabled.
@@ -790,7 +790,7 @@ yes|vobcopy|vobcopy|exe,dev,doc,nls
 yes|vorbis-tools|vorbis-tools|exe,dev,doc,nls
 no|wag_profiles||exe| #taken out of net_setup pet, see forum t=82092&start=300
 yes|wavpack|wavpack|exe,dev,doc,nls
-yes|wayland|libwayland-client0,libwayland-cursor0,libwayland-dev,libwayland-server0|exe,dev,doc,nls| #needed by gtk+3. libwayland-server0 needed by gstreamer. GSTREAMER1.0 have taken out gtk3
+yes|wayland|libwayland-client0,libwayland-cursor0,libwayland-dev,libwayland-server0,libwayland-egl1|exe,dev,doc,nls| #needed by gtk+3. libwayland-server0 needed by gstreamer. GSTREAMER1.0 have taken out gtk3
 yes|wayland-protocols|wayland-protocols|exe>dev,dev| #needed for compiling gtk3 apps
 yes|wcpufreq||exe,dev,doc,nls| #using this instead of cpu-scaling-ondemand.
 yes|wget|wget,libpcre2-8-0|exe,dev>null,doc,nls
@@ -830,7 +830,7 @@ no|yad||exe,dev,doc,nls|
 yes|yahtzeez||exe,dev,doc,nls
 yes|yajl|libyajl2,libyajl-dev|exe,dev,doc,nls| #needed by raptor2.
 yes|yasm|yasm|exe>dev,dev,doc,nls|
-no|YASSM||exe|
+yes|YASSM||exe|
 no|ycalc||exe
 yes|zip|zip|exe,dev>null,doc,nls
 yes|zlib|zlib1g,zlib1g-dev|exe,dev,doc,nls
