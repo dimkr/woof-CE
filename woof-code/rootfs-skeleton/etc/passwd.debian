@@ -23,3 +23,4 @@ gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologi
 _apt:x:100:65534::/nonexistent:/usr/sbin/nologin
 webuser:x:1002:504:Linux User,,,:/root/Web-Server:/bin/sh
 sshd:x:1003:1003:sshd:/:
+finn:x:1001:100:Linux User,,,:/home/finn:/bin/sh
