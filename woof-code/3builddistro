@@ -668,6 +668,26 @@ rm -f rootfs-complete/etc/profile.d/*.csh* 2>/dev/null # slackware 13.1
 #sanity check...
 echo
 
+#shared library loading...
+mkdir -p rootfs-complete/etc/ld.so.conf.d/ # may not be there
+if [ "$USR_SYMLINKS" = "yes" ];then
+	echo "/root/my-applications/lib" > rootfs-complete/etc/ld.so.conf.d/my-applications.conf
+else
+	( # > rootfs-complete/etc/ld.so.conf
+		echo 'include /etc/ld.so.conf.d/*.conf'
+		echo "/lib${lsuffix}"
+		echo "/usr/lib${lsuffix}"
+		if [ "$ARCHDIR" = "x86_64-linux-gnu" ] ; then #WOOF_TARGETARCH='x86_64'
+			echo "/lib64"
+			echo "/usr/lib64"
+			echo -e "/lib64\n/usr/lib64" > rootfs-complete/etc/ld.so.conf.d/lib64.conf
+		fi
+		[ -d rootfs-complete/usr/local/lib${lsuffix} ] && echo "/usr/local/lib${lsuffix}"
+		[ -d rootfs-complete/opt/qt4/lib${lsuffix} ] && echo "/opt/qt4/lib${lsuffix}"
+		echo "/root/my-applications/lib"
+	) > rootfs-complete/etc/ld.so.conf
+fi
+
 if [ $CROSSBUILD -eq 0 -o -n "$QEMU" ];then #111123
 	strace -f chroot rootfs-complete echo 'testing chroot'
 	if [ $? -ne 0 ];then
