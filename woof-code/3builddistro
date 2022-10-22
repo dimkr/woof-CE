@@ -688,6 +688,7 @@ else
 	) > rootfs-complete/etc/ld.so.conf
 fi
 
+rm -f rootfs-complete/etc/ld.so.cache
 if [ $CROSSBUILD -eq 0 -o -n "$QEMU" ];then #111123
 	strace -f chroot rootfs-complete echo 'testing chroot'
 	if [ $? -ne 0 ];then
