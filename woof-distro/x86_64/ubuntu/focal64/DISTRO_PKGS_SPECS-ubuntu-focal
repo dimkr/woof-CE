@@ -181,8 +181,7 @@ no|flsynclient||exe
 no|fonts-arphic-ukai|fonts-arphic-ukai|exe,dev,doc,nls
 yes|fonts-liberation2|fonts-liberation2|exe,dev,doc,nls||deps:yes
 yes|fonts-noto-color-emoji|fonts-noto-color-emoji|exe,dev,doc,nls||deps:yes
-yes|foomatic-db-engine|foomatic-db-engine|exe,dev,doc,nls
-yes|foomatic-filters|foomatic-filters|exe,dev,doc,nls
+yes|foomatic-db-compressed-ppds|foomatic-db-compressed-ppds|exe,dev,doc,nls
 yes|fpm2||exe,dev,doc,nls
 yes|freeglut|freeglut3,freeglut3-dev|exe,dev,doc,nls
 no|freememapplet||exe|
