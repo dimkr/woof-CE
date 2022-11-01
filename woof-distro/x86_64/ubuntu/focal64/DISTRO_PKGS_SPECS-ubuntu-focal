@@ -542,7 +542,7 @@ yes|libzstd|libzstd1,libzstd-dev|exe,dev,doc,nls
 yes|linux-header|linux-libc-dev|exe>dev,dev,doc,nls
 yes|lirc|liblircclient0,liblircclient-dev|exe,dev,doc,nls
 yes|ListDD||exe,dev,doc,nls|
-yes|llvm-cut|libllvm10|exe,dev,doc,nls
+yes|llvm-cut|libllvm12|exe,dev,doc,nls
 yes|lm-sensors|lm-sensors|exe,dev,doc,nls
 yes|lockstate||exe,dev,doc,nls
 yes|lsb-base|lsb-base|exe,dev,doc,nls
