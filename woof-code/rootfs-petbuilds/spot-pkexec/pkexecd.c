@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
+#if defined(__NR_pidfd_open) && defined(__NR_pidfd_getfd)
+
 static inline
 int pidfd_open(pid_t pid, unsigned int flags)
 {
@@ -21,9 +23,12 @@ int pidfd_getfd(int pidfd, int targetfd, unsigned int flags)
 	return syscall(__NR_pidfd_getfd, pidfd, targetfd, flags);
 }
 
+#endif
+
 static
 void exec_child(const pid_t pid, char *argv[])
 {
+#if defined(__NR_pidfd_open) && defined(__NR_pidfd_getfd)
 	int fd, i, pid_fd;
 
 	if ((pid_fd = pidfd_open(pid, 0)) < 0) return;
@@ -38,6 +43,9 @@ void exec_child(const pid_t pid, char *argv[])
 	}
 
 	close(pid_fd);
+#else
+#	warning stdio redirection is unsupported
+#endif
 
 	execvp(argv[0], argv);
 }
