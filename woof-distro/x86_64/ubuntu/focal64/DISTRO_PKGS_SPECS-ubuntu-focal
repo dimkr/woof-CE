@@ -35,7 +35,7 @@ yes|aalib|libaa1|exe,dev>null,doc,nls| #ascii library, needed by mplayer, gphoto
 yes|abiword||exe,dev>null,doc,nls|
 yes|acl|acl,libacl1,libacl1-dev|exe,dev,doc,nls
 yes|acpi|acpi|exe,dev,doc,nls
-yes|acpid-busibox||exe
+no|acpid-busibox||exe
 yes|adduser|adduser|exe>null,dev>null,doc>null,nls>null
 yes|advancecomp|advancecomp|exe>dev,dev,doc,nls
 yes|alsa-base|alsa-base|exe,dev,doc,nls
