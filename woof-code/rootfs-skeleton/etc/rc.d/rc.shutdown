@@ -86,6 +86,8 @@ do
    $service_script stop
   fi
 done
+killall klogd 2>/dev/null
+killall syslogd 2>/dev/null
 #note, /etc/rc.d/rc.services does same, with 'start' parameter.
 
 [ "$PUNIONFS" = "aufs" ] && sfs_load --cli stop
