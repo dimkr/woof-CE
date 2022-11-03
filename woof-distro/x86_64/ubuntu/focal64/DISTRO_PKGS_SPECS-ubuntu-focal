@@ -102,6 +102,7 @@ yes|conky|conky-all,libaudclient2,libxmmsclient6,libxnvctrl0|exe,dev,doc,nls
 yes|conky-gtk||exe,dev,doc,nls
 yes|copy-fast||exe|
 yes|coreutils|coreutils|exe,dev>null,doc,nls
+yes|connman|connman|exe,dev,doc,nls
 yes|cmake|cmake,cmake-data,cmake-curses-gui|exe>dev,dev,doc,nls
 yes|colord|libcolord2,libcolord-dev|exe,dev,doc,nls| #needed by gtk+3.
 yes|cpio|cpio|exe,dev>null,doc,nls
