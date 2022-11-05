@@ -54,7 +54,7 @@ echo '
         <button image-position="2">
           <label>'$(gettext 'Theming')'</label>
           '"`/usr/lib/gtkdialog/xml_button-icon puppy_theme.svg huge`"'' >> $HOME/.jwm/tmp/pdesktop_xml
-          [ "`which ptheme`" ] && echo '<action>/usr/sbin/ptheme &</action>' >> $HOME/.jwm/tmp/pdesktop_xml || echo '<action>cd /usr/local/jwm_config; ./theme_switcher &</action><action>cd /usr/local/jwm_config; ./window_buttons &</action>' >> $HOME/.jwm/tmp/pdesktop_xml
+          [ "`which ptheme`" ] && echo '<action>/usr/sbin/ptheme &</action>' >> $HOME/.jwm/tmp/pdesktop_xml || echo '<action>ptheme_gtk &</action><action>cd /usr/local/jwm_config; ./theme_switcher &</action><action>cd /usr/local/jwm_config; ./window_buttons &</action>' >> $HOME/.jwm/tmp/pdesktop_xml
         echo '</button>
         <button image-position="2">
           <label>'$(gettext 'Font')'</label>
@@ -70,6 +70,11 @@ echo '
       </hbox>
 
       <hbox spacing="10" homogeneous="true" space-expand="true" space-fill="true">
+        <button image-position="2">
+          <label>'$(gettext 'Cursor')'</label>
+          '"`/usr/lib/gtkdialog/xml_button-icon mouse_cursor.svg huge`"'
+          <action>pcur &</action>
+        </button>
         <togglebutton image-position="2">
           <label>'$(gettext 'Desktop Icons')'</label>
           '"`/usr/lib/gtkdialog/xml_button-icon desktop_icons.svg huge`"'
@@ -82,7 +87,6 @@ echo '
           <action>/usr/local/pwidgets/pwidgets &</action>
         </button>' >> $HOME/.jwm/tmp/pdesktop_xml || echo '<text><label>""</label></text>' >> $HOME/.jwm/tmp/pdesktop_xml
         echo '<text><label>""</label></text>
-        <text><label>""</label></text>
 	  </hbox>
     </frame>
   </vbox>
