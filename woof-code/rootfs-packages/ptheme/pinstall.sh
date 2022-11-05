@@ -8,7 +8,7 @@ echo
 [ -f ../build.conf ] && . ../build.conf # zwn - pwd -> $CHROOT_DIR
 #--
 
-for dtop in switch2 GTK-Chtheme icon_switcher Desktop-drive-icons; do
+for dtop in switch2 GTK-Chtheme; do
     [ -f "usr/share/applications/${dtop}.desktop" ] || continue
     if grep -q "^NoDisplay" usr/share/applications/${dtop}.desktop; then
         sed -i 's%NoDisplay=.*%NoDisplay=true%' usr/share/applications/${dtop}.desktop
@@ -37,12 +37,6 @@ echo "see $PWD/usr/share/ptheme/globals for available themes"
 echo "that you can specify in build.conf: PTHEME=<theme>"
 
 . usr/share/ptheme/globals/"${theme}"
-
-cat << EOF > root/.pthemerc
-PTHEME_GTK="$PTHEME_GTK"
-PTHEME_ICONS_GTK="$PTHEME_ICONS_GTK"
-PTHEME_MOUSE="$PTHEME_MOUSE"
-EOF
 
 ##### JWM
 [ ! -d root/.jwm ] && mkdir -p root/.jwm

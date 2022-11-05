@@ -163,6 +163,10 @@ and edit it to include your customised package list.
 			state=false
 			[ "$DISTRO_KERNEL_PET" = 'Huge_Kernel' -a "$ISOFLAG" ] && state=true
 			;;
+		ptheme)
+			state=false
+			[ "$PTHEME" ] && state=true
+			;;
 		*)
 			state=true
 			grep -q "yes|${d}|" $PKGSSPECS && state=false # don't overwrite user chosen specs
