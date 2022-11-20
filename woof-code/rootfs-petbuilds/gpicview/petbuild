@@ -11,5 +11,4 @@ build() {
         ./configure --prefix=/usr
     fi
     make install
-    sed 's/^Categories=.*/Categories=X-Graphic-viewer;/' -i /usr/share/applications/gpicview.desktop
 }

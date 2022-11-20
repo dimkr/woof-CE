@@ -8,5 +8,4 @@ build() {
     patch -p1 < ../defaults.patch
     ./configure --prefix=/usr --without-systemd --with-gtk
     make install
-    sed 's/^Categories=.*/Categories=FileTransfer;/' -i /usr/share/applications/transmission-gtk.desktop
 }

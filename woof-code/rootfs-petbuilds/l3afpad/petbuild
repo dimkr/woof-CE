@@ -8,6 +8,5 @@ build() {
     ./autogen.sh
     ./configure --prefix=/usr --disable-statistics
     make install
-    sed 's/^Categories=.*/Categories=TextEditor;/' -i /usr/share/applications/l3afpad.desktop
     ln -s l3afpad /usr/bin/leafpad
 }

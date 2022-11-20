@@ -7,6 +7,5 @@ build() {
     cd sylpheed-3.7.0
     ./configure --prefix=/usr --disable-updatecheck --disable-updatecheckplugin
     make install
-    sed 's/^Categories=.*/Categories=Email;/' -i /usr/share/applications/sylpheed.desktop
     rm -rf /usr/share/sylpheed /usr/lib/*.la /usr/lib/*.a /usr/include
 }

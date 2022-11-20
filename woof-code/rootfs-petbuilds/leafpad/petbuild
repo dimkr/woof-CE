@@ -7,5 +7,4 @@ build() {
     cd leafpad-0.8.17
     ./configure --prefix=/usr --disable-chooser
     make install
-    sed 's/^Categories=.*/Categories=TextEditor;/' -i /usr/share/applications/leafpad.desktop
 }
