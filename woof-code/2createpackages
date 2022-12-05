@@ -340,7 +340,7 @@ do
 	esac
  done <<< "${FNDIT}"
  [ ! "$XDBENTRY" ] && read -r XDBENTRY <<< "${FNDIT}"
- if [ -d ${PKG_DIR}/usr/share/applications ] ; then
+ if [ "$FIX_DESKTOP_FILES" != "no" -a -d ${PKG_DIR}/usr/share/applications ] ; then
 	./support/2createpackages.fix.desktop.files.sh "${PKG_DIR}" "$XDBENTRY"
  fi
  #====================================================================

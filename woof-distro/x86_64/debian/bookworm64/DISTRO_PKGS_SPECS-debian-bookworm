@@ -86,7 +86,6 @@ yes|gnutls|libgnutls30,libgnutls28-dev|exe,dev,doc,nls||deps:yes
 yes|grep|grep|exe,dev>null,doc,nls||deps:yes
 yes|groff|groff,groff-base|exe,dev,doc,nls||deps:yes
 yes|gsettings-desktop-schemas|gsettings-desktop-schemas|exe,dev,doc,nls||deps:yes #needs d-conf.
-yes|gtk+3|libgtk-3-0,libgtk-3-dev,libgtk-3-common,gtk-update-icon-cache,adwaita-icon-theme|exe,dev,doc,nls||deps:yes #have taken out all gtk3 apps. 140127 still have gnome-mplayer --no
 yes|hdparm|hdparm|exe,dev>null,doc,nls||deps:yes
 yes|hicolor-icon-theme|hicolor-icon-theme|exe,dev>null,doc,nls||deps:yes
 yes|icu|libicu72,libicu-dev|exe,dev,doc,nls||deps:yes #scribus needs this though it is not listed as a dep. note, it is big, 7MB pkg. crap, better put it into main f.s. NO have manually put this dep into main db. harfbuzz needs icu also.
@@ -114,7 +113,6 @@ yes|man-db|man-db|exe,dev,doc,nls||deps:yes
 yes|ncurses|ncurses-base,ncurses-term,ncurses-bin,libncurses6,libncurses-dev,libncursesw6,libtinfo6|exe,dev,doc,nls||deps:yes
 yes|netbase|netbase|exe>null,dev>null,doc>null,nls>null
 yes|net-tools|net-tools|exe,dev,doc,nls||deps:yes
-yes|notification-daemon|notification-daemon|exe>null,dev>null,doc>null,nls>null
 yes|nscd|unscd|exe||deps:yes
 yes|ntfs-3g|ntfs-3g|exe,dev,doc,nls||deps:yes
 yes|ntpdate|ntpdate|exe,dev>exe,doc,nls||deps:yes #used by psync to sync local time and date from the internet.
@@ -171,7 +169,19 @@ yes|efibootmgr|efibootmgr|exe,dev,doc,nls||deps:yes
 "
 fi
 
-if [ "$DISTRO_VARIANT" != "dwl" ]; then
+if [ "$DISTRO_VARIANT" = "xfce" ]; then
+	PKGS_SPECS_TABLE="$PKGS_SPECS_TABLE
+yes|adwaita-icon-theme|adwaita-icon-theme|exe,dev,doc,nls||deps:yes
+yes|gtk+3|libgtk-3-0,libgtk-3-dev,libgtk-3-common,gtk-update-icon-cache|exe,dev,doc,nls||deps:yes
+"
+else
+	PKGS_SPECS_TABLE="$PKGS_SPECS_TABLE
+yes|gtk+3|libgtk-3-0,libgtk-3-dev,libgtk-3-common,gtk-update-icon-cache,adwaita-icon-theme|exe,dev,doc,nls||deps:yes
+yes|notification-daemon|notification-daemon|exe>null,dev>null,doc>null,nls>null
+"
+fi
+
+if [ "$DISTRO_VARIANT" != "dwl" -a "$DISTRO_VARIANT" != "xfce" ]; then
 	PKGS_SPECS_TABLE="$PKGS_SPECS_TABLE
 yes|vte|libvte-2.91-0,libvte-2.91-common,libvte-2.91-dev|exe,dev,doc,nls||deps:yes
 "
@@ -249,6 +259,12 @@ yes|mpv|mpv|exe,dev,doc,nls||deps:yes
 yes|patch|patch|exe,dev,doc,nls||deps:yes
 yes|putty|putty|exe,dev,doc,nls||deps:yes
 yes|xournalpp|xournalpp|exe,dev,doc,nls||deps:yes
+"
+fi
+
+if [ "$DISTRO_VARIANT" = "xfce" ]; then
+	PKGS_SPECS_TABLE="$PKGS_SPECS_TABLE
+yes|xfce|xfce4,xfce4-goodies,thunar-volman,xfce4-notifyd,xfce4-power-manager|exe,dev,doc,nls||deps:yes
 "
 fi
 
