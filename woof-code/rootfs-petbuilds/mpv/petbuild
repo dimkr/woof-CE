@@ -1,0 +1,11 @@
+download() {
+    [ -f mpv-0.35.0.tar.gz ] || wget -t 3 -T 60 -O mpv-0.35.0.tar.gz https://github.com/mpv-player/mpv/archive/refs/tags/v0.35.0.tar.gz
+}
+
+build() {
+    tar -xzf mpv-0.35.0.tar.gz
+    cd mpv-0.35.0
+    meson --buildtype=release --prefix=/usr --confdir=/etc/mpv build
+    ninja -C build install
+    rm -rf /usr/share/zsh
+}

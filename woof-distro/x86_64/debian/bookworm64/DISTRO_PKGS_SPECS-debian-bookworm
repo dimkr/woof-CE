@@ -245,7 +245,7 @@ yes|gpart|gpart|exe,dev,doc,nls||deps:yes
 yes|gparted|gparted|exe,dev,doc,nls||deps:yes
 yes|libva|vainfo,va-driver-all|exe,dev,doc,nls||deps:yes
 yes|make|make|exe,dev,doc,nls||deps:yes
-yes|mpv|mpv|exe,dev,doc,nls||deps:yes
+yes|mpv-deps|libavcodec-dev,libavfilter-dev,libass-dev,libva-dev,libvdpau-dev,libxss-dev,libxpresent-dev,libxv-dev,libpipewire-0.3-dev|exe,dev,doc,nls||deps:yes
 yes|patch|patch|exe,dev,doc,nls||deps:yes
 yes|putty|putty|exe,dev,doc,nls||deps:yes
 yes|xournalpp|xournalpp|exe,dev,doc,nls||deps:yes
