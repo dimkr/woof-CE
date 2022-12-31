@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-22.04
     container:
       image: debian:bullseye-slim
-      options: "--privileged --userns=host"
+      options: "--privileged --userns=host --pid=host"
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
