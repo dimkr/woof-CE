@@ -62,8 +62,8 @@ jobs:
           local-repositories-${{ inputs.arch }}-${{ inputs.compat-distro }}-${{ inputs.compat-distro-version }}-
     - name: Install dependencies
       run: |
-        sudo apt-get update -qq
-        sudo apt-get install -y --no-install-recommends sudo curl gcc patchelf dc debootstrap librsvg2-bin zstd xml2
+        apt-get update -qq
+        apt-get install -y --no-install-recommends sudo curl gcc patchelf dc debootstrap librsvg2-bin zstd xml2
         [ ${{ inputs.compat-distro }} != devuan ] || curl https://git.devuan.org/devuan/debootstrap/raw/branch/master/scripts/ceres | sudo tee /usr/share/debootstrap/scripts/`echo ${{ inputs.compat-distro-version }} | sed s/64$//`
     - name: Prepare build environment
       run: |
