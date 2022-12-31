@@ -1141,8 +1141,8 @@ if [ "$BUILD_DEVX" = "yes" ] ; then
 	done
 
 	echo "Now creating ${DEVXSFS} ..."
-	[ -d sandbox3/devx/root ] && busybox chmod 700 sandbox3/devx/root
-	[ -d sandbox3/devx/home/spot ] && busybox chmod 700 sandbox3/devx/home/spot
+	[ -d sandbox3/devx/root ] && chmod 700 sandbox3/devx/root
+	[ -d sandbox3/devx/home/spot ] && chmod 700 sandbox3/devx/home/spot
 	mksquashfs sandbox3/devx ./sandbox3/${DEVXSFS} ${SFSCOMP} #100911 110713
 	chmod 644 ./sandbox3/${DEVXSFS}
 	echo "...done"
