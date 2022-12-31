@@ -51,7 +51,7 @@ PUPINSTALL=${PUPDIR%/*}
 AMDM=1
 INTM=1
 LABEL=''
-grep -q "$PUPMNT" /proc/mounts && MTD=$?
+grep -q "$PUPMNT" /proc/mounts && MTD=$? || MTD=0
 if [ $MTD -ne 0 ];then
 	mkdir -p /mnt/special
 	mount /dev/$PUPMNT /mnt/special || exit 1
