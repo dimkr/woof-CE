@@ -916,11 +916,11 @@ if [ "$SDFLAG" != "" ];then
 fi
 
 # users shouldn't be able to read files under another home directory - i.e. leak .netrc
-busybox chmod 700 rootfs-complete/root rootfs-complete/home/spot
+chmod 700 rootfs-complete/root rootfs-complete/home/spot
 
 if grep -q '^spot:' rootfs-complete/etc/passwd ; then
 	echo "Setting ownership of /home/spot"
-	busybox chown -h -R `grep ^spot rootfs-complete/etc/passwd | cut -f 3 -d :`:`grep ^spot rootfs-complete/etc/group | cut -f 3 -d :` rootfs-complete/home/spot
+	chown -h -R `grep ^spot rootfs-complete/etc/passwd | cut -f 3 -d :`:`grep ^spot rootfs-complete/etc/group | cut -f 3 -d :` rootfs-complete/home/spot
 fi
 (
 	cd rootfs-complete
@@ -1056,8 +1056,8 @@ if [ "$BUILD_SFS" = 'yes' ]; then
 			esac
 			echo -e "\nNow building the $SYS_SFS f.s., $TYPE_SYS_SFS ..."
 			rm -f build/${TYPE_SYS_SFS} 2>/dev/null
-			[ -d ${SYS_SFS}/root ] && busybox chmod 700 ${SYS_SFS}/root
-			[ -d ${SYS_SFS}/home/spot ] && busybox chmod 700 ${SYS_SFS}/home/spot
+			[ -d ${SYS_SFS}/root ] && chmod 700 ${SYS_SFS}/root
+			[ -d ${SYS_SFS}/home/spot ] && chmod 700 ${SYS_SFS}/home/spot
 			mksquashfs $SYS_SFS build/${TYPE_SYS_SFS} ${SFSCOMP} #170330
 			[ -n "$GITHUB_ACTIONS" ] && rm -rf $SYS_SFS
 		done
