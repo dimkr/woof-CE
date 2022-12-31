@@ -40,7 +40,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     container:
-      image: ubuntu:jammy
+      image: debian:bullseye-slim
       options: "--privileged --userns=host"
     steps:
     - name: Checkout code
