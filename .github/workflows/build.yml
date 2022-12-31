@@ -63,7 +63,7 @@ jobs:
     - name: Install dependencies
       run: |
         apt-get update -qq
-        apt-get install -y --no-install-recommends sudo curl ca-certificates gcc libc6-dev make xz-utils bzip2 zip unzip cpio ccache patchelf dc debootstrap librsvg2-bin zstd xml2
+        apt-get install -y --no-install-recommends sudo curl ca-certificates gcc libc6-dev make xz-utils bzip2 zip unzip cpio patchelf dc debootstrap librsvg2-bin zstd xml2
         [ ${{ inputs.compat-distro }} != devuan ] || curl https://git.devuan.org/devuan/debootstrap/raw/branch/master/scripts/ceres | sudo tee /usr/share/debootstrap/scripts/`echo ${{ inputs.compat-distro-version }} | sed s/64$//`
     - name: Prepare build environment
       run: |
