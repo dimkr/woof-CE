@@ -63,7 +63,7 @@ jobs:
     - name: Install dependencies
       run: |
         apt-get update -qq
-        apt-get install -y --no-install-recommends sudo curl ca-certificates gcc libc6-dev xz-utils bzip2 patchelf dc debootstrap librsvg2-bin zstd xml2
+        apt-get install -y --no-install-recommends sudo curl ca-certificates gcc libc6-dev make g++ xz-utils bzip2 patchelf dc debootstrap librsvg2-bin zstd xml2
         [ ${{ inputs.compat-distro }} != devuan ] || curl https://git.devuan.org/devuan/debootstrap/raw/branch/master/scripts/ceres | sudo tee /usr/share/debootstrap/scripts/`echo ${{ inputs.compat-distro-version }} | sed s/64$//`
     - name: Prepare build environment
       run: |
@@ -165,7 +165,7 @@ jobs:
         cd ../woof-out_*
         sudo -E HOME=/root XDG_CONFIG_HOME=/root/.config ./3builddistro release
         sudo chown -R --reference ~ petbuild-{sources,cache,output}
-        sudo mv petbuild-{sources,cache,output} $GITHUB_WORKSPACE/
+        sudo mv petbuild-{sources,cache,output} ..
     - name: Move build output
       run: |
         for i in `ls ../woof-out_*/woof-output-*/*.{sfs,iso} 2>/dev/null`; do sudo mv -f $i .; done
