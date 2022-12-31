@@ -40,7 +40,7 @@ rm -f /tmp/ucode*.log /tmp/ucode*.tmp
 PKG_INTEL=
 PKG_AMD=
 PUPMNT=${PUPSFS%%,*}
-grep -q "$PUPMNT" /proc/mounts && MTD=$?
+grep -q "$PUPMNT" /proc/mounts && MTD=$? || MTD=1
 if [ $MTD -ne 0 ];then
 	MTPT=/mnt/ucode
 else
