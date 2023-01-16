@@ -20,18 +20,58 @@ on:
       arch:
         description: 'Architecture'
         required: false
+        type: choice
+        options:
+        - 'x86_64'
+        - 'x86'
         default: 'x86_64'
       compat-distro:
         description: 'Compatible distro'
         required: false
+        type: choice
+        options:
+        - 'ubuntu'
+        - 'slackware64'
+        - 'slackware'
+        - 'debian'
+        - 'devuan'
+        - 'void'
         default: 'ubuntu'
       compat-distro-version:
         description: 'Compatible distro version'
         required: false
         default: 'jammy64'
+        type: choice
+        options:
+        - 'jammy64'
+        - 'focal64'
+        - 'bionic64'
+        - 'upupjj+d'
+        - 'upupff+d'
+        - 'upupbb'
+        - 's15pup64'
+        - 's15pup32'
+        - '14.2'
+        - 'sid64'
+        - 'bookworm64'
+        - 'bullseye64'
+        - 'bookworm'
+        - 'bullseye'
+        - 'chimaera64'
+        - 'voidpup64'
+        - 'voidpup32'
       kernel:
         description: 'Kernel version'
         required: false
+        type: choice
+        options:
+        - 'debian-sid'
+        - 'debian-bookworm'
+        - 'debian-bullseye'
+        - '5.15.x'
+        - '5.10.x'
+        - '5.4.x'
+        - '4.19.x'
         default: '5.15.x'
       prefix:
         description: 'File name prefix'
