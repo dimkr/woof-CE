@@ -39,9 +39,13 @@ defaultPref("identity.fxaccounts.enabled", false);
 defaultPref("identity.fxaccounts.toolbar.enabled", false);
 defaultPref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 defaultPref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
+defaultPref("browser.tabs.firefox-view", false);
 
 // disable autoplay
 defaultPref("media.autoplay.default", 5);
+
+// use an external PDF viewer
+defaultPref("pdfjs.disabled", true);
 
 // privacy
 defaultPref("privacy.trackingprotection.enabled", true);
@@ -75,13 +79,6 @@ done < <(find -name omni.ja -or -name '*.xpi'))
 NLSDIR=`pwd`_NLS/$FFDIR/browser/extensions
 mkdir -p $NLSDIR
 mv -vf $FFDIR/browser/extensions/langpack-* $NLSDIR/
-
-# force Firefox to combine the tab bar with the tile bar, to save vertical space
-# and fix inconsistency with some GTK 3 themes
-mkdir -p etc/profile.d
-cat << EOF > etc/profile.d/firefox
-export MOZ_GTK_TITLEBAR_DECORATION=client
-EOF
 
 (
 echo "echo '"'#!/bin/sh'"' > usr/local/bin/defaultbrowser"
