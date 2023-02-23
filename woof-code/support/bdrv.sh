@@ -217,10 +217,13 @@ chmod 644 bdrv/usr/lib/os-release
 
 # add-shell needs these
 if [ "$USR_SYMLINKS" = "yes" ]; then
+	rm -f bdrv/usr/bin/chown
 	ln -s chown-FULL bdrv/usr/bin/chown
 else
+	rm -f bdrv/bin/chown
 	ln -s chown-FULL bdrv/bin/chown
 fi
+rm -f bdrv/usr/bin/realpath
 ln -s realpath-FULL bdrv/usr/bin/realpath
 
 # open .deb files with gdebi
