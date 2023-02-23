@@ -40,7 +40,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     container:
-      image: debian:bullseye-slim
+      image: debian:bookworm-slim
       options: "--privileged --userns=host --pid=host"
     steps:
     - name: Checkout code
