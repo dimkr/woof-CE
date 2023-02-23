@@ -160,6 +160,7 @@ jobs:
     - name: 3builddistro
       timeout-minutes: 180
       run: |
+        sudo mkdir -p petbuild-{sources,cache,output}
         sudo chown -R root:root petbuild-{sources,cache,output}
         sudo mv petbuild-{sources,cache,output} ../woof-out_*/
         cd ../woof-out_*
