@@ -260,7 +260,7 @@ function copy_pkgs_to_build() {
 
 echo "Copying to sandbox3/rootfs-complete..."
 EXTRAS_LIST=
-for PKG in ${ADRV_INC} ${YDRV_INC} ${FDRV_INC}; do
+for PKG in ${ADRV_INC} ${YDRV_INC} ${ZDRV_INC} ${FDRV_INC}; do
 	if [ -n "$EXTRAS_LIST" ]; then
 		EXTRAS_LIST="${EXTRAS_LIST}|${PKG}"
 	else
@@ -360,13 +360,14 @@ if [ "$DISTRO_BINARY_COMPAT" = "void" ]; then
 fi
 
 ### new {a,f,y}drv build - this sorts the packages and builds the {a,f,y}drv filesystem
-ADRV_INCLUDE='';FDRV_INCLUDE_='';YDRV_INCLUDE=''
+ADRV_INCLUDE='';ZDRV_INCLUDE_='';FDRV_INCLUDE_='';YDRV_INCLUDE=''
 [ "$(echo $ADRV_INC)" != "" ] && ADRV_INCLUDE=adrv
 [ "$(echo $FDRV_INC)" != "" ] && FDRV_INCLUDE=fdrv
+[ "$(echo $ZDRV_INC)" != "" ] && ZDRV_INCLUDE=zdrv
 [ "$(echo $YDRV_INC)" != "" ] && YDRV_INCLUDE=ydrv
-if [ -n "$ADRV_INCLUDE" -o -n "$FDRV_INCLUDE" -o -n "$YDRV_INCLUDE" ];then
+if [ -n "$ADRV_INCLUDE" -o -n "$ZDRV_INCLUDE" -o -n "$FDRV_INCLUDE" -o -n "$YDRV_INCLUDE" ];then
 	rm -f sandbox3/?pinstall.sh
-	for _DRV in  $ADRV_INCLUDE $FDRV_INCLUDE $YDRV_INCLUDE;do
+	for _DRV in  $ADRV_INCLUDE $FDRV_INCLUDE $ZDRV_INCLUDE $YDRV_INCLUDE;do
 		echo
 		echo "Now building sandbox3/${_DRV} with apps redirected to ${_DRV}_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs"
 		case ${_DRV} in
@@ -381,6 +382,18 @@ if [ -n "$ADRV_INCLUDE" -o -n "$FDRV_INCLUDE" -o -n "$YDRV_INCLUDE" ];then
 			[ "$USR_SYMLINKS" = "yes" ] && usrmerge sandbox3/adrv 0
 			chmod 755 sandbox3/apinstall.sh
 			echo;;
+		zdrv)
+			if [ -n "$GITHUB_ACTIONS" ]; then
+				echo '#!/bin/sh -x' > sandbox3/zpinstall.sh
+			else
+				echo '#!/bin/sh' > sandbox3/zpinstall.sh
+			fi
+			mkdir -p sandbox3/zdrv/
+			copy_pkgs_to_build "${ZDRV_INC}" zdrv
+			[ "$USR_SYMLINKS" = "yes" ] && usrmerge sandbox3/zdrv 0
+			chmod 755 sandbox3/zpinstall.sh
+			echo
+			CONF_DIR=no;;
 		fdrv)
 			if [ -n "$GITHUB_ACTIONS" ]; then
 				echo '#!/bin/sh -x' > sandbox3/fpinstall.sh
@@ -532,7 +545,7 @@ cd $WKGDIR/sandbox3/rootfs-complete
 $WKGDIR/sandbox3/pinstall.sh
 ( ### new {a,f,y}drv stuff - execute the '{a,f,y}pinstall.sh'
 	cd $WKGDIR/sandbox3/
-	for post_inst in adrv fdrv ydrv;do
+	for post_inst in adrv fdrv zdrv ydrv;do
 		[ -d "$post_inst" ] || continue
 		echo "configuring $post_inst"
 		prefix=${post_inst:0:1}
@@ -644,7 +657,11 @@ cp rootfs-complete/etc/DISTRO_SPECS ../initrd-progs/DISTRO_SPECS
 rm -f build/initrd.[gx]z ../initrd-progs/initrd.[gx]z
 (
 	cd ../initrd-progs/
-	./build.sh -prebuilt -auto -arch ${WOOF_TARGETARCH:-default} ${INITRD_LANG} ${INITRD_KM}
+	if [ -n "$ZDRV_INC" ]; then
+		./build.sh -prebuilt -auto -arch ${WOOF_TARGETARCH:-default} -modules $WKGDIR/sandbox3/zdrv
+	else
+		./build.sh -prebuilt -auto -arch ${WOOF_TARGETARCH:-default}
+	fi
 )
 mv -fv ../initrd-progs/initrd.[gx]z build/ || exit 1
 
@@ -1102,14 +1119,15 @@ if [ "$BUILD_SFS" = 'yes' ]; then
 	rm -f build/${PUPPYSFS} 2>/dev/null
 	mksquashfs rootfs-complete build/${PUPPYSFS} ${SFSCOMP} #100911 110713
 	###########
-	if [ -d bdrv -o -d adrv -o -d fdrv -o -d ydrv ];then
+	if [ -d bdrv -o -d adrv -o -d zdrv -o -d fdrv -o -d ydrv ];then
 		#build the {a,f,y}drive sfs...
-		for SYS_SFS in bdrv adrv fdrv ydrv
+		for SYS_SFS in bdrv adrv zdrv fdrv ydrv
 		do
 			[ ! -d "$SYS_SFS" ] && echo "no $SYS_SFS" && continue
 			case $SYS_SFS in
 				bdrv) TYPE_SYS_SFS="${BDRVSFS}";;
 				adrv) TYPE_SYS_SFS="${ADRVSFS}";;
+				zdrv) TYPE_SYS_SFS="${ZDRVSFS}";;
 				fdrv) TYPE_SYS_SFS="${FDRVSFS}";;
 				ydrv) TYPE_SYS_SFS="${YDRVSFS}";;
 			esac

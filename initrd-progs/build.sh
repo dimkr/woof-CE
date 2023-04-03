@@ -15,6 +15,7 @@ help_msg() {
 
 Options:
   -specs file : DISTRO_SPECS file to use
+  -modules : modules to copy to initrd
 
   Valid <targets> for -arch:
       ${ARCH_LIST} default
@@ -29,6 +30,8 @@ while [ "$1" ] ; do
 			       [ "$TARGET_ARCH" = "" ] && exit_error "$0 -arch: Specify a target arch" ;;
 		-specs)    DISTRO_SPECS="$2"   ; shift 2
 			       [ ! -f "$DISTRO_SPECS" ] && exit_error "$0 -specs: '${DISTRO_SPECS}' is not a regular file" ;;
+		-modules)    MODULES_DIR="$2"   ; shift 2
+			       [ ! -d "$MODULES_DIR" ] && exit_error "$0 -modules: '${MODULES_DIR}' is not a directory" ;;
 	-h|-help|--help) help_msg ; exit ;;
 		*) echo "Unrecognized option: $1" ; shift ;;
 	esac
@@ -96,6 +99,12 @@ generate_initrd() {
 	fi
 	[ -f "$DISTRO_SPECS" ] && cp -f ${V} "${DISTRO_SPECS}" .
 	[ -x ../init ] && cp -f ../init .
+
+	if [ -n "$MODULES_DIR" ]; then
+		cp -r ${MODULES_DIR}/* .
+		[ -d usr/lib/modules -a ! -d lib/modules ] && ln -s ../usr/lib/firmware /lib/
+		chroot . busybox depmod -a || exit 1
+	fi
 
 	. ./DISTRO_SPECS
 

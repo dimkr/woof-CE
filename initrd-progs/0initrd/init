@@ -55,6 +55,10 @@ L_SFFS_ERROR="ERROR: savefile filesystem is not ext2/3/4"
 
 /sbin/usablefs # mount: /proc /sys /dev / (proc sysfs devtmpfs rootfs)
 
+touch /dev/mdev.seq
+/bin/busybox mdev -s
+echo "/bin/busybox mdev" > /proc/sys/kernel/hotplug
+
 for i in $(cat /proc/cmdline) ; do
   case $i in
     fullinstall) exec ash /sbin/init_full_install ;;
@@ -1357,6 +1361,7 @@ if [ "$SAVEPART" -a "$UNIONFS" = 'overlay' -a -f /pup_new/etc/rc.d/BOOTCONFIG ];
  done
 fi
 
+echo "" >/proc/sys/kernel/hotplug
 umount_unneeded
 
 echo -n $(($TOTAL_SIZEK_SFS_RAM - 5)) > /tmp/sfs_ram_sizek
