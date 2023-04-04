@@ -102,7 +102,7 @@ generate_initrd() {
 
 	if [ -n "$MODULES_DIR" ]; then
 		cp -r ${MODULES_DIR}/* .
-		[ -d usr/lib/modules -a ! -d lib/modules ] && ln -s ../usr/lib/firmware /lib/
+		[ -d usr/lib/modules -a ! -d lib/modules ] && ln -s ../usr/lib/modules /lib/
 		chroot . busybox depmod -a || exit 1
 	fi
 
