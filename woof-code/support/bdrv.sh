@@ -130,6 +130,7 @@ chroot bdrv apt-get update
 chroot bdrv apt-get upgrade -y
 
 # blacklist packages that may conflict with packages in the main SFS
+[ "$DISTRO_BINARY_COMPAT" = "ubuntu" ] || chroot bdrv apt-mark hold systemd
 chroot bdrv apt-mark hold busybox
 chroot bdrv apt-mark hold busybox-static
 
