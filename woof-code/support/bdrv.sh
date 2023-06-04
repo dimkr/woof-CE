@@ -36,7 +36,7 @@ TARBALL="${CACHE_DIR}/debootstrap-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSIO
 [ "$USR_SYMLINKS" != "yes" ] || TARBALL="${CACHE_DIR}/debootstrap-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}-usrmerge.tar.gz"
 
 if [ "$USR_SYMLINKS" = "yes" -a ! -e ${TARBALL} ]; then
-	$debootstrap --arch=$ARCH --variant=minbase --make-tarball=${TARBALL} ${DISTRO_COMPAT_VERSION} bdrv ${MIRROR}
+	$debootstrap --arch=$ARCH --variant=minbase --exclude=libsystemd0 --include=sysvinit-core,libelogind0 --make-tarball=${TARBALL} ${DISTRO_COMPAT_VERSION} bdrv ${MIRROR}
 elif [ ! -e ${TARBALL} ]; then
 	$debootstrap --no-merged-usr --arch=$ARCH --variant=minbase --make-tarball=${TARBALL} ${DISTRO_COMPAT_VERSION} bdrv ${MIRROR}
 fi
