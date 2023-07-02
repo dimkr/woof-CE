@@ -3,6 +3,9 @@ download() {
 }
 
 build() {
+    # hack for Devuan
+    ln -sv /usr/lib/*/libelogind.so.0 /usr/lib/libsystemd.so.0 2>/dev/null
+
     tar -xzf gtkdialog-0.8.5a.tar.gz
     if [ $PETBUILD_GTK -eq 3 ]; then
         cd gtkdialog-0.8.5a
