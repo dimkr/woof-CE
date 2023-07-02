@@ -3,6 +3,9 @@ download() {
 }
 
 build() {
+    # hack for Devuan
+    ln -sv /usr/lib/*/libelogind.so.0 /usr/lib/libsystemd.so.0 2>/dev/null
+
     tar -xJf lxterminal-0.4.0.tar.xz
     cd lxterminal-0.4.0
     patch -p1 < ../colors.patch
