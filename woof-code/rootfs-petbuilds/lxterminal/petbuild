@@ -4,7 +4,7 @@ download() {
 
 build() {
     # hack for Devuan
-    ln -sv /usr/lib/*-linux-gnu/libelogind.so.0 /usr/local/lib/libsystemd.so.0 || :
+    ln -sv /lib/*-linux-gnu/libelogind.so.0 /usr/local/lib/libsystemd.so.0 || :
 
     tar -xJf lxterminal-0.4.0.tar.xz
     cd lxterminal-0.4.0
