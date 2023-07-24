@@ -1,23 +1,22 @@
 download() {
-    [ -f mpv-0.35.1.tar.gz ] || wget -t 3 -T 60 -O mpv-0.35.1.tar.gz https://github.com/mpv-player/mpv/archive/refs/tags/v0.35.1.tar.gz
+    [ -f mpv-0.36.0.tar.gz ] || wget -t 3 -T 60 -O mpv-0.36.0.tar.gz https://github.com/mpv-player/mpv/archive/refs/tags/v0.36.0.tar.gz
 }
 
 build() {
-    tar -xzf mpv-0.35.1.tar.gz
-    cd mpv-0.35.1
+    tar -xzf mpv-0.36.0.tar.gz
+    cd mpv-0.36.0
 
     # hack for dpup: these symlinks exist in bdrv but we don't have it yet
     ln -s /usr/lib/*-linux-gnu*/blas/libblas.so.* /usr/lib/*-linux-gnu*/ || :
     ln -s /usr/lib/*-linux-gnu*/lapack/liblapack.so.* /usr/lib/*-linux-gnu*/ || :
 
-    DISABLE_OUTPUT="--disable-pipewire"
+    DISABLE_OUTPUT="-Dpipewire=enabled"
     if command -v pipewire > /dev/null; then
-        DISABLE_OUTPUT="--disable-pulse"
+        DISABLE_OUTPUT="-Dpulse=disabled"
     fi
 
-    ./bootstrap.py
-    ./waf configure --prefix=/usr --confdir=/etc/mpv --disable-build-date --enable-libbluray --enable-dvdnav --enable-cdda $DISABLE_OUTPUT
-    ./waf install
+    meson --buildtype=release --prefix=/usr -Dbuild-date=false -Dcdda=enabled -Ddvdnav=enabled -Dlibbluray=enabled $DISABLE_OUTPUT build
+    ninja -C build install
 
     rm -rf /usr/share/zsh /usr/lib/*-linux-gnu*/libblas.so.* /usr/lib/*-linux-gnu*/liblapack.so.*
 }
