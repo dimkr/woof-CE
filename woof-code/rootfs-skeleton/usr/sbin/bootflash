@@ -93,7 +93,7 @@ create_gpt_drv() {
 	mkdosfs -F 32 -v /dev/${XDEV}1
 	sleep 1
 	case "$XFSTYPE2" in
-		f2fs) mkfs.f2fs /dev/${XDEV}2 ;;
+		f2fs) mkfs.f2fs -f /dev/${XDEV}2 ;;
 	esac
 	sync
 
@@ -276,7 +276,7 @@ create_bios_bootable_drv() {
 	esac
 	sleep 1
 	case "$XFSTYPE2" in
-		f2fs) mkfs.f2fs /dev/${XDEV}2 ;;
+		f2fs) mkfs.f2fs -f /dev/${XDEV}2 ;;
 	esac
 
 	sync
