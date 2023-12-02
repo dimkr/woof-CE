@@ -53,7 +53,7 @@ ${ONEPKGSPEC}"
                 # hack: debdb2pupdb doesn't understand dependency on libsystemd0|liblogind0 and takes the first option
                 if [ "$DISTRO_BINARY_COMPAT" = "debian" -o "$DISTRO_BINARY_COMPAT" = "devuan" ]; then
                     case "$DEP" in
-                    libsystemd0) DEP="libelogind0" ;;
+                    libsystemd0) [ "$DISTRO_BINARY_COMPAT" = "debian" -a "$DISTRO_COMPAT_VERSION" = "bullseye" ] || [ "$DISTRO_BINARY_COMPAT" = "debian" -a "$DISTRO_COMPAT_VERSION" = "bookworm" ] || [ "$DISTRO_BINARY_COMPAT" = "devuan" ] && DEP="libelogind0" ;;
                     dbus-user-session) DEP="dbus-x11" ;;
                     logind) DEP="libpam-elogind" ;;
                     esac
