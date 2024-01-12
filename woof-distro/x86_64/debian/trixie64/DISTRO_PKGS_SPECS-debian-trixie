@@ -63,7 +63,7 @@ yes|exfatprogs|exfatprogs|exe,dev,doc,nls||deps:yes
 yes|f2fs-tools|f2fs-tools|exe,dev,doc,nls||deps:yes
 yes|file|file,libmagic-mgc,libmagic-dev|exe,dev,doc,nls||deps:yes
 yes|findutils|findutils|exe,dev>null,doc,nls||deps:yes
-yes|freetype|libfreetype6,libfreetype-dev,libfreetype6-dev|exe,dev,doc,nls||deps:yes
+yes|freetype|libfreetype6,libfreetype-dev,libfreetype-dev|exe,dev,doc,nls||deps:yes
 yes|gawk|gawk|exe,dev>null,doc,nls||deps:yes
 yes|gdk-pixbuf|libgdk-pixbuf-2.0-0,libgdk-pixbuf2.0-common,libgdk-pixbuf-2.0-dev,libgdk-pixbuf2.0-0,libgdk-pixbuf2.0-dev,libgdk-pixbuf-xlib-2.0-0,libgdk-pixbuf-xlib-2.0-dev|exe,dev,doc,nls||deps:yes
 yes|gettext-full|gettext,gettext-base|exe,dev>exe,doc,nls||deps:yes
