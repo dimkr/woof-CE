@@ -152,6 +152,7 @@ EOF
             HAVE_ROOTFS=1
         fi
 
+        set -x
         if [ $HAVE_BUSYBOX -eq 0 -a "$NAME" != "busybox" ]; then
             if [ ! -f petbuild-rootfs-complete/bin/busybox ]; then
                 if [ -f ../petbuild-output/busybox-latest/bin/busybox ]; then # busybox petbuild
