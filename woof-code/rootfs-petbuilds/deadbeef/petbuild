@@ -15,6 +15,7 @@ build() {
     ls -la /
     ls -la /usr/
     ls -la /bin/grep /usr/bin/grep /bin/sed /usr/bin/sed || :
+    ls -la /bin/
     if command -v pipewire > /dev/null; then
         cd external
         tar -xzf ../../ddb_output_pw-0b099d13ab0e89d9934aabdeb2872f0f66ea6960.tar.gz
