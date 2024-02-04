@@ -53,7 +53,6 @@ fi
 HERE=`pwd`
 PKGS=
 
-set -x
 # busybox must be first, so other petbuilds can use coreutils commands
 for NAME in $PETBUILDS; do
     # peabee hack to reuse old petbuild output if BUILD_DEVX=no
@@ -154,6 +153,7 @@ EOF
         fi
 
         if [ $HAVE_BUSYBOX -eq 0 -a "$NAME" != "busybox" ]; then
+            set -x
             if [ ! -f petbuild-rootfs-complete/bin/busybox ]; then
                 if [ -f ../petbuild-output/busybox-latest/bin/busybox ]; then # busybox petbuild
                     install -D -m 755 ../petbuild-output/busybox-latest/bin/busybox petbuild-rootfs-complete/bin/busybox
@@ -166,6 +166,7 @@ EOF
                     exit 1
                 fi
             fi
+            set +x
             ../support/busybox_symlinks.sh petbuild-rootfs-complete
             HAVE_BUSYBOX=1
         fi
