@@ -75,6 +75,8 @@ for NAME in $PETBUILDS; do
             rm -rf petbuild-rootfs-complete
             cp -a rootfs-complete petbuild-rootfs-complete
 
+            [ "$USR_SYMLINKS" = "yes" ] && usrmerge petbuild-rootfs-complete 1
+
             rm -f petbuild-rootfs-complete/bin/sh
             ln -s bash petbuild-rootfs-complete/bin/sh
 
