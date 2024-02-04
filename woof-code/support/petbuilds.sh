@@ -156,6 +156,8 @@ EOF
             if [ ! -f petbuild-rootfs-complete/bin/busybox ]; then
                 if [ -f ../petbuild-output/busybox-latest/bin/busybox ]; then # busybox petbuild
                     install -D -m 755 ../petbuild-output/busybox-latest/bin/busybox petbuild-rootfs-complete/bin/busybox
+                elif [ -f ../petbuild-output/busybox-latest/usr/bin/busybox ]; then # busybox petbuild
+                    install -D -m 755 ../petbuild-output/busybox-latest/usr/bin/busybox petbuild-rootfs-complete/bin/busybox
                 elif [ -f ../packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox ]; then # prebuilt busybox
                     install -D -m 755 ../packages-${DISTRO_FILE_PREFIX}/busybox/bin/busybox petbuild-rootfs-complete/bin/busybox
                 elif [ "$NAME" != "busybox" ]; then
