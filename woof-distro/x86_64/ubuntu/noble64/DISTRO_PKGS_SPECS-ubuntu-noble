@@ -172,7 +172,7 @@ no|get_libreoffice||exe
 yes|gettext-full|gettext,gettext-base|exe,dev>exe,doc,nls||deps:yes
 no|gexec|gexec|exe,dev>null,doc,nls
 no|gftp|gftp-gtk,gftp-common|exe,dev>null,doc,nls
-yes|ghostscript|ghostscript,ghostscript-x,libgs9,libgs9-common,libgs-dev|exe,dev,doc,nls||deps:yes
+yes|ghostscript|ghostscript,libgs-dev|exe,dev,doc,nls||deps:yes
 no|gifsicle|gifsicle|exe,dev>null,doc,nls
 yes|git|git|exe>dev,dev,doc,nls||deps:yes
 no|glade2|glade,libgladeui-2-6,libgladeui-common,libgladeui-dev|exe>dev,dev,doc,nls
