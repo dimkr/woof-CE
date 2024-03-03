@@ -244,7 +244,7 @@ yes|htop|htop|exe,dev>null,doc,nls||deps:yes
 no|hunspell|hunspell,libhunspell-*,libhunspell-dev|exe,dev,doc,nls
 no|hunspell-en-us|hunspell-en-us|exe,dev,doc,nls
 no|icedtea-netx|icedtea-netx,default-jre,default-jre-headless,librhino-java,libtagsoup-java|exe,dev,doc,nls #java jnlp, needs openjdk-*-jre
-yes|icu|libicu70,libicu-dev|exe,dev,doc,nls||deps:yes #scribus needs this though it is not listed as a dep. note, it is big, 7MB pkg. crap, better put it into main f.s. NO have manually put this dep into main db. harfbuzz needs icu also.
+yes|icu|libicu-dev|exe,dev,doc,nls||deps:yes #scribus needs this though it is not listed as a dep. note, it is big, 7MB pkg. crap, better put it into main f.s. NO have manually put this dep into main db. harfbuzz needs icu also.
 no|id3lib|libid3-3.8.3v5,libid3-3.8.3-dev|exe,dev,doc,nls
 no|ijs|libijs-0.35,libijs-dev|exe,dev,doc,nls
 yes|imake|xutils-dev|exe>dev,dev,doc,nls||deps:yes
