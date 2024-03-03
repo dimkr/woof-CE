@@ -501,7 +501,7 @@ yes|numix-gtk-theme|numix-gtk-theme|exe,dev,doc,nls||deps:yes
 no|numlockx||exe| #needed by shinobars firstrun.
 no|opencv|libopencv-core*,libopencv-imgproc*|exe,dev>null,doc,nls #ffmpeg needs this. dep: libtbb2. have left off the dev deb.
 no|openjdk-jre|openjdk-11-jre,openjdk-11-jre-headless,ca-certificates-java,java-common|exe,dev,doc,nls #needed if icedtea selected
-yes|openldap|libldap-2.5-0|exe,dev,doc,nls||deps:yes
+yes|openldap|libldap2|exe,dev,doc,nls||deps:yes
 no|opensp|opensp,libosp-dev|exe>dev,dev,doc,nls|+sgml-base,+sgml-data,+xml-core
 yes|openssh-client|openssh-client|exe,dev,doc,nls||deps:yes
 yes|openssl|openssl,libssl3,libssl-dev|exe,dev,doc,nls||deps:yes #libssl1.0.2 = older libssl
