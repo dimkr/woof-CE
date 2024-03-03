@@ -9,7 +9,7 @@ else
 	BASH=`find ./bin ./usr/bin -name 'bash*' 2>/dev/null`
 	mv $BASH ./bin/bash 2>/dev/null
 
-	mkdir -p usr/bin
+	mkdir -p bin usr/bin
 
 	ln -sf bash bin/sh
 fi
