@@ -411,7 +411,7 @@ yes|libtirpc|libtirpc3,libtirpc-common,libtirpc-dev|exe,dev,doc,nls||deps:yes
 yes|libuchardet|libuchardet0|exe,dev,doc,nls||deps:yes
 yes|libudev|libudev1,libudev-dev|exe,dev,doc,nls||deps:yes
 yes|libunbound|libunbound8|exe,dev,doc,nls||deps:yes
-yes|libunistring|libunistring2|exe,dev,doc,nls||deps:yes
+yes|libunistring|libunistring5|exe,dev,doc,nls||deps:yes
 no|libusb|libusb-0.1-4,libusb-dev|exe,dev,doc,nls
 yes|libusb1|libusb-1.0-0|exe,dev,doc,nls||deps:yes #libusb1 necesssary for ffmpeg3
 no|libutf8proc|libutf8proc2|exe>dev,dev,doc,nls||deps:yes
