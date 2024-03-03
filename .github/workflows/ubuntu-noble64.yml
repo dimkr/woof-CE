@@ -1,8 +1,8 @@
-name: ubuntu-jammy64
+name: ubuntu-noble64
 
 on:
   schedule:
-    - cron: '0 0 2 * *'
+    - cron: '0 0 2,16 * *'
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
       ref: ${{ github.ref }}
       arch: x86_64
       compat-distro: ubuntu
-      compat-distro-version: jammy64
-      kernel: ubuntu-jammy
+      compat-distro-version: noble64
+      kernel: ubuntu-noble
       artifact: ${{ github.workflow }}-${{ github.run_number }}
-      retention: 30
+      retention: 15

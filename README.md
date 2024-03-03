@@ -5,6 +5,7 @@ Currently supported:
 | Distro        | Version       | Architecture | Status   |
 | ------------- | ------------- | -------------| -------- |
 | Slackware     | 15.0          | x86_64, x86  | [![slackware-s15pup](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/slackware-s15pup.yml/badge.svg)](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/slackware-s15pup.yml) |
+| Ubuntu        | 24.04         | x86_64       | [![ubuntu-noble64](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/ubuntu-noble64.yml/badge.svg)](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/ubuntu-noble64.yml) |
 | Ubuntu        | 22.04         | x86_64       | [![ubuntu-jammy64](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/ubuntu-jammy64.yml/badge.svg)](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/ubuntu-jammy64.yml) |
 | Debian        | Unstable      | x86_64       | [![debian-sid64](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/debian-sid64.yml/badge.svg)](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/debian-sid64.yml) |
 | Debian        | Testing       | x86_64       | [![debian-trixie](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/debian-trixie.yml/badge.svg)](https://github.com/puppylinux-woof-CE/woof-CE/actions/workflows/debian-trixie.yml) |

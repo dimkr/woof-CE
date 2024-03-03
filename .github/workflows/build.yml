@@ -118,8 +118,8 @@ jobs:
     - name: Get cached kernel-kit output
       uses: dawidd6/action-download-artifact@v3
       with:
-        repo: puppylinux-woof-CE/woof-CE
-        branch: testing
+        repo: dimkr/woof-CE
+        branch: noble
         workflow: ${{ startsWith(inputs.kernel, 'debian-') && 'dpup-kernel.yml' || (startsWith(inputs.kernel, 'ubuntu-') && 'upup-kernel.yml' || 'kernel-kit.yml') }}
         workflow_conclusion: success
         name: ${{ env.kernel_artifact }}
