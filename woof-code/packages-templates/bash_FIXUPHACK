@@ -6,7 +6,7 @@ if [ "$DISTRO_BINARY_COMPAT" = "void" ]; then
 
 	ln -sf bash bin/sh
 else
-	BASH=`find ./bin ./usr/bin -name 'bash*'`
+	BASH=`find ./bin ./usr/bin -name 'bash*' 2>/dev/null`
 	mv $BASH ./bin/bash 2>/dev/null
 
 	mkdir -p usr/bin
