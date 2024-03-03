@@ -1,21 +1,20 @@
 DISABLE_POST_INSTALL_SCRIPT=yes
 
-if [ "$DISTRO_BINARY_COMPAT" = "void" ]; then
+if [ -f usr/bin/bash ] && [ ! -e bin/bash -a ! -L bin/bash ] ; then
 	mkdir -p bin
 	mv -f usr/bin/bash bin
 
-	ln -sf ../../bin/bash usr/bin/sh
-	ln -sf ../../bin/bash usr/bin/bash
-elif [ -d bin ]; then
+	ln -sf bash bin/sh
+else
 	BASH=`find ./bin -name 'bash*'`
 	mv $BASH ./bin/bash 2>/dev/null
 
-	mkdir -p bin usr/bin
+	mkdir -p usr/bin
 
-	ln -sf ../../bin/bash usr/bin/sh
-	ln -sf ../../bin/bash usr/bin/bash
+	ln -sf bash bin/sh
 fi
-ln -sf bash bin/sh
+ln -sf ../../bin/bash usr/bin/sh
+ln -sf ../../bin/bash usr/bin/bash
 
 #files in /etc
 #	etc/bash.bashrc
