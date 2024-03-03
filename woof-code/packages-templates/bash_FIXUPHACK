@@ -4,17 +4,18 @@ if [ "$DISTRO_BINARY_COMPAT" = "void" ]; then
 	mkdir -p bin
 	mv -f usr/bin/bash bin
 
-	ln -sf bash bin/sh
-else
-	BASH=`find ./bin ./usr/bin -name 'bash*' 2>/dev/null`
+	ln -sf ../../bin/bash usr/bin/sh
+	ln -sf ../../bin/bash usr/bin/bash
+elif [ -d bin ]; then
+	BASH=`find ./bin -name 'bash*'`
 	mv $BASH ./bin/bash 2>/dev/null
 
 	mkdir -p bin usr/bin
 
-	ln -sf bash bin/sh
+	ln -sf ../../bin/bash usr/bin/sh
+	ln -sf ../../bin/bash usr/bin/bash
 fi
-ln -sf ../../bin/bash usr/bin/sh
-ln -sf ../../bin/bash usr/bin/bash
+ln -sf bash bin/sh
 
 #files in /etc
 #	etc/bash.bashrc
