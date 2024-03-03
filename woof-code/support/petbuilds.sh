@@ -77,6 +77,11 @@ for NAME in $PETBUILDS; do
 
             [ "$USR_SYMLINKS" = "yes" ] && usrmerge petbuild-rootfs-complete 1
 
+            ls -la petbuild-rootfs-complete
+            ls -la petbuild-rootfs-complete/bin/bash
+            ls -la petbuild-rootfs-complete/bin/sh
+            ls -la petbuild-rootfs-complete/usr/bin/bash
+            ls -la petbuild-rootfs-complete/usr/bin/sh
             rm -f petbuild-rootfs-complete/bin/sh
             ln -s bash petbuild-rootfs-complete/bin/sh
 
