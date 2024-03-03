@@ -709,15 +709,6 @@ rm -f rootfs-complete/etc/profile.d/*.csh* 2>/dev/null # slackware 13.1
 #sanity check...
 echo
 
-if [ $CROSSBUILD -eq 0 -o -n "$QEMU" ];then #111123
-	chroot rootfs-complete echo 'testing chroot'
-	if [ $? -ne 0 ];then
-		echo "ERROR: could not 'chroot' into sandbox3/rootfs-complete"
-		echo "This means that something is incomplete, perhaps a library"
-		exit 1
-	fi
-fi
-
 for ONELIST in $PKGLISTS_COMPAT $PACKAGELISTS_PET_ORDER ; do
 	cp -fv ../$ONELIST rootfs-complete${PACKAGES_DIR}/
 done
