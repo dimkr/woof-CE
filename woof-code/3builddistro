@@ -280,6 +280,7 @@ while IFS='|' read YESNO NAME ETC; do
 	fi
 done <<< "$PKGS_SPECS_TABLE"
 copy_pkgs_to_build "${PKGLIST}" rootfs-complete
+[ "$USR_SYMLINKS" = "yes" ] && usrmerge rootfs-complete 1
 echo
 
 case $BUILD_DEVX in #_00build.conf
@@ -1084,7 +1085,6 @@ fi
 
 if [ "$BUILD_SFS" = 'yes' ]; then
 	sh $MWD/support/files2delete.sh rootfs-complete
-	[ "$USR_SYMLINKS" = "yes" ] && usrmerge rootfs-complete 1
 
 	if [ "$BUILD_BDRV" = 'yes' ]; then
 		case $DISTRO_BINARY_COMPAT in debian|devuan|ubuntu)
