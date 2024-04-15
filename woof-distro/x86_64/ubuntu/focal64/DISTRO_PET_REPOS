@@ -7,11 +7,7 @@
 #   3 - name of db file when local and after being processed into standard format
 #  (in the case of PET databases, the names are the same and no processing is required)
 
-if [ "${BUILD_FROM_WOOF//;/_}" != "$BUILD_FROM_WOOF" ] ; then
-	WCE_BRANCH="${BUILD_FROM_WOOF%%;*}" #cut -f 1 -d ';'
-else
-	WCE_BRANCH=testing
-fi
+WCE_BRANCH=testing
 
 PKG_DOCS_PET_REPOS="
 z|https://distro.ibiblio.org/puppylinux/Packages-puppy-${DISTRO_DB_SUBNAME}-official|z
