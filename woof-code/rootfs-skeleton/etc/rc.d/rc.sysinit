@@ -416,20 +416,12 @@ if [ "$BOOT_UDEVDCHILDREN" ];then #120709
 else
    udevd --daemon --resolve-names=early
 fi
-[ "$DISTRO_TARGETARCH" = "x86" ] && sleep 0.3
+udevadm trigger --type=subsystems --action=add
+udevadm trigger --type=devices --action=add
+ln -sf /bin/true /dev/MAKEDEV
 
 # kernel polling - https://lwn.net/Articles/423619/
 echo 5000 > /sys/module/block/parameters/events_dfl_poll_msecs
-
-#replay uevents from /sys...
-for ONEMODALIAS in $MODALIASES
-do
- ONEPATH="${ONEMODALIAS%/*}"
- if [ -e ${ONEPATH}/uevent ];then
-  echo add > ${ONEPATH}/uevent #generates an 'add' uevent.
-  [ "$DISTRO_TARGETARCH" = "x86" ] && sleep 0.02
- fi
-done
 
 if [ $PUPMODE -eq 2 ] ; then #full hd installation.
  modprobe nls_cp437 > /dev/null 2>&1 #these needed by vfat/ntfs/ext2 f.s.'s. 110712 maybe builtin.
@@ -585,8 +577,7 @@ if [ "$USBBUILTIN" = "no" ];then #110712
          #(delay before usb mouse info appears in /proc/bus/input/devices)
 fi
 
-udevadm trigger #--action=add --subsystem-match="input" --subsystem-match="sound" --subsystem-match="power_supply"
-udevadm settle -t 20
+udevadm settle
 
 # -- from slackware's /etc/rc.d/rc.udev -- modded. kmod 14+
 (
