@@ -418,7 +418,6 @@ else
 fi
 udevadm trigger --type=subsystems --action=add
 udevadm trigger --type=devices --action=add
-ln -sf /bin/true /dev/MAKEDEV
 
 # kernel polling - https://lwn.net/Articles/423619/
 echo 5000 > /sys/module/block/parameters/events_dfl_poll_msecs
