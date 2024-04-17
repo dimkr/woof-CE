@@ -576,7 +576,7 @@ if [ "$USBBUILTIN" = "no" ];then #110712
          #(delay before usb mouse info appears in /proc/bus/input/devices)
 fi
 
-udevadm settle
+udevadm settle -t 20
 
 # -- from slackware's /etc/rc.d/rc.udev -- modded. kmod 14+
 (
