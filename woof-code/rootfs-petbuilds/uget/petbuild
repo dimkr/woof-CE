@@ -1,5 +1,5 @@
 download() {
-    [ -f uget-2.2.1.tar.gz ] || wget -t 3 -T 60 https://netix.dl.sourceforge.net/project/urlget/uget%20%28stable%29/2.2.1/uget-2.2.1.tar.gz
+    [ -f uget-2.2.1.tar.gz ] || wget -t 3 -T 60 https://altushost-swe.dl.sourceforge.net/project/urlget/uget%20%28stable%29/2.2.1/uget-2.2.1.tar.gz
 }
 
 build() {
