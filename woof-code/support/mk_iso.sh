@@ -347,8 +347,7 @@ mk_iso() {
 	MKISOFS="mkisofs"
 	command -v mkisofs > /dev/null || MKISOFS="xorriso -as mkisofs"
 	if [ "$UEFI_ISO" ] ; then
-		${MKISOFS} -iso-level 4 -D -R -o $OUTPUT -b isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table ${BOOT_CAT} -isohybrid-mbr rootfs-complete/usr/lib/ISOLINUX/isohdpfx.bin \
-			-eltorito-alt-boot -e boot/efi.img -isohybrid-gpt-basdat -no-emul-boot "$tmp_isoroot" || exit 100
+		${MKISOFS} -r -o $OUTPUT -isohybrid-mbr rootfs-complete/usr/lib/ISOLINUX/isohdpfx.bin -b isolinux.bin ${BOOT_CAT} -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/efi.img -isohybrid-gpt-basdat -no-emul-boot $tmp_isoroot" || exit 100
 		[ $? -ne 0 ] && exit 1
 	else
 		${MKISOFS} -iso-level 4 -D -R -o $OUTPUT -b isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table ${BOOT_CAT} "$tmp_isoroot" || exit 101
