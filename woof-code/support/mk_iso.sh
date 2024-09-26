@@ -350,7 +350,7 @@ mk_iso() {
 		${MKISOFS} -iso-level 4 -D -R -o $OUTPUT -b isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table ${BOOT_CAT} \
 			-eltorito-alt-boot -eltorito-platform efi -b boot/efi.img -no-emul-boot "$tmp_isoroot" || exit 100
 		[ $? -ne 0 ] && exit 1
-		UEFI_OPT=-u
+		UEFI_OPT='' # hack
 	else
 		${MKISOFS} -iso-level 4 -D -R -o $OUTPUT -b isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table ${BOOT_CAT} "$tmp_isoroot" || exit 101
 		[ $? -ne 0 ] && exit 1
